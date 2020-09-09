@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>05-31-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="编译原理"> 编译原理</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>此为编译原理课程的最后一个与算法有关的实验博客。</p>
+<p>总的来说还是很不容易的。5个算法，难度依次递增，coding时间、代码量也是依次递增，不过写出它们的快乐也是依次递增的。说起来也是自己给自己增加coding难度，<strong>为了在所有代码中保持贯穿一致的数据结构</strong>，多做了很多的工作。不过写到现在也觉得这些工作是非常值得的，不管是看起来还是用起来都是十分赏心悦目的。</p>
+<p>尤其是这一次，大概是几个实验中bug最少的一个了。当我把用代码生成的DFA和我手写的DFA进行对比，发现<strong>完全一模一样</strong>的时候，那真的是非常开心了！写到现在，对于C++ STL的运用也更加的娴熟，这也是我学习这门课程的意外收获之一。</p>
+<p><strong>本博客会对之前4个博客的内容做综合总结。</strong></p>
+<hr>
+<h1 id="目标任务"><a href="#目标任务" class="headerlink" title="目标任务"></a>目标任务</h1><h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>完成以下描述赋值语句 SLR(1)文法语法制导生成中间代码四元式的过程。</p>
+<pre><code>G[E]:
+A→V=E
+E→E+T∣E-T∣T 
+T→T*F∣T/F∣F
+F→(E)∣i
+V→i</code></pre>
+<h2 id="设计说明"><a href="#设计说明" class="headerlink" title="设计说明"></a>设计说明</h2><p>终结符号i为用户定义的简单变量，即标识符的定义。</p>
+<h2 id="设计要求"><a href="#设计要求" class="headerlink" title="设计要求"></a>设计要求</h2><ul>
+<li><p>(1) 构造文法的 SLR(1)分析表，设计语法制导翻译过程，给出每一产生式对应的语义动作;</p>
+</li>
+<li><p>(2) 设计中间代码四元式的结构;</p>
+</li>
+<li><p>(3) 输入串应是词法分析的输出二元式序列，即某赋值语句“专题1”的输出结果，输出为赋值语句的四元式序列中间文件;</p>
+</li>
+<li><p>(4) 设计两个测试用例(尽可能完备，正确和出错)，并给出测试结果;</p>
+</li>
+</ul>
+<hr>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="SLR-1-分析法"><a href="#SLR-1-分析法" class="headerlink" title="SLR(1)分析法"></a>SLR(1)分析法</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p><strong>由于大多数适用的程序设计语言的文法不能满足LR(O)文法的条件，即使是描述一个实数变量说明的这样一个简单文法也不一定是LR(O)文法。</strong>因此对于LR(O)规范族中有冲突的项目集(状态)用向前查看一个符号的办法进行处理，以解决冲突。这种办法将能满足一些文法的需要，因为只对有冲突的状态才向前查看一个符号，以确定做那种动作，因而称这种分析方法为简单的LR(1)分析法，用SLR(1)表示。</p>
+<p><strong>SLR(1)分析法属于LR分析法中的一种</strong>，是通过使用输入串中下一个记号来指导它的动作，<strong>它大大地提高了 LR(0) 分析的能力</strong>。</p>
+<p>它通过两种方法做到这一点：</p>
+<ul>
+<li><p>首先，它在一个移进之前先考虑输入记号以确保存在着一个恰当的 DFA 。</p>
+</li>
+<li><p>其次，使用构造的非终结符的 Follow 集合来决定是否应执行一个归约。</p>
+</li>
+</ul>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><p>对于给定文法G和一语句，若要进行SLR(1)分析，一般需要进行以下步骤：</p>
+<ul>
+<li><p>(1) 写出已知文法G的扩展文法G’</p>
+</li>
+<li><p>(2) 写出扩展文法G’的初始项目集</p>
+</li>
+<li><p>(3) 根据状态转移构建识别G’活前缀的DFA（项目集编号为I0-IN）</p>
+</li>
+<li><p>(4) 求得文法G的FOLLOW集合</p>
+</li>
+<li><p>(5) 根据步骤(3)和(4)构建SLR(1)分析表</p>
+</li>
+</ul>
+<h2 id="文法扩展"><a href="#文法扩展" class="headerlink" title="文法扩展"></a>文法扩展</h2><p>所谓G的拓展文法G’，即映入一个新的开始符号，并添加一个新的产生式：将新的开始符号作为新产生的左部，将原开始符号作为产生式的右部。</p>
+<p>设新增的开始符号为Z，对于本实验所给文法，拓展文法G’中新增如下产生式：</p>
+<pre><code>Z-&gt;A</code></pre>
+<h2 id="扩展文法G’的LR-0-项目集"><a href="#扩展文法G’的LR-0-项目集" class="headerlink" title="扩展文法G’的LR(0)项目集"></a>扩展文法G’的LR(0)项目集</h2><p>构成识别一个文法活前缀的DFA项目集(状态)的全体，称之为这个文法的LR(0)项目集规范族。</p>
+<p>对于活前缀，定义为：对于任一文法G[S]，若新的开始符号经过任意次推导得到αAω，继续经过一次推导得到αβω，若γ是αβ的前缀，则称γ是G的一个活前缀。</p>
+<p>设分割符为“.”，对上述扩展文法G’，其全部的LR(0)项目为：</p>
+<pre><code>Z=.A  Z=A.
+A→.V=E  A→V.=E  A→V=.E  A→V=E.
+E→.E+T  E→E.+T  E→E+.T  E→E+T.
+E→.E-T  E→E.-T  E→E-.T  E→E-T.
+E→.T  E→T.
+T→.T*F  T→T.*F  T→T*.F  T→T*F.
+T→.T/F  T→T./F  T→T/.F  T→T/F.
+T→.F  T→F.
+F→.(E)  F→(.E)  F→(E.)  F→(E).
+F→.i  F→i.
+V→.i  V→i.</code></pre>
+<h2 id="识别G’活前缀的DFA"><a href="#识别G’活前缀的DFA" class="headerlink" title="识别G’活前缀的DFA"></a>识别G’活前缀的DFA</h2><p>首先引入如下概念：LR(0)项目集的闭包函数CLOSURE和状态转换函数GO：</p>
+<h3 id="LR-0-项目集的闭包函数CLOSURE"><a href="#LR-0-项目集的闭包函数CLOSURE" class="headerlink" title="LR(0)项目集的闭包函数CLOSURE"></a>LR(0)项目集的闭包函数CLOSURE</h3><p>闭包函数CLOSURE(I)的定义如下：
+　　</p>
+<ul>
+<li>(1) I的项目均在CLOSURE(I)中。
+　　</li>
+<li>(2) 若A→α·Bβ属于CLOSURE(I)，则每一形如B→·γ的项目也属于CLOSURE(I)。
+　　</li>
+<li>(3) 重复b)直到不出现新的项目为止。即CLOSURE(I)不再扩大。</li>
+</ul>
+<h3 id="LR-0-项目集的状态转换函数GO"><a href="#LR-0-项目集的状态转换函数GO" class="headerlink" title="LR(0)项目集的状态转换函数GO"></a>LR(0)项目集的状态转换函数GO</h3><p>转换函数GO(I，X)的定义：
+　　</p>
+<ul>
+<li>GO(I，X)＝CLOSURE(J)</li>
+</ul>
+<p>其中：I为包含某一项目的状态，J＝{任何形如A→αX·β的项目| A→α·Xβ属于I}。</p>
+<p>这样就可以使用闭包函数和转换函数构造文法G′的LR(0)项目集规范族。</p>
+<h3 id="LR-0-项目集规范族"><a href="#LR-0-项目集规范族" class="headerlink" title="LR(0)项目集规范族"></a>LR(0)项目集规范族</h3><p>使用闭包函数和转换函数构造文法G′的LR(0)项目集规范族，步骤如下：
+　　</p>
+<ul>
+<li><p>(1) 置项目【新开始符号→·原开始符号】为初态集的核，然后对核求闭包，得到初态的项目集。</p>
+</li>
+<li><p>(2) 对初态集或其它所构造的项目集应用转换函数GO(I，X)=CLOSURE(J)，求出新状态J的项目集。</p>
+</li>
+<li><p>(3) 重复(2)直到不出现新的项目为止。</p>
+</li>
+</ul>
+<h3 id="DFA"><a href="#DFA" class="headerlink" title="DFA"></a>DFA</h3><p>至此，我们所要构造的识别文法全部或前缀的DFA为：</p>
+<pre><code>M=&#123;C,V,GO,I0,C&#125;</code></pre>
+<p><strong>其中，C为M的状态集也就是文法的LR(0)项目集规范族；V是M的字母表也就是文法的字汇表；GO为M的映像也就是如上定义的状态转换函数GO。</strong></p>
+<p>对上述扩展文法G’，识别文法全部或前缀的DFA为：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/1.png" alt="图1" title="Optional title"></p>
+<p>其中，蓝色编号为项目集的编号，绿色编号为有向边。</p>
+<p><strong>在本文法的DFA中，共有20个项目集和38条有向边。</strong></p>
+<h2 id="文法G的FOLLOW集合"><a href="#文法G的FOLLOW集合" class="headerlink" title="文法G的FOLLOW集合"></a>文法G的FOLLOW集合</h2><p>在构建SLR分析表的时候，文法G的FOLLOW集合用来构建归约过程。对于文法的FOLLOW集合求取，步骤见《编译原理：LL(1)语法分析》。</p>
+<p>对于上述文法G，其FOLLOW集合为：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/2.png" alt="图2" title="Optional title"></p>
+<h2 id="构建SLR-1-分析表"><a href="#构建SLR-1-分析表" class="headerlink" title="构建SLR(1)分析表"></a>构建SLR(1)分析表</h2><h3 id="LR-0-分析表的构造"><a href="#LR-0-分析表的构造" class="headerlink" title="LR(0)分析表的构造"></a>LR(0)分析表的构造</h3><p>LR(0)分析表的ACTION表项和GOTO表项可按如下方法构造：</p>
+<ul>
+<li><p>(1)若项目A -&gt;α • aβ属于 Ik 且 GO (Ik, a)= Ij, 期望字符a 为终结符，则置ACTION[k, a] =sj (j表示新状态Ij);<br>【如果圆点不在项目k最后且圆点后的期待字符a为终结符，则ACTION[k, a] =sj (j表示新状态Ij)】</p>
+</li>
+<li><p>(2)若项目A -&gt;α • Aβ属于 Ik，且GO (Ik, A)= Ij,期望字符 A为非终结符，则置GOTO(k, A)=j (j表示文法中第j个产生式);<br>【如果圆点不在项目k最后且圆点后的期待字符A为非终结符，则GOTO(k, A)=j (j表示文法中第j个产生式)】</p>
+</li>
+<li><p>(3)若项目A -&gt;α •属于Ik, 那么对任何终结符a, 置ACTION[k, a]=rj；其中，假定A-&gt;α为文法G 的第j个产生式；<br>【如果圆点在项目k最后且k不是S’ -&gt;S，那么对所有终结符a，ACTION[k, a]=rj (j表示文法中第j个产生式)】</p>
+</li>
+<li><p>(4)若项目S’ -&gt;S • 属于Ik, 则置ACTION[k, #]为“acc”;<br>【如果圆点在项目k最后且k是S’ -&gt;S，则ACTION[k, #]为“acc”】</p>
+</li>
+<li><p>(5)分析表中凡不能用上述规则填入信息的空白格均置上“出错标志”.</p>
+</li>
+</ul>
+<h3 id="SLR-1-分析表的构造"><a href="#SLR-1-分析表的构造" class="headerlink" title="SLR(1)分析表的构造"></a>SLR(1)分析表的构造</h3><p>当LR(0)出现多重定义分析动作的时候，对于含有冲突的项目集：</p>
+<pre><code>I(i)=&#123;B-&gt;α • Aβ, A-&gt;α •, C-&gt;α •&#125;</code></pre>
+<p>对于任何输入符号a，可运用如下规则消去冲突：</p>
+<ul>
+<li><p>(1) 当a=b时，置[i,b]=”移进”；</p>
+</li>
+<li><p>(2) 当a属于FOLLOW(A)时，置[i,a]={按产生式A-&gt;α •规约}；</p>
+</li>
+<li><p>(3) 当a属于FOLLOW(C)时，置[i,a]={按产生式C-&gt;α •规约}；</p>
+</li>
+<li><p>(4) 当a不属于上述三种情况之一时，置[i,a]=”ERROR”。</p>
+</li>
+</ul>
+<p><strong>需要注意的是，对于是LR(0)文法的文法来说，其LR(0)分析表和SLR(1)分析表是一样的（因为没有可消去的冲突，其余的构造方法又是一致的）。</strong></p>
+<p>对于上述文法G’，根据DFA和FOLLOW集合构造SLR(1)分析表，如下：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/3.png" alt="图3" title="Optional title"></p>
+<p>上述结果为本次实验代码生成的SLR分析表和对产生式的编号。<br><del>实际上是我懒得再把表格敲一编到这儿了就直接拿截图代替了233333</del></p>
+<h2 id="根据构造好的SLR-1-分析表进行分析"><a href="#根据构造好的SLR-1-分析表进行分析" class="headerlink" title="根据构造好的SLR(1)分析表进行分析"></a>根据构造好的SLR(1)分析表进行分析</h2><p>SLR(1)分析分析流程同LR分析，流程图如下：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/4.png" alt="图4" title="Optional title"></p>
+<h2 id="生成中间代码四元式"><a href="#生成中间代码四元式" class="headerlink" title="生成中间代码四元式"></a>生成中间代码四元式</h2><p>在做SLR（1）分析时，在归约动作进行的同时，需要执行语义动作，并生成生成中间代码四元式子。</p>
+<h3 id="四元式结构"><a href="#四元式结构" class="headerlink" title="四元式结构"></a>四元式结构</h3><p>定义四元式结构如下：</p>
+<ul>
+<li>(op, agr1, arg2, result)</li>
+</ul>
+<p>其中，op为二元运算符；result为两运算对象arg1、arg2通过运算符op进行运算所得到的结果变量；arg1和arg2分别为op左边和右边的运算对象，<strong>该对象可以是产生式中的非终结符号，也可以是先前产生的result临时变量</strong>。</p>
+<h3 id="如何产生四元式？"><a href="#如何产生四元式？" class="headerlink" title="如何产生四元式？"></a>如何产生四元式？</h3><p>一般的，语句中有多少个运算符，对应就要产生多少个中间代码四元式。<strong>对于含有运算符的产生式来说，如果发生的归约动作使用了这个产生式，那么就把该产生式的左部和右部按照上述结构进行记录：</strong></p>
+<pre><code>op=产生式右部的运算符
+arg1=产生式右部的运算符的左边的运算对象
+arg2=产生式右部的运算符的右边的运算对象
+result=产生式左部的非终结符号</code></pre>
+<p>如果按照产生式中的进行记录，那么对于所有的四元式来说，无法看出它们之间的关系。对应的做法是按照顺序记录这些四元式，在所有记录都完成之后，<strong>按照从上到下的顺序将任意四元式的运算对象arg1、arg2替换为上面一个四元式的result</strong>。这里需要注意的是，<strong>在记录的时候一定要按照语法分析的顺序进行记录</strong>，否则就无法进行顺序替换：<strong>按语法顺序进行的记录就是该四元式在原语句中的映射顺序记录</strong>。</p>
+<h2 id="文件结构及函数简介"><a href="#文件结构及函数简介" class="headerlink" title="文件结构及函数简介"></a>文件结构及函数简介</h2><p>本专题大部分文件和功能函数与专题1同名，具体的文件结构和功能函数简介见《编译原理：词法分析程序》。</p>
+<p>新增文件SLR.h，内含的函数用SLR分析表的构造及文法的扩充等。</p>
+<p>文件firstAndFollow.h同《编译原理：LL(1)语法分析》所实现的功能一致。</p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>详细的主函数流程如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化参数</span></span><br><span class="line">    initAll();</span><br><span class="line">    <span class="comment">//读取lab1中输出的二元组结果文件</span></span><br><span class="line">    readFile_Result();</span><br><span class="line">    <span class="comment">//读取lab1中输出的标识符结果文件</span></span><br><span class="line">    readFile_Identifier();</span><br><span class="line">    <span class="comment">//过滤读取结果，得到纯粹的标识符内容</span></span><br><span class="line">    getPureMorphemeAndSentence();</span><br><span class="line">    <span class="comment">//输出过滤后的语句</span></span><br><span class="line">    printSentenceInfo();</span><br><span class="line">    <span class="comment">//读取文法，求得包含所有的非终结符号的不重复集合</span></span><br><span class="line">    readFile_Formula();</span><br><span class="line">    <span class="comment">//求得包含所有的终结符号的不重复集合</span></span><br><span class="line">    getAllVT();</span><br><span class="line">    <span class="comment">//求得文法的first集合和follow集合以及由此构造分析表，并写入txt文件中</span></span><br><span class="line">    getFirstAndFollow();</span><br><span class="line">    <span class="comment">//文法扩充</span></span><br><span class="line">    grammarExpand();</span><br><span class="line">    <span class="comment">//求识别文法全部活前缀的DFA</span></span><br><span class="line">    DFA();</span><br><span class="line">    <span class="comment">//将所求的DFA写入txt文件中</span></span><br><span class="line">    writeFile_DFA();</span><br><span class="line">    <span class="comment">//构造SLR分析表</span></span><br><span class="line">    getSLRAnalyseTable();</span><br><span class="line">    <span class="comment">//将所求的SLR分析表写入txt文件中</span></span><br><span class="line">    writeFile_SLR1AnalyseTable();</span><br><span class="line">    <span class="comment">//进行分析</span></span><br><span class="line">    <span class="keyword">if</span>(getAnalyseResult())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配成功!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="comment">//匹配成功，输出分析栈结果</span></span><br><span class="line">        printAnalyseResultInfo();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//匹配失败，输出错误位置信息</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配失败!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        printError();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造识别文法所有活前缀的DFA，首先需要构造好初态I(0)：即把【新开始符号→·原开始符号】加入I(0)中。然后执行循环。循环的内容为：从第0个状态开始先求取状态的闭包，然后读取所有可读取的符号，并把读取过后构造的不重复新状态加入到项目集中，等待接下来的读取。跳出循环的条件为：当项目集的个数不再增大且所有的项目集都经过求取闭包和符号移进。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFA</span><span class="params">()</span></span>&#123;</span><br><span class="line">    dfaCounter+=<span class="number">1</span>;</span><br><span class="line">    <span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator itBegin;</span><br><span class="line">    itBegin=Sentence.find(newBegin);</span><br><span class="line">    <span class="comment">//0状态的初始化： [新开始符号-&gt;.原开始符号]</span></span><br><span class="line">    dfaForG_prim[<span class="number">0</span>].dfa.insert(<span class="built_in">make_pair</span>(newBegin, fenGe+itBegin-&gt;second));</span><br><span class="line">    <span class="comment">//对0状态求闭包</span></span><br><span class="line">    dfaForG_prim[<span class="number">0</span>].dfa=closure(dfaForG_prim[<span class="number">0</span>].dfa);</span><br><span class="line">    <span class="comment">//从0状态开始循环</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;dfaCounter;i++)&#123;</span><br><span class="line">        <span class="comment">//读取所有可读取的字符，作为新状态，并对新状态求闭包</span></span><br><span class="line">        <span class="comment">//不重复的新状态则加入dfa中，等待之后的读取</span></span><br><span class="line">        getNextSta(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数**void getNextSta(int dfaCount)**用来求当前状态的闭包和对该闭包进行读取移进的工作：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getNextSta</span><span class="params">(<span class="keyword">int</span> dfaCount)</span></span>&#123;</span><br><span class="line">    <span class="comment">//将该状态中全部可以读取的字符做成集合</span></span><br><span class="line">    <span class="comment">//可以读取的字符：所有产生式中的紧挨着分割符的下一个字符</span></span><br><span class="line">    <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; nextChar;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_1=dfaForG_prim[dfaCount].dfa.begin();it_1!=dfaForG_prim[dfaCount].dfa.end();it_1++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;it_1-&gt;second.length()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(it_1-&gt;second[i]==fenGe[<span class="number">0</span>])&#123;</span><br><span class="line">                nextChar.insert(it_1-&gt;second[i+<span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//没有可以读取的字符，该状态是终结状态</span></span><br><span class="line">    <span class="keyword">if</span>(nextChar.size()==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//有可以读取的字符，按上述所求得的集合中的内容读取</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator it_1=nextChar.begin();it_1!=nextChar.end();it_1++)&#123;</span><br><span class="line">        <span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt; temp;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_2=dfaForG_prim[dfaCount].dfa.begin();it_2!=dfaForG_prim[dfaCount].dfa.end();it_2++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;it_2-&gt;second.length()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(it_2-&gt;second[i]==fenGe[<span class="number">0</span>]&amp;&amp;it_2-&gt;second[i+<span class="number">1</span>]==*it_1)&#123;</span><br><span class="line">                    <span class="built_in">string</span> tempString=it_2-&gt;second;</span><br><span class="line">                    <span class="comment">//分隔符移进（读取）</span></span><br><span class="line">                    <span class="comment">//使用位操作交换第i个位置内容(分隔符)和第i+1个位置的内容</span></span><br><span class="line">                    tempString[i]=tempString[i]^tempString[i+<span class="number">1</span>];</span><br><span class="line">                    tempString[i+<span class="number">1</span>]=tempString[i]^tempString[i+<span class="number">1</span>];</span><br><span class="line">                    tempString[i]=tempString[i]^tempString[i+<span class="number">1</span>];</span><br><span class="line">                    temp.insert(<span class="built_in">make_pair</span>(it_2-&gt;first,tempString));</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//对移进之后的产生式求取闭包temp</span></span><br><span class="line">        temp=closure(temp);</span><br><span class="line">        <span class="keyword">bool</span> ifRepeat=<span class="literal">false</span>;</span><br><span class="line">        <span class="comment">//对temp查重</span></span><br><span class="line">        <span class="comment">//如果temp和现在dfa中的任意一个状态重合，则该temp不加入dfa状态中</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;dfaCounter;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(temp.size()==dfaForG_prim[i].dfa.size())&#123;</span><br><span class="line">                <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; rComPare1;</span><br><span class="line">                <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; rComPare2;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_3=dfaForG_prim[i].dfa.begin(), it_4=temp.begin();it_3!=dfaForG_prim[i].dfa.end();it_3++,it_4++)&#123;</span><br><span class="line">                    <span class="comment">//将所对比的两个状态的左右部全部加入向量中，便于比较</span></span><br><span class="line">                    rComPare1.push_back(it_3-&gt;second);</span><br><span class="line">                    rComPare1.push_back(<span class="string">&quot;&quot;</span>+it_3-&gt;first);</span><br><span class="line">                    rComPare2.push_back(it_4-&gt;second);</span><br><span class="line">                    rComPare2.push_back(<span class="string">&quot;&quot;</span>+it_4-&gt;first);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(rComPare1==rComPare2)&#123;</span><br><span class="line">                    <span class="comment">//当前temp有重复</span></span><br><span class="line">                    ifRepeat=<span class="literal">true</span>;</span><br><span class="line">                    <span class="comment">//重复的内容有边连到当前状态</span></span><br><span class="line">                    dfaLine[dfaLineCounter].from=dfaCount;</span><br><span class="line">                    dfaLine[dfaLineCounter].read=*it_1;</span><br><span class="line">                    dfaLine[dfaLineCounter].to=i;</span><br><span class="line">                    dfaLineCounter+=<span class="number">1</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(!ifRepeat)&#123;</span><br><span class="line">            <span class="comment">//当前temp不重复</span></span><br><span class="line">            <span class="comment">//当前temp有边指向下一个temp</span></span><br><span class="line">            dfaLine[dfaLineCounter].from=dfaCount;</span><br><span class="line">            dfaLine[dfaLineCounter].read=*it_1;</span><br><span class="line">            dfaLine[dfaLineCounter].to=dfaCounter;</span><br><span class="line">            dfaLineCounter+=<span class="number">1</span>;</span><br><span class="line">            <span class="comment">//当前temp加入dfa中成为一个新状态</span></span><br><span class="line">            dfaForG_prim[dfaCounter].dfa=temp;</span><br><span class="line">            dfaCounter+=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述函数过程中调用了closure函数，用来求取当前状态的闭包：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">multimap&lt;char,string&gt; closure(multimap&lt;char,string&gt; a)&#123;</span><br><span class="line">    <span class="comment">//int oldSize=a.size();</span></span><br><span class="line">    <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">        <span class="comment">//记录集合的大小</span></span><br><span class="line">        <span class="keyword">int</span> oldSize=a.size();</span><br><span class="line">        <span class="comment">//求取闭包temp</span></span><br><span class="line">        <span class="comment">//紧挨着分割符的下一个字符如果是非终结字符，则把以该非终结字符作为左部的所有产生式加入该状态，并使其右部的第一个位置加入分割符</span></span><br><span class="line">        <span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt; temp=a;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_a=a.begin();it_a!=a.end();it_a++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;it_a-&gt;second.length()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(it_a-&gt;second[i]==fenGe[<span class="number">0</span>])&#123;</span><br><span class="line">                    <span class="keyword">if</span>(isCaptain(it_a-&gt;second[i+<span class="number">1</span>]))&#123;</span><br><span class="line">                        <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_1=Sentence.begin();it_1!=Sentence.end();it_1++)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(it_1-&gt;first==it_a-&gt;second[i+<span class="number">1</span>])&#123;</span><br><span class="line">                                <span class="comment">// 左 -&gt; 分割符 + 右</span></span><br><span class="line">                                temp.insert(<span class="built_in">make_pair</span>(it_1-&gt;first, fenGe+it_1-&gt;second));</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//temp内部去重</span></span><br><span class="line">        <span class="comment">//去除重复的产生式</span></span><br><span class="line">        <span class="keyword">int</span> tempSize=temp.size();</span><br><span class="line">        <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_1=temp.begin();it_1!=temp.end();it_1++)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>,<span class="built_in">string</span>&gt;::iterator it_2=it_1;it_2!=temp.end();it_2++)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(it_1!=it_2&amp;&amp;it_1-&gt;first==it_2-&gt;first&amp;&amp;!it_1-&gt;second.compare(it_2-&gt;second))&#123;</span><br><span class="line">                        <span class="comment">//erase擦去重复的产生式</span></span><br><span class="line">                        temp.erase(it_2);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(tempSize==temp.size())&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                tempSize=temp.size();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        a=temp;</span><br><span class="line">        <span class="comment">//状态不再扩大，证明是闭包，跳出</span></span><br><span class="line">        <span class="keyword">if</span>(oldSize==a.size())&#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>构造SLR分析表和进行分析则完全按照上述算法进行，不再赘述。</p>
+<h2 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h2><p>依据所给文法写出给出两正确语句，并验证结果：</p>
+<h3 id="var-d-var-a-var-b-var-c"><a href="#var-d-var-a-var-b-var-c" class="headerlink" title="var_d=var_a+var_b*var_c"></a>var_d=var_a+var_b*var_c</h3><p>将此表达式写入专题1中的SourceProgram.txt文件，运行专题1程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/5.png" alt="图5" title="Optional title"></p>
+<p>查看标识符文件Identifier.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/6.png" alt="图6" title="Optional title"></p>
+<p>查看词素二元组文件ResultofLexicalAnalysis.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/7.png" alt="图7" title="Optional title"></p>
+<p>可以看到对于专题1来说，该语句是符合要求的。</p>
+<p>接下来运行本专题的SLR(1)分析及中间代码生成程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/8.png" alt="图8" title="Optional title"></p>
+<p>查看生成的DFA文件DFA.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/9.png" alt="图9" title="Optional title"></p>
+<p>生成的SLR分析表文件SLR1AnalyseTable.txt见【3.6.1 SLR(1)分析表的构造】。</p>
+<h3 id="var-a-var-b-var-c-var-d-var-e-var-f"><a href="#var-a-var-b-var-c-var-d-var-e-var-f" class="headerlink" title="var_a=var_b-(var_c+var_d/var_e)*var_f"></a>var_a=var_b-(var_c+var_d/var_e)*var_f</h3><p>将此表达式写入专题1中的SourceProgram.txt文件，运行专题1程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/10.png" alt="图10" title="Optional title"></p>
+<p>查看标识符文件Identifier.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/11.png" alt="图11" title="Optional title"></p>
+<p>查看词素二元组文件ResultofLexicalAnalysis.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/12.png" alt="图12" title="Optional title"></p>
+<p>可以看到对于专题1来说，该语句是符合要求的。</p>
+<p>接下来运行本专题的SLR(1)分析及中间代码生成程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/13.png" alt="图13" title="Optional title"><br><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/5/14.png" alt="图14" title="Optional title"></p>
+<p>上述测试结果证明了两个程序可按设计本意顺利完成功能。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，编译原理与算法有关的代码编写及博客写作就告一段落。纵观所有内容，将优缺点及后续需要改进的地方进行总结：</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li><p>使用编程语言统一（c++）、<strong>数据结构统一</strong>、输入内容统一（实验要求）、输出方式统一（包括控制台输出与文件输出）；</p>
+</li>
+<li><p>语法分析的4个程序的代码整体架构统一，具体为：<strong>总控程序+分析依据构造+分析算法</strong>；</p>
+</li>
+<li><p>细节功能封装体现的较为到位；</p>
+</li>
+<li><p>功能操作方便、代码泛用性高：在循环中经常使用的变量或常量均设置了全局变量，对不同规模、不同内容的文法或语句进行测试或者在别的工程中引用当前工程功能的时候，无需再次修改代码，仅需要修改txt文件即可。</p>
+</li>
+</ul>
+<h2 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h2><ul>
+<li><p>代码不够简洁：主要体现在对数据结构的遍历中（循环嵌套严重、为了方便循环不设置跳出等）；</p>
+</li>
+<li><p>在进行词法分析程序（1）编写的时候没有考虑到后面的内容，导致了很多无用或者费力的代码。</p>
+</li>
+</ul>
+<h2 id="以后要做的事情"><a href="#以后要做的事情" class="headerlink" title="以后要做的事情"></a>以后要做的事情</h2><ul>
+<li><p>程序整合：整合所有功能，精简无用、重复代码；</p>
+</li>
+<li><p>进一步进行功能函数的封装；</p>
+</li>
+<li><p>可视化前端编写。<br><del>有时间有心情我就写</del></p>
+</li>
+</ul>
+<hr>
+<p>最后，庆祝历时两个多月的编译原理的算法相关coding的完成！</p>
+<p>记录时间：2019年4月——2019年5月31日17时37分</p>
+<blockquote>
+<p>最后的最后，我还想说一句，编译原理这些个东西也太难理解太难写了，我终于写完了2333～～<br>接下来的实验6是1和5的整合相当于白给，博客也懒得再写太多了都是些重复的东西，实验7是选做也相当于白给以后再说吧233333～～</p>
+</blockquote>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/05/31/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E5%9F%BA%E4%BA%8ESLR-1-%E5%88%86%E6%9E%90%E6%B3%95%E7%9A%84%E8%AF%AD%E6%B3%95%E5%88%B6%E5%AF%BC%E7%BF%BB%E8%AF%91%E5%8F%8A%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/">http://example.com/2019/05/31/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E5%9F%BA%E4%BA%8ESLR-1-%E5%88%86%E6%9E%90%E6%B3%95%E7%9A%84%E8%AF%AD%E6%B3%95%E5%88%B6%E5%AF%BC%E7%BF%BB%E8%AF%91%E5%8F%8A%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/06/04/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89%EF%BC%9A%E4%BD%BF%E7%94%A8%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AF%86%E5%88%AB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97/" title="深度学习笔记（2）：使用神经网络识别手写数字"><span>< PreviousPost</span><br><span class="prevTitle">深度学习笔记（2）：使用神经网络识别手写数字</span></a><a class="nextSlogan" href="/2019/05/21/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%EF%BC%9A%E5%8C%85%E8%A3%85%E7%94%9F%E4%BA%A7%E7%BA%BF%E8%A3%85%E7%93%B6%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B/" title="数字图像处理：包装生产线装瓶质量检测"><span>NextPost ></span><br><span class="nextTitle">数字图像处理：包装生产线装瓶质量检测</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">目标任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E6%B1%82"><span class="toc-number">2.1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E"><span class="toc-number">2.2.</span> <span class="toc-text">设计说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%A6%81%E6%B1%82"><span class="toc-number">2.3.</span> <span class="toc-text">设计要求</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">3.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SLR-1-%E5%88%86%E6%9E%90%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">SLR(1)分析法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">3.1.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">3.1.2.</span> <span class="toc-text">流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%B3%95%E6%89%A9%E5%B1%95"><span class="toc-number">3.2.</span> <span class="toc-text">文法扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95%E6%96%87%E6%B3%95G%E2%80%99%E7%9A%84LR-0-%E9%A1%B9%E7%9B%AE%E9%9B%86"><span class="toc-number">3.3.</span> <span class="toc-text">扩展文法G’的LR(0)项目集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%86%E5%88%ABG%E2%80%99%E6%B4%BB%E5%89%8D%E7%BC%80%E7%9A%84DFA"><span class="toc-number">3.4.</span> <span class="toc-text">识别G’活前缀的DFA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LR-0-%E9%A1%B9%E7%9B%AE%E9%9B%86%E7%9A%84%E9%97%AD%E5%8C%85%E5%87%BD%E6%95%B0CLOSURE"><span class="toc-number">3.4.1.</span> <span class="toc-text">LR(0)项目集的闭包函数CLOSURE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LR-0-%E9%A1%B9%E7%9B%AE%E9%9B%86%E7%9A%84%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0GO"><span class="toc-number">3.4.2.</span> <span class="toc-text">LR(0)项目集的状态转换函数GO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LR-0-%E9%A1%B9%E7%9B%AE%E9%9B%86%E8%A7%84%E8%8C%83%E6%97%8F"><span class="toc-number">3.4.3.</span> <span class="toc-text">LR(0)项目集规范族</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DFA"><span class="toc-number">3.4.4.</span> <span class="toc-text">DFA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E6%B3%95G%E7%9A%84FOLLOW%E9%9B%86%E5%90%88"><span class="toc-number">3.5.</span> <span class="toc-text">文法G的FOLLOW集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E5%BB%BASLR-1-%E5%88%86%E6%9E%90%E8%A1%A8"><span class="toc-number">3.6.</span> <span class="toc-text">构建SLR(1)分析表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LR-0-%E5%88%86%E6%9E%90%E8%A1%A8%E7%9A%84%E6%9E%84%E9%80%A0"><span class="toc-number">3.6.1.</span> <span class="toc-text">LR(0)分析表的构造</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SLR-1-%E5%88%86%E6%9E%90%E8%A1%A8%E7%9A%84%E6%9E%84%E9%80%A0"><span class="toc-number">3.6.2.</span> <span class="toc-text">SLR(1)分析表的构造</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%9E%84%E9%80%A0%E5%A5%BD%E7%9A%84SLR-1-%E5%88%86%E6%9E%90%E8%A1%A8%E8%BF%9B%E8%A1%8C%E5%88%86%E6%9E%90"><span class="toc-number">3.7.</span> <span class="toc-text">根据构造好的SLR(1)分析表进行分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E5%9B%9B%E5%85%83%E5%BC%8F"><span class="toc-number">3.8.</span> <span class="toc-text">生成中间代码四元式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E5%85%83%E5%BC%8F%E7%BB%93%E6%9E%84"><span class="toc-number">3.8.1.</span> <span class="toc-text">四元式结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BA%A7%E7%94%9F%E5%9B%9B%E5%85%83%E5%BC%8F%EF%BC%9F"><span class="toc-number">3.8.2.</span> <span class="toc-text">如何产生四元式？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%8F%8A%E5%87%BD%E6%95%B0%E7%AE%80%E4%BB%8B"><span class="toc-number">3.9.</span> <span class="toc-text">文件结构及函数简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">3.10.</span> <span class="toc-text">代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E5%88%86%E6%9E%90"><span class="toc-number">3.11.</span> <span class="toc-text">结果分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#var-d-var-a-var-b-var-c"><span class="toc-number">3.11.1.</span> <span class="toc-text">var_d&#x3D;var_a+var_b*var_c</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#var-a-var-b-var-c-var-d-var-e-var-f"><span class="toc-number">3.11.2.</span> <span class="toc-text">var_a&#x3D;var_b-(var_c+var_d&#x2F;var_e)*var_f</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">4.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E8%B6%B3"><span class="toc-number">4.2.</span> <span class="toc-text">不足</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A5%E5%90%8E%E8%A6%81%E5%81%9A%E7%9A%84%E4%BA%8B%E6%83%85"><span class="toc-number">4.3.</span> <span class="toc-text">以后要做的事情</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

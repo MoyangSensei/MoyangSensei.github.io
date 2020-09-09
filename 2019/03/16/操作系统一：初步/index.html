@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>操作系统一：初步 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">操作系统一：初步</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>03-16-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="操作系统"> 操作系统</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！<br>代码、文章及图片挂载地址：<a target="_blank" rel="noopener" href="https://github.com/MoyangSensei/OS">https://github.com/MoyangSensei/OS</a></p>
+</blockquote>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><ul>
+<li>1 （系统调用实验）了解系统调用不同的封装形式。<br>（1）参考下列网址中的程序。阅读分别运行用API接口函数getpid()直接调用和汇编中断调用两种方式调用Linux操作系统的同一个系统调用getpid的程序（请问getpid的系统调用号是多少？linux系统调用的中断向量号是多少？)。<br>（2）上机完成习题1.13。<br>（3）阅读pintos操作系统源代码，画出系统调用实现的流程图。</li>
+</ul>
+<ul>
+<li>2 （并发实验）根据以下代码完成下面的实验。<br>（1）编译运行该程序（cpu.c），观察输出结果，说明程序功能。<br>(编译命令： gcc -o cpu cpu.c –Wall)（执行命令：./cpu）<br>（2）再次按下面的运行并观察结果：执行命令：./cpu A &amp; ; ./cpu B &amp; ; ./cpu C &amp; ; ./cpu D &amp;程序cpu运行了几次？他们运行的顺序有何特点和规律？请结合操作系统的特征进行解释。</li>
+</ul>
+<ul>
+<li>3 （内存分配实验）根据以下代码完成实验。<br>（1）阅读并编译运行该程序(mem.c)，观察输出结果，说明程序功能。<br>(命令： gcc -o mem mem.c –Wall)<br>（2）再次按下面的命令运行并观察结果。两个分别运行的程序分配的内存地址是否相同？是否共享同一块物理内存区域？为什么？命令：./mem &amp;; ./mem &amp;</li>
+</ul>
+<ul>
+<li>4 （共享的问题）根据以下代码完成实验。<br>（1）阅读并编译运行该程序，观察输出结果，说明程序功能。<br>（编译命令：gcc -o thread thread.c -Wall）（执行命令1：./thread 1000）<br>（2）尝试其他输入参数并执行，并总结执行结果的有何规律？你能尝试解释它吗？<br>（例如执行命令2：./thread 100000）（或者其他参数。）<br>（3）提示：哪些变量是各个线程共享的，线程并发执行时访问共享变量会不会导致意想不到的问题。</li>
+</ul>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><ul>
+<li>（1）从所给代码中可以看出getpid的系统调用号是0x14，linux系统调用的中断向量号是0x80，两种调用方式如下所示：<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/1.1.png" alt="Alt text" title="Optional title"></li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/1.2.png" alt="Alt text" title="Optional title"></p>
+<ul>
+<li>（2）两种调用方式如下。其中，linux的系统调用使用write函数。此函数有三个参数，第一个参数为1时是控制台输出。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/1.31.png" alt="Alt text" title="Optional title"></li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/1.32.png" alt="Alt text" title="Optional title"></p>
+<ul>
+<li>（3）通过阅读../userprog/syscall.c文件，可知pintos操作系统的系统调用的实现如下：<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/1.4.png" alt="Alt text" title="Optional title"></li>
+</ul>
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><ul>
+<li>（1）进行如题所示的编译命令和执行命令，结果如下。根据代码和输出的信息可以看出，这个程序的作用是输出命令行参数中的内容。如果输入的参数个数为0（代码中设置的条件为不等于2，因为函数的名称在是命令行参数中的第一个，用户参数从第二个算起），则输出提示信息。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/2.1.png" alt="Alt text" title="Optional title"></li>
+<li>（2）进行如题所示的编译命令和执行命令，结果如下。可以明显的看到输出的顺序与输入参数的顺序（ABCD）是不一致的。且这个不一致是变化的，并不仅是除了ABCD这个顺序之外的单个顺序。四个程序在宏观上是一同运行的，微观上还是在cpu交替运行的，他们的优先级相同，因此先进行的程序不一定是先结束，这就造成了这四个程序同时运行的时候，结束的顺序是不确定的，那么输出顺序也是不一定的。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/2.2.png" alt="Alt text" title="Optional title"></li>
+</ul>
+<h2 id="3"><a href="#3" class="headerlink" title="3"></a>3</h2><ul>
+<li>（1）进行如题所示的编译命令和执行命令，结果如下。该程序做了如下几件事：程序分配了内存并打印出内存地址，然后将0放入内存的第一个位置。在一个无限循环中，延迟一秒并递增存储在p中保存的地址的值。对于每个print语句，它还会打印出正在运行的程序的进程标识符（每个运行过程中都唯一）。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/3.1.png" alt="Alt text" title="Optional title"></li>
+<li>（2）进行如题所示的编译命令和执行命令，结果如下。可以从运行结果看到，两个独立运行的程序并不共享一块物理地址。这是因为操作系统虚拟化了内存。每个进程访问自己的私有虚拟地址空间，操作系统以某种方式映射到机器的物理内存。一个正在运行的程序中的内存引用不会影响其他进程（或OS本身）的地址空间。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/3.2.1.png" alt="Alt text" title="Optional title"><br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/3.2.2.png" alt="Alt text" title="Optional title"></li>
+</ul>
+<h2 id="4"><a href="#4" class="headerlink" title="4"></a>4</h2><ul>
+<li>（1）进行如题所示的编译命令和执行命令，结果如下。调用时输入的参数为1000。程序使用Pthread .create()创建两个线程，每个线程在worker（）的例程中运行，该函数的作用是循环递增的计数器，计数区间为1。当两个线程完成时，计数器的最终值为2000，因为每个线程将计数器递1000次。 所以可以推断当循环的输入值设置为N时，程序的期望输出为2N。<br><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab1/4.png" alt="Alt text" title="Optional title"></li>
+<li>（2）在以上解释的基础下，增大输入的参数，会发现得到的输入不再是2N。原因是：计数器递增，需要三个指令：计数器的值从存储器加载到寄存器中、递增、存储回内存。这意味着这三条指令不是同时执行的，所以这“一组”操作与其他操作之间的执行顺序是不固定的。而且countor、loops这两个全局变量是被这两个线程共享的。当两个的线程一起被调用执行的时候，共享全局变量countor，在编写多线程的程序时，同一个变量可能被多个线程修改，而程序通过该变量同步各个线程。所以当参数变得很大时，就会因为指令调用顺序和参数共享的缘故导致错误。</li>
+</ul>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/03/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%80%EF%BC%9A%E5%88%9D%E6%AD%A5/">http://example.com/2019/03/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%80%EF%BC%9A%E5%88%9D%E6%AD%A5/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/03/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BA%8C%EF%BC%9A%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6/" title="操作系统二：进程控制"><span>< PreviousPost</span><br><span class="prevTitle">操作系统二：进程控制</span></a><a class="nextSlogan" href="/2019/03/16/%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BF%E6%B5%8B%E8%AF%95/" title="部署上线测试"><span>NextPost ></span><br><span class="nextTitle">部署上线测试</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">2.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">2.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">2.2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">2.3.</span> <span class="toc-text">3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4"><span class="toc-number">2.4.</span> <span class="toc-text">4</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

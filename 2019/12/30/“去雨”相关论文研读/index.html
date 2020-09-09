@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>“去雨”相关论文研读 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">“去雨”相关论文研读</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>12-30-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="Attentive-Generative-Adversarial-Network-for-Raindrop-Removal-from-A-Single-Image"><a href="#Attentive-Generative-Adversarial-Network-for-Raindrop-Removal-from-A-Single-Image" class="headerlink" title="Attentive Generative Adversarial Network for Raindrop Removal from A Single Image"></a>Attentive Generative Adversarial Network for Raindrop Removal from A Single Image</h1><blockquote>
+<p>一幅单一图像中雨滴去除的专注生成对抗性网络</p>
+</blockquote>
+<p>这篇论文主要介绍了一个新的利用单张图片去除图片中雨滴的算法。</p>
+<p>作者使用了两种不同的神经网络来实现这三步，作者使用了Generative Network来识别图像中的雨滴，并对其进行复原。通过使用Discriminative Network来对复原后的图片进行识别，以提高复原质量。</p>
+<p>作者使用GAN作为自己方法的算法架构。GAN通过中至少两个模块（生成模块与识别模块）的相互博弈学习产生相当好的输出。作者的生成模块和识别模块都使用神经网络组成。</p>
+<h2 id="Generative-Network"><a href="#Generative-Network" class="headerlink" title="Generative Network"></a>Generative Network</h2><p>作者的生成模块由两个副网络组成，分别是Attentive-recurrent network和Contextual autoencoder。</p>
+<blockquote>
+<p>Given an input image degraded by raindrops, our generative network attempts to produce an image as real as possible and free from raindrops. The discriminative network will validate whether the image produced by the generative network looks real.</p>
+</blockquote>
+<blockquote>
+<p>如果输入的图像因雨滴而退化，我们的生成网络试图生成尽可能真实、不受雨滴影响的图像。判别网络将验证生成网络产生的图像是否真实。</p>
+</blockquote>
+<h3 id="Attentive-recurrent-Network"><a href="#Attentive-recurrent-Network" class="headerlink" title="Attentive-recurrent Network"></a>Attentive-recurrent Network</h3><p>attentive-recurrent network的作用在于寻找原始输入图片中可能存在雨滴的部分，并将这些部分构造成attention map，从而为contextual autoencoder指定雨滴部分及雨滴附近的需要注意的区域。这个网络可以说是作者整个方法的核心部分，正是attention map的引入使得后续的操作变得精准而简单，为图像的复原提供了较好的前提条件。</p>
+<p>attention map的实质是一个大小与原图相等的二维数组，数组中的每一个元素的值是0-1内的一个值。元素的值越大，在后续的操作中，网络会给其及其附近的区域进行优先度更高的操作。</p>
+<p>关于attention map的数值在图片中被雨滴遮盖部分的分布，总的概括就是雨滴的边缘数值最大，雨滴的正中心数值相对来说最小。</p>
+<blockquote>
+<p>Our attention map, which is learned at each time step, is a matrix ranging from 0 to 1, where the greater the value, the greater attention it suggests, as shown in the visualization in Fig. 3. Unlike the binary mask, M, the attention map is a non-binary map, and represents the increasing attention from non-raindrop regions to raindrop regions, and the values vary even inside raindrop regions. This increasing attention makes sense to have, since the surrounding regions of raindrops also needs the attention, and the transparency of a raindrop area in fact varies (some parts do not totally occlude the background, and thus convey some background information).</p>
+</blockquote>
+<blockquote>
+<p>我们的注意力图，是在每个时间步骤中学习的，是一个从0到1的矩阵，其中值越大，它所表示的注意力就越多，如图3中的可视化所示。与二值掩码M不同，注意映射是一种非二值映射，它代表着从非雨滴区域到雨滴区域的注意力的增加，雨滴区域内部的关注度也是不同的。这种注意力的增加是有意义的，因为雨滴周围的区域也需要注意，而雨滴区域的透明度实际上是不同的(有些部分并不完全遮住背景，从而传达了一些背景信息)。</p>
+</blockquote>
+<p>attractive-recurrent network的组成可以由先前的图片中得出，每一层由若干个Residual Block，一个LSTM和一个Convs组成。需要说明的是，图中的每一个“Block”由5层ResNet组成，其作用是得到输入图片的精确特征与前一个Block的模。</p>
+<blockquote>
+<p>Our convolution LSTM unit consists of an input gate i t , a forget gate  ft , an output gate  ot as well as a cell state ct . The interaction between states and gates along time dimension is defined as follows:</p>
+</blockquote>
+<blockquote>
+<p>我们的卷积LSTM单元包括一个输入门 i t 、一个忘记门ft、一个输出门ot以及一个单元状态ct。状态与门随时间维度的相互作用定义如下：</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/1.png" title="Optional title"></p>
+<blockquote>
+<p>where X t is the features generated by ResNet. C t encodes the cell state that will be fed to the next LSTM. H t represents the output features of the LSTM unit. Operator ∗ represents the convolution operation. The LSTM’s output feature is then fed into the convolutional layers, which generate a 2D attention map. In the training process, we initialize the values of the attention map to 0.5. In each time step, we concatenate the current attention map with the input image and then feed them into the next block of our recurrent network.</p>
+</blockquote>
+<blockquote>
+<p>其中，X t 是由ResNet生成的特征； C t 对将要转递到下一个LSTM的状态进行编码； H t代表LSTM单元的输出特性；运算符 * 表示卷积运算。LSTM的输出特征随后被输入到卷积层，这将产生一个2D的注意图。在训练过程中，我们将注意力图的值初始化为0.5。在每个时间步骤中，我们将当前的注意力映射与输入连接起来，然后将它们输入到我们的递归网络的下一个块中。</p>
+</blockquote>
+<p>attention map并不是一次生成的，其生成过程是一个不断叠加，不断优化的过程。作者让神经网络对分别有雨点和没有雨点的图片进行学习，并找出两幅图中信息不相等的部分，并对其进行一定的运算，以找到图片中的所有雨滴.</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/2.png" title="Optional title"></p>
+<blockquote>
+<p>In training the generative network, we use pairs of images with and without raindrops that contain exactly the same background scene. The loss function in each recurrent block is defined as the mean squared error (MSE) between the output attention map at time step t, or A t , and the binary mask, M. We apply this process N time steps. The earlier attention maps have smaller values and get larger when approaching the N th time step indicating the increase in confidence.</p>
+</blockquote>
+<blockquote>
+<p>在训练生成网络时，我们使用包含和不包含雨滴的具有完全相同背景场景的图像对。每个循环块中的损失函数定义为在时间步长t的输出注意映射，或者说At与二值掩码M之间的均方误差(MSE)。我们在N个时间步骤中应用这个过程。较早的注意映射值较小，且随着时间步长的增加而变大，这说明信任度的增加。</p>
+</blockquote>
+<h3 id="Contextual-Autoencoder"><a href="#Contextual-Autoencoder" class="headerlink" title="Contextual Autoencoder"></a>Contextual Autoencoder</h3><p>该部分的组成由图2可以看出，该部分的作用在于根据Attractive-recurrentNetwork得出的attention map对于雨点图像进行还原。很讨巧的是，由于attention map的给出，这一部分的工作类似于将attention map中attention值较高的部分通过该部分周围的图片信息形成的新的色块进行替换，从而实现图片信息的还原。</p>
+<p>直接得到的复原图像G(I)并不是十分清晰，其中有一些复原点还很模糊。这是因为在复原过程中除了复原点周围过少造成的无法复原外，还有一部分是由于在卷积过程中的大小变换造成的，作者分别对两类误差进行了量化描述。</p>
+<h2 id="Discriminative-Network"><a href="#Discriminative-Network" class="headerlink" title="Discriminative Network"></a>Discriminative Network</h2><p>GAN中Generative network的作用类似于学生根据题目进行解答，Discriminative network的作用则类似于老师。</p>
+<p>由先前对于Generative network的介绍可以看出，最终输出的复原图像有的误差。为了鉴别这部分的误差是否能被看出，从而引入了Discriminative network。其工作原理是将Generative Network生成的复原图像和原图像作为输入，让Discriminative network对其进行鉴别，判断其是否是同一个图像，若是同一图像，则该图像的复原是成功的，若不是，则不成功，需要继续复原。</p>
+<p>在这里作者又一次引入了attention map来简化操作。由于Generative Network的操作区域只有“attention map”所标注的区域。所以只对这些区域的误差进行判别，既减少了计算量，也在一定程度上提高了识别精度。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h3><blockquote>
+<p>Our novelty lies on the use of the attention map in both generative and discriminative network. We also consider that our method is the first method that can handle relatively severe presence of raindrops, which the state of the art methods in raindrop removal fail to handle.</p>
+</blockquote>
+<blockquote>
+<p>我们的方法新奇之处在于注意力图在生成网络和判别网络中的使用。我们还认为，我们的方法是第一种能够处理相对严重的雨滴存在的方法，这是目前最先进的雨滴清除方法所不能处理的。</p>
+</blockquote>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>论文里所用到的两类图片，即干净图片和雨滴污染之后的图片均是由作者及其研究团队自行拍摄完成。所用设备原文中有提到。雨滴图片是使用玻璃板驾在镜头之前，人为泼水模拟雨滴。</p>
+<h3 id="代码和数据是否开源"><a href="#代码和数据是否开源" class="headerlink" title="代码和数据是否开源"></a>代码和数据是否开源</h3><p>代码和数据开源。</p>
+<hr>
+<h1 id="Density-aware-Single-Image-De-reaining-using-a-Multi-stream-Dense-Network"><a href="#Density-aware-Single-Image-De-reaining-using-a-Multi-stream-Dense-Network" class="headerlink" title="Density-aware Single Image De-reaining using a Multi-stream Dense Network"></a>Density-aware Single Image De-reaining using a Multi-stream Dense Network</h1><blockquote>
+<p>使用多流密集网络的密度感知单图像去雨</p>
+</blockquote>
+<p>这篇论文提出一种密度感知多路稠密连接神经网络算法，DID-MDN，来雨量密集估计和去雨。这种方法可以使网络自动地判断雨密度，然后有效地去除雨线。</p>
+<p>这个方法主要针对的是，目前的去雨方法只能处理一类雨水的图片，而没有考虑不同密度和尺度的雨水，因此通用性不是很好。如果是将数据集给扩展成不同的雨水密度的数据集，单一的网络无法处理这种多密度的雨水分布。如果是为不同密度的雨水设计网络，又缺少灵活性，所以这篇文章的目的是设计一个网络可以同时处理不同密度雨水的去雨工作。基本思路是先设计一个密度分类网络，得到雨水的密度估计，然后将其fuse到雨水去除网络，实现雨水的自动去除。</p>
+<h2 id="DID-MDN"><a href="#DID-MDN" class="headerlink" title="DID-MDN"></a>DID-MDN</h2><blockquote>
+<p>Density-aware Image De-raining Multi-stream Dense Network</p>
+</blockquote>
+<p>这种网络可以自动的判断雨量密度信息（大、中、小）。这种方法包括两步：雨密度分类和雨线去除。</p>
+<p>（1）为了准确估计雨密度级别，一种新的残差网络利用残差模块在有雨的做分类。</p>
+<p>（2）雨线去除算法基于多流密集连接网络，它考虑了雨线的尺寸和形状信息。</p>
+<p>一旦雨密度级别估计出来，融合已估计的雨密度信息到多流密集连接网络，得到最终的除雨的输出结果。</p>
+<p>DID-MDN主要包括两个模块：Residual-aware Rain-density Classifier和Multi-stream Dense Network。</p>
+<h3 id="Residual-aware-Rain-density-Classifier"><a href="#Residual-aware-Rain-density-Classifier" class="headerlink" title="Residual-aware Rain-density Classifier"></a>Residual-aware Rain-density Classifier</h3><blockquote>
+<p>残差感知雨密度分类器</p>
+</blockquote>
+<p>过去的一些方法总是存在着不足：</p>
+<p>其一，不同雨密度下效果不好。</p>
+<blockquote>
+<p>As discussed above, even though some of the previous methods achieve significant improvements on the de-raining performance, they often tend to over de-rain or under de-rain the image. This is mainly due to the fact that a single network may not be sufficient enough to learn different rain-densities occurring in practice.</p>
+</blockquote>
+<blockquote>
+<p>如上所述，尽管先前的一些方法在去雨性能上取得了显著的改进，但它们往往倾向于过去雨或欠去雨图像。这主要是因为一个单一的网络可能不足以了解实际中发生的不同雨密度。</p>
+</blockquote>
+<p>其二，通用分类模型不好使。</p>
+<blockquote>
+<p>However, we observed that directly fine-tuning such a ‘deep’ model on our task is not an efficient solution. This is mainly due to the fact that high-level features (deeper part) of a CNN tend to pay more attention to localize the discriminative objects in the input image 46. Hence, relatively small rain-streaks may not be localized well in these high-level features. In other words, the rain-streak information may be lost in the high-level features and hence may degrade the overall classification performance. </p>
+</blockquote>
+<blockquote>
+<p>然而，我们观察到，直接微调这样一个“深度”模型对我们的任务不是一个有效的解决方案。这主要是因为CNN的高层次特征（更深的部分）倾向于更关注输入图像中的可分辨对象的局部化。因此，相对较小的雨带可能不会很好地局部化在这些高层特征中。换言之，雨痕信息可能在高层特征中丢失，因此可能降低总体分类性能。</p>
+</blockquote>
+<p>所以这里需要估计出带雨图片和干净图片的残差也就是雨水信息，这里使用了一个多流的densenet网络，估计得到雨水的残差信息，然后输入到分类网络。残差估计模块可以看做是特征提取模块。这里在训练时，首先对残差特征提取模块进行训练，然后训练分类网络。最后两步合在一起训练，损失函数表示为:</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/3.png" title="Optional title"></p>
+<p>其中第一项是残差信息像素的欧式距离，第二项是分类的交叉熵损失函数。</p>
+<h3 id="Multi-stream-Dense-Network"><a href="#Multi-stream-Dense-Network" class="headerlink" title="Multi-stream Dense Network"></a>Multi-stream Dense Network</h3><blockquote>
+<p>多流密集感知去雨网络</p>
+</blockquote>
+<p>由于不同的雨水密度不一样，所以这里使用多尺度的特征更有利于捕捉不同的雨水密度信息，通过使用不同卷积核的densenet实现。最后通过一个concat将这些信息融合在一起，从而融合多尺度的雨水信息。为了将雨水密度信息来引导去雨过程，上采样之后的雨水label被concat到这些雨水feature上，然后这些concat之后的特征被用来估计雨水的残差信息，用有雨水的图片减去残差信息获得coarse的去雨图片，最后通过一个refine的网络去获得输出的去雨之后的图片。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/4.png" title="Optional title"></p>
+<p>最后损失函数被定义为:</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/5.png" title="Optional title"></p>
+<p>其中第二项是去雨图片的欧式距离，最后一项是基于relu1_2的VGG的feature loss。</p>
+<h2 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h2><h3 id="贡献-1"><a href="#贡献-1" class="headerlink" title="贡献"></a>贡献</h3><blockquote>
+<p>This paper makes the following contributions:</p>
+<ol>
+<li>AnovelDID-MDNmethodwhichautomaticallydeter- mines the rain-density information and then efficiently removes the corresponding rain-streaks guided by the estimated rain-density label is proposed.</li>
+<li>Based on the observation that residual can be used as a better feature representation in characterizing the rain- density information, a novel residual-aware classifier to efficiently determine the density-level of a given rainy image is proposed in this paper.</li>
+<li>A new synthetic dataset consisting of 12,000 training images with rain-density labels and 1,200 test images is synthesized. To the best of our knowledge, this is the first dataset that contains the rain-density label in- formation. Although the network is trained on our syn- thetic dataset, it generalizes well to real-world rainy images.</li>
+<li>Extensive experiments are conducted on three highly challenging datasets (two synthetic and one real- world) and comparisons are performed against several recent state-of-the-art approaches. Furthermore, an ab- lation study is conducted to demonstrate the effects of different modules in the proposed network.</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>DID-MDN自动的判断雨量密度信息，然后通过估计出来的雨量密度标签去除雨线；基于残差可以作为更好的描述雨密度信息的特征，论文提出残差感知分类器来判断雨量密度；合成数据集包括 12000 带有雨量密度的训练图片和1200张测试图片；据作者所知这是第一个包含雨量标签的数据集。尽管是在合成数据上训练的，它可以泛化到真实世界的图片；在三个高挑战性的数据集上（两个合成、一个真实）和比赛上进行了大量的实验。</p>
+</blockquote>
+<h3 id="数据-1"><a href="#数据-1" class="headerlink" title="数据"></a>数据</h3><p>来自论文【4.1. Synthetic Dataset】。</p>
+<h3 id="代码和数据是否开源-1"><a href="#代码和数据是否开源-1" class="headerlink" title="代码和数据是否开源"></a>代码和数据是否开源</h3><p>未提及。</p>
+<hr>
+<h1 id="Densely-Connected-Pyramid-Dehazing-Network"><a href="#Densely-Connected-Pyramid-Dehazing-Network" class="headerlink" title="Densely Connected Pyramid Dehazing Network"></a>Densely Connected Pyramid Dehazing Network</h1><blockquote>
+<p>密集连接金字塔除雾网络</p>
+</blockquote>
+<blockquote>
+<p>这是一片研究图像去雾的论文。选择这样一篇与“去雨”不相合但是有一定的相关性的论文，是想要借鉴一些这类问题的共性，即图像进化或者图像去污，而不只是着眼于“去雨”。</p>
+</blockquote>
+<blockquote>
+<p>此篇略读。</p>
+</blockquote>
+<p>基于大气散射模型的图像去雾研究很多，主要的步骤是估计transmission map和自然光。但是绝大部分研究更多的放在精确的估计transmission map， 而利用经验公式去估计自然光，似乎都默认好的transmission map会带来比较好的去雾效果，对自然光的估计并没有很重视。现有方法主要分为基于先验信息（prior-based)的和基于深度学习(learning-based)的方法来估计transmission map。</p>
+<p>作者认为现有的方法存在以下不足：首先是transmission map估计还不够准确。另外是估计transmission map/ 自然光等步骤是分开估计（优化）的，并非end to end，因此作者认为上述几个部分同时估计的情况下，效果会有提升。</p>
+<p>文章中所叙述的网络包含以下几个部分：</p>
+<h2 id="Pyramid-densely-connected-network"><a href="#Pyramid-densely-connected-network" class="headerlink" title="Pyramid densely connected network"></a>Pyramid densely connected network</h2><h3 id="dense-block"><a href="#dense-block" class="headerlink" title="dense block"></a>dense block</h3><p>用dense block做CNN的基本block来提取feature。dense block被认为是有利于融合多尺度特征。</p>
+<h3 id="multi-level-pyramid-pooling-method"><a href="#multi-level-pyramid-pooling-method" class="headerlink" title="multi-level pyramid pooling method"></a>multi-level pyramid pooling method</h3><p>该方法是将得到的特征用不同尺寸的pooling，四个池化层，4，8，16，32分别进行，然后再扩张回到原尺寸，就算多尺度的feature。</p>
+<p>同时优化多个task的网络还是比较难训练的，作者使用leverage stage-wise 训练的方案，先分别优化网络的每一个部分，然后再联合优化整个网络。</p>
+<h3 id="自然光估计"><a href="#自然光估计" class="headerlink" title="自然光估计"></a>自然光估计</h3><p>作者同样假设大气光是均匀的e.g. A(z)=c constant。采用U-net来估计图像的大气光。</p>
+<h3 id="去雾图像"><a href="#去雾图像" class="headerlink" title="去雾图像"></a>去雾图像</h3><p>根据得到的tranmission map和大气光，按照大气散射模型，估计得到去雾图像。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/6.png" title="Optional title"></p>
+<h3 id="discriminator"><a href="#discriminator" class="headerlink" title="discriminator"></a>discriminator</h3><blockquote>
+<p>与第一篇的相似之处。</p>
+</blockquote>
+<p>增加了一个discriminator来refine生成的transmission map， A(z)。 discriminator的作用就是让产生的transmission map 和 A(z) 像ground-truth 靠拢，而更加难以分辨。</p>
+<h3 id="边沿的loss和总loss"><a href="#边沿的loss和总loss" class="headerlink" title="边沿的loss和总loss"></a>边沿的loss和总loss</h3><p>边沿的loss按照如下公式进行。总loss的训练方面，由于多task的同时训练不好收敛，作者提出initialization stage，先分块优化每一个小block，然后再统一训练。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/7.png" title="Optional title"></p>
+<h2 id="其他-2"><a href="#其他-2" class="headerlink" title="其他"></a>其他</h2><h3 id="代码和数据是否开源-2"><a href="#代码和数据是否开源-2" class="headerlink" title="代码和数据是否开源"></a>代码和数据是否开源</h3><p>开源。</p>
+<p>github：<a target="_blank" rel="noopener" href="https://github.com/hezhangsprinter/DCPDN">https://github.com/hezhangsprinter/DCPDN</a></p>
+<hr>
+<h1 id="Deep-Joint-Rain-Detection-and-Removal-from-a-Single-Image"><a href="#Deep-Joint-Rain-Detection-and-Removal-from-a-Single-Image" class="headerlink" title="Deep Joint Rain Detection and Removal from a Single Image"></a>Deep Joint Rain Detection and Removal from a Single Image</h1><blockquote>
+<p>单图像深度联合雨水检测与去除</p>
+</blockquote>
+<p>本文在现有的模型上，开发了一种多任务深度学习框架，学习了三个方面，包括二元雨条纹映射(binary rain streak map)，雨条纹外观和干净的背景。特别是新添加的二元雨条纹映射，其损失函数可以为神经网络提供额外的强特征。对于雨带积累现象（暴雨形成的如烟如雾的现象），采取循环雨检测和清除，以迭代和渐进方式清除。</p>
+<p>针对去雨问题已经提出了各种算法，当前算法主要存在的问题如下：因为雨水和背景纹理的内在重叠性，当前大部分算法会平滑没有雨区域的纹理细节；雨水在图像中引起的变化是复杂的，但是当前对雨水常用的模型没有很好的覆盖真是雨水图像中的一些重要因素，例如水气，雨水的不同形状，或方向；一个重要的信息： spatial contextual information 没有被考虑。</p>
+<p>为此该文章提出了一个新的模型用于去雨,思路大致如下： </p>
+<p>（1）首先提出了一个基于区域的雨水模型，在模型中使用了一个二值雨水图，如果该像素位置有可见雨，那么二值图中的值为1，否则为0。 </p>
+<p>（2）基于上面建立的模型，构建一个深度网络用于检测雨水和去除雨水。可以自动检测出雨水区域，对这些区域进行雨水去除。 </p>
+<p>（3）提出了一个回归雨水检测去除网络，a recurrent rain detection and removal network。</p>
+<h2 id="雨水模型及变化"><a href="#雨水模型及变化" class="headerlink" title="雨水模型及变化"></a>雨水模型及变化</h2><h3 id="常用雨水模型"><a href="#常用雨水模型" class="headerlink" title="常用雨水模型"></a>常用雨水模型</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/8.png" title="Optional title"></p>
+<p>这里B是没有雨水的图像，S是rain streak layer雨水层，O是有雨水的图像。基于该模型，去雨水被看做是两个信号的分离问题，基于观察到的O恢复B和S。</p>
+<p>这个模型有两个问题：</p>
+<p>（1）没有区分对待 heavy rain 和 light rain；</p>
+<p>（2）没有区分对待 rain and non-rain regions。</p>
+<h3 id="广义雨水模型"><a href="#广义雨水模型" class="headerlink" title="广义雨水模型"></a>广义雨水模型</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/9.png" title="Optional title"></p>
+<p>针对上述问题，提出了一个广义的雨水模型。</p>
+<p>引入的 R 是一个二值图，1表示该位置有雨，0表示没雨。</p>
+<h3 id="Rain-Accumulation-and-Heavy-Rain"><a href="#Rain-Accumulation-and-Heavy-Rain" class="headerlink" title="Rain Accumulation and Heavy Rain"></a>Rain Accumulation and Heavy Rain</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/10.png" title="Optional title"></p>
+<p>针对雨雾和问题，提出了上述模型来解决。</p>
+<p>上式中每个St表示雨纹相同即方向和形状类似。</p>
+<blockquote>
+<p>t is the overlapping streak numbers</p>
+</blockquote>
+<p>t表示图像中含有的雨纹个数，即方向和形状类似种类，其中B是原图，O是带雨的图片，其他的量代表雨滴带来的影响。S指叠加的雨滴的强度，R指含雨滴范围的一个 binary mask，A对雨雾进行建模。</p>
+<p>之所以将S、R分别描述并分别用网络预测，是为了避免只回归S影响了图中不含雨滴的部分，R实际上描述了雨滴存在的区域，这也是标题中rain detection的含义。t指的是图片中多个方向的雨叠加的效果，训练所用的合成雨的图片就是多次叠加的结果。最后A描述了一个图像整体的偏移，这是由大雨中远处大量雨滴叠加造成的类似雾的效果，实际算法中也用了去雾算法做处理。</p>
+<h2 id="其他-3"><a href="#其他-3" class="headerlink" title="其他"></a>其他</h2><h3 id="数据-2"><a href="#数据-2" class="headerlink" title="数据"></a>数据</h3><p>训练数据和测试方法上都是沿用之前工作的方法。训练数据都是使用不带雨的图片人工合成带雨的图片，并从图中抽取patch进行训练。在测试流程上，对于合成图片，主要比较衡量图片结构相似度的SSIM指标。对于真实环境的带雨图片，主要是视觉上的qualitative比较。</p>
+<h3 id="数据和代码是否开源"><a href="#数据和代码是否开源" class="headerlink" title="数据和代码是否开源"></a>数据和代码是否开源</h3><p>查询网页有提及会开源，但未找到。</p>
+<hr>
+<h1 id="Image-De-raining-Using-a-Conditional-Generative-Adversarial-Network"><a href="#Image-De-raining-Using-a-Conditional-Generative-Adversarial-Network" class="headerlink" title="Image De-raining Using a Conditional Generative Adversarial Network"></a>Image De-raining Using a Conditional Generative Adversarial Network</h1><blockquote>
+<p>基于条件生成对抗网络的图像去雨</p>
+</blockquote>
+<p>这篇论文提出一种基于cGAN网络的一种新的去雨网络。</p>
+<p>主要是试图使用具有强大的生成建模能力的条件GAN网络加上一个强制约束，即去雨图像必须与相应的背景图像不可区分。同时GAN网络的对抗损失提供了额外的正则化。同时，还提出了一种新的细化损失函数，旨在减少GAN网络引入的伪影。</p>
+<p>ID-CGAN主要由两个子网络组成：密集连接的生成器（generator）和多尺度的判别器(discriminator)。</p>
+<p>生成器子网络使用了密集连接网络。判别器主要通过多尺度池来捕获上下文信息。同时在GAN网络训练时会引入伪影，这里引入一个改进的感知损失作为额外的损失函数来去除伪影。</p>
+<h2 id="GAN目标函数"><a href="#GAN目标函数" class="headerlink" title="GAN目标函数"></a>GAN目标函数</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/11.png" title="Optional title"></p>
+<p>G为生成器，D是判别器。</p>
+<h2 id="对称结构Generator"><a href="#对称结构Generator" class="headerlink" title="对称结构Generator"></a>对称结构Generator</h2><p>在分离之后，新的域中的背景图像必须要转换回原来的域，这便要求了对称结构的使用。密集块体使强梯度流动成为可能，并提高了参数效率。此外，我们还引入了跨越密集块的跳跃连接，以有效地利用来自不同级别的特性，并保证更好的收敛性。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/12.png" title="Optional title"></p>
+<p>其中，CBLP是一组卷积层，后面依次是BN 、leaky ReLU激活函数和池化模块，括号内的数字表示每个块的输出特征映射的通道数。</p>
+<h2 id="多尺度Discriminator"><a href="#多尺度Discriminator" class="headerlink" title="多尺度Discriminator"></a>多尺度Discriminator</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/13.png" title="Optional title"></p>
+<p>前人工作发现，基于Patch的判别是有效的，但是仍然不能捕捉到足够的上下文全局信息。因此，需要一个更强大的判别器捕捉局部和全局信息来判断图像是真是假。</p>
+<h2 id="感知损失函数"><a href="#感知损失函数" class="headerlink" title="感知损失函数"></a>感知损失函数</h2><p>GANs训练中会引入伪影，于是引入感知损失来去除伪影。</p>
+<p>新的损失函数为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/14.png" title="Optional title"></p>
+<p>其中，每个像素的欧几里得损失为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/15.png" title="Optional title"></p>
+<p>感知损失为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/16.png" title="Optional title"></p>
+<p>对抗损失为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A8/17.png" title="Optional title"></p>
+<h2 id="其他-4"><a href="#其他-4" class="headerlink" title="其他"></a>其他</h2><h3 id="贡献-2"><a href="#贡献-2" class="headerlink" title="贡献"></a>贡献</h3><p>提出了一种基于cGAN网络的框架用于处理单幅图像去雨问题，同时不需要任何后续处理。</p>
+<p>提出了一个密集连接的生成器子网络。</p>
+<p>提出了一种多尺度鉴别器，利用局部信息和全局信息来判断去雨图像的真伪。</p>
+<h3 id="数据-3"><a href="#数据-3" class="headerlink" title="数据"></a>数据</h3><p>使用PS自建合成数据集。700张训练图，100张测试，256x256。50张真实世界图片。</p>
+<p>评价指标：PSNR、SSIM、UQI、VIF。</p>
+<h3 id="数据和代码是否开源-1"><a href="#数据和代码是否开源-1" class="headerlink" title="数据和代码是否开源"></a>数据和代码是否开源</h3><p>开源。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/hezhangsprinter/ID-CGAN">https://github.com/hezhangsprinter/ID-CGAN</a></p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/12/30/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/">http://example.com/2019/12/30/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/01/01/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/" title="“去雨”相关论文研读（二）"><span>< PreviousPost</span><br><span class="prevTitle">“去雨”相关论文研读（二）</span></a><a class="nextSlogan" href="/2019/12/25/%E2%80%9C%E4%B8%80%E5%9C%BA%E6%88%98%E4%BA%89%E2%80%9D/" title="“一场战争”"><span>NextPost ></span><br><span class="nextTitle">“一场战争”</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Attentive-Generative-Adversarial-Network-for-Raindrop-Removal-from-A-Single-Image"><span class="toc-number">1.</span> <span class="toc-text">Attentive Generative Adversarial Network for Raindrop Removal from A Single Image</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Generative-Network"><span class="toc-number">1.1.</span> <span class="toc-text">Generative Network</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Attentive-recurrent-Network"><span class="toc-number">1.1.1.</span> <span class="toc-text">Attentive-recurrent Network</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Contextual-Autoencoder"><span class="toc-number">1.1.2.</span> <span class="toc-text">Contextual Autoencoder</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Discriminative-Network"><span class="toc-number">1.2.</span> <span class="toc-text">Discriminative Network</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">1.3.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-number">1.3.2.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%92%8C%E6%95%B0%E6%8D%AE%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码和数据是否开源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Density-aware-Single-Image-De-reaining-using-a-Multi-stream-Dense-Network"><span class="toc-number">2.</span> <span class="toc-text">Density-aware Single Image De-reaining using a Multi-stream Dense Network</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DID-MDN"><span class="toc-number">2.1.</span> <span class="toc-text">DID-MDN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Residual-aware-Rain-density-Classifier"><span class="toc-number">2.1.1.</span> <span class="toc-text">Residual-aware Rain-density Classifier</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-stream-Dense-Network"><span class="toc-number">2.1.2.</span> <span class="toc-text">Multi-stream Dense Network</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-1"><span class="toc-number">2.2.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE-1"><span class="toc-number">2.2.2.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%92%8C%E6%95%B0%E6%8D%AE%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90-1"><span class="toc-number">2.2.3.</span> <span class="toc-text">代码和数据是否开源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Densely-Connected-Pyramid-Dehazing-Network"><span class="toc-number">3.</span> <span class="toc-text">Densely Connected Pyramid Dehazing Network</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pyramid-densely-connected-network"><span class="toc-number">3.1.</span> <span class="toc-text">Pyramid densely connected network</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#dense-block"><span class="toc-number">3.1.1.</span> <span class="toc-text">dense block</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#multi-level-pyramid-pooling-method"><span class="toc-number">3.1.2.</span> <span class="toc-text">multi-level pyramid pooling method</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%84%B6%E5%85%89%E4%BC%B0%E8%AE%A1"><span class="toc-number">3.1.3.</span> <span class="toc-text">自然光估计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E9%9B%BE%E5%9B%BE%E5%83%8F"><span class="toc-number">3.1.4.</span> <span class="toc-text">去雾图像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#discriminator"><span class="toc-number">3.1.5.</span> <span class="toc-text">discriminator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E6%B2%BF%E7%9A%84loss%E5%92%8C%E6%80%BBloss"><span class="toc-number">3.1.6.</span> <span class="toc-text">边沿的loss和总loss</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-2"><span class="toc-number">3.2.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%92%8C%E6%95%B0%E6%8D%AE%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90-2"><span class="toc-number">3.2.1.</span> <span class="toc-text">代码和数据是否开源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Deep-Joint-Rain-Detection-and-Removal-from-a-Single-Image"><span class="toc-number">4.</span> <span class="toc-text">Deep Joint Rain Detection and Removal from a Single Image</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%A8%E6%B0%B4%E6%A8%A1%E5%9E%8B%E5%8F%8A%E5%8F%98%E5%8C%96"><span class="toc-number">4.1.</span> <span class="toc-text">雨水模型及变化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E9%9B%A8%E6%B0%B4%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.1.1.</span> <span class="toc-text">常用雨水模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%BF%E4%B9%89%E9%9B%A8%E6%B0%B4%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.1.2.</span> <span class="toc-text">广义雨水模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rain-Accumulation-and-Heavy-Rain"><span class="toc-number">4.1.3.</span> <span class="toc-text">Rain Accumulation and Heavy Rain</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-3"><span class="toc-number">4.2.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE-2"><span class="toc-number">4.2.1.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C%E4%BB%A3%E7%A0%81%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90"><span class="toc-number">4.2.2.</span> <span class="toc-text">数据和代码是否开源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Image-De-raining-Using-a-Conditional-Generative-Adversarial-Network"><span class="toc-number">5.</span> <span class="toc-text">Image De-raining Using a Conditional Generative Adversarial Network</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#GAN%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">GAN目标函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E7%BB%93%E6%9E%84Generator"><span class="toc-number">5.2.</span> <span class="toc-text">对称结构Generator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E5%B0%BA%E5%BA%A6Discriminator"><span class="toc-number">5.3.</span> <span class="toc-text">多尺度Discriminator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">5.4.</span> <span class="toc-text">感知损失函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96-4"><span class="toc-number">5.5.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE-2"><span class="toc-number">5.5.1.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE-3"><span class="toc-number">5.5.2.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%92%8C%E4%BB%A3%E7%A0%81%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90-1"><span class="toc-number">5.5.3.</span> <span class="toc-text">数据和代码是否开源</span></a></li></ol></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

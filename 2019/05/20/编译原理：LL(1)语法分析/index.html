@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>编译原理：LL(1)语法分析 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">编译原理：LL(1)语法分析</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>05-20-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="编译原理"> 编译原理</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<h1 id="目标任务"><a href="#目标任务" class="headerlink" title="目标任务"></a>目标任务</h1><h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>完成以下描述赋值语句的 LL(1)文法的 LL(1)分析过程。</p>
+<p>G[A]: S-&gt;V=E<br>E-&gt;TE’<br>E’-&gt;ATE’|ε<br>T-&gt;FT’<br>T’-&gt;MFT’|ε<br>F-&gt; (E)|i<br>A-&gt;+|-<br>M-&gt;*|/<br>V-&gt;i</p>
+<h2 id="设计说明"><a href="#设计说明" class="headerlink" title="设计说明"></a>设计说明</h2><p>终结符号i为用户定义的简单变量，即标识符的定义。</p>
+<h2 id="设计要求"><a href="#设计要求" class="headerlink" title="设计要求"></a>设计要求</h2><ul>
+<li><p>(1)输入串应是词法分析的输出二元式序列，即某算术表达式“专题1”的输出结果。输出为输入串是否为该文法定义的算术表达式的判断结果;</p>
+</li>
+<li><p>(2)LL(1)分析过程应能发现输入串出错;</p>
+</li>
+<li><p>(3)设计两个测试用例(尽可能完备，正确和出错)，并给出测试结果;</p>
+</li>
+<li><p>(4)考虑根据LL(1)文法编写程序构造LL(1)分析表，并添加到你的LL(1)分析程序中。</p>
+</li>
+</ul>
+<hr>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="LL-1-分析"><a href="#LL-1-分析" class="headerlink" title="LL(1)分析"></a>LL(1)分析</h2><p>专题2中要求我们实现递归下降语法分析。在实践过程中，可以发现：这种带回溯的自顶向下的分析方法实际上是一种穷举的不断试探的过程，分析效率极低。</p>
+<p>实际上，递归下降分析在实际的编译程序中极少使用。</p>
+<p>相较于递归下降分析，LL(1)分析法又称预测分析法，是一种不带回溯的非递归自顶向下分析方法。LL(1)的含义是：第一个L表明自顶向下分析是从左向右扫描输入串，第2个L表明分析过程中将使用最左推导，1表明只需向右看一个符号便可决定如何推导，即选择哪个产生式(规则)进行推导。</p>
+<p>该方法的显著特点是使用<strong>显式栈</strong>，该算法在本质上就是<strong>用栈来显式地实现非递归版本的递归下降分析</strong>，或者说非递归版本的树的遍历的一个过程。</p>
+<h2 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h2><p>递归下降分析器的构造方法同样非常简单，就是为每一个非终结符寻找到FIRST集合和FOLLOW集合，并由这两个集合构造LL(1)分析表，最后根据分析表进行对指定的句子打印出分析栈的分析过程。</p>
+<p>需要注意的是，在进行递归下降分析之前需要对不是LL(1)的文法进行处理。</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/1.png" alt="图1" title="Optional title"></p>
+<h2 id="左递归的消除"><a href="#左递归的消除" class="headerlink" title="左递归的消除"></a>左递归的消除</h2><p>由于所给的文法为标准的LL（1）文法，这一步可省略。</p>
+<h2 id="FIRST集合"><a href="#FIRST集合" class="headerlink" title="FIRST集合"></a>FIRST集合</h2><p>FIRST(A)集合是非终结符号A的所有可能推导出的开头终结符或ε组成的集合。称FIRST(A)为A的开始符号集或首符号集。</p>
+<p>对于大部分文法而言，存在一个产生式存在多个候选式的情况，而选择哪一个候选式是不确定的，所以这就产生了回溯。回溯需要消耗大量的计算、存储空间，所以我们需要消除回溯。而消除回溯的其中一种方法叫作“预测”，即根据栈顶非终结符去预测后面的候选式，那预测方法就是求第一个非终结符，来判断是否和读头匹配，以达到预测的效果。</p>
+<p>计算FIRST集合需要经过以下步骤：</p>
+<ul>
+<li><p>（1）若X ∈ VT，则FIRST(X) = {X}；<br>【终结符自己就是自己的FIRST集合】</p>
+</li>
+<li><p>（2）若X ∈ VN，且有产生式X -&gt; a……， a ∈ VT，则a ∈ FIRST(X)；<br>【非终结符，选第一个终结符加入】</p>
+</li>
+<li><p>（3）若X ∈ VN，X -&gt; ε，则 ε ∈ FIRST(X)；<br>【能直接推出ε，ε加入FIRST】</p>
+</li>
+<li><p>（4）若X,Y1,Y2,……,Yn ∈ VN，而有产生式X -&gt; Y1,Y2,……,Yn。当Y1,Y2,……,Y(i-1)直接推出ε时，则FIRST(Y1) - ε, FIRST(Y2) - ε, …… , FIRST(Y(i-1) - ε) ,FIRST(Yi) 都包含在FIRST(X)中；<br>【位于中间的ε是不可加入进去】</p>
+</li>
+<li><p>（5）当（4）中所有Yi 都推出 ε时，则最后的FIRST(X) = FIRST(Y1) ∪ FIRST(Y2) ∪ …… ∪ FIRST(Yn) ∪ {ε}；</p>
+</li>
+</ul>
+<p>反复运用（2）-（5）步骤，直到每个符号的FIRST集合不再增大为止。</p>
+<p>对本专题所给的文法求FIRST集合的过程如下：<br>【1】First(S) = First(V) = First(i) = {i}<br>【2】First(E) = First(T) = First(F) = First(() + First(i) = {(,i}<br>【3】First(R) = First(A) + First(ε) = First(+) + First(-) + First(ε) = {+,-,井}<br>【4】First(T) = First(F) = First(() + First(i) = {(,i}<br>【5】First(Y) = First(M) + First(ε) = First(*) + First( + First(ε) = First(*) + ) + First(ε) = {*,/,井}<br>【6】First(F) = First(() + First(i) = {(,i}<br>【7】First(A) = First(+) + First(-) = {+,-}<br>【8】First(M) = First(*) + First( = First(*) + ) = {*,/}<br>【9】First(V) = First(i) = {i}</p>
+<p>注：为了方便代码的编写，对文法做如下字符的替换（之后所有用到如下规则的地方都做此替换，不再赘述）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E’ -&gt; R</span><br><span class="line">T’ -&gt; Y</span><br></pre></td></tr></table></figure>
+
+<h2 id="FOLLOW集合"><a href="#FOLLOW集合" class="headerlink" title="FOLLOW集合"></a>FOLLOW集合</h2><p>FOLLOW(A)集合是所有紧跟A之后的终结符或#所组成的集合（#是句尾的标志），称FOLLOW(A)是A的随符集。</p>
+<p>当某一非终结符的产生式中含有空产生式时，它的非空产生式右部的开始符号集两两不相交，并与在推导过程中紧跟该非终结符右部可能出现的终结符集也不相交，则仍可构造确定的自顶向下分析。因此，引入了文法符号的后跟符号集合FOLLOW。</p>
+<p>计算FOLLOW集合需要经过以下步骤：</p>
+<p>（1）对S，将井加入 FOLLOW(S)，然后再按后面的处理；</p>
+<p>（2）若B -&gt; aAb是G的产生式，则将FIRST(β)-ε加入FOLLOW(A)；</p>
+<p>（3）若B -&gt; aA是G的产生式，或B -&gt; aAb是G的产生式（b 多次推导后得到ε ），则将FOLLOW(B) 加入到FOLLOW(A) 。<br>【将B用aA替换之后，B后面紧跟的字符就是A后面紧跟的字符】</p>
+<p>反复使用（2）-（3）步骤，直到FOLLOW集合不再增大为止</p>
+<p>对本专题所给的文法求FIRST集合的过程如下：<br>【1】Follow(S): S-&gt;S = {井}<br>【2】Follow(E): S-&gt;V=E、S-&gt;(E) = {井,)}<br>【3】Follow(R): S-&gt;TR、S-&gt;(E)-&gt;(R) = {井,)}<br>【4】Follow(T): S-&gt;TR-&gt;T+、S-&gt;TR-&gt;T-、S-&gt;TR-&gt;Tε、S-&gt;(E)-&gt;(T) = {+,-,井,)}<br>【5】Follow(Y): S-&gt;TR-&gt;FYR-&gt;Y+、S-&gt;TR-&gt;FYR-&gt;Y-、S-&gt;FY、S-&gt;(E)-&gt;(Y) = {+,-,井,)}<br>【6】Follow(F): S-&gt;FY-&gt;F*、S-&gt;FY-&gt;F/、S-&gt;FY-&gt;Fε、S-&gt;TR-&gt;F+、S-&gt;TR-&gt;F-、S-&gt;(E)-&gt;(F) = {*,/,井,+,-,)}<br>【7】Follow(A): S-&gt;ATR-&gt;A(R、S-&gt;ATR-&gt;AiR = {(,i}<br>【8】Follow(M): S-&gt;MFY-&gt;M(Y、S-&gt;MFY-&gt;MiY = {(,i}<br>【9】Follow(V): S-&gt;V=E = {=}</p>
+<h2 id="根据FIRST集合和FOLLOW集合构造LL-1-分析表"><a href="#根据FIRST集合和FOLLOW集合构造LL-1-分析表" class="headerlink" title="根据FIRST集合和FOLLOW集合构造LL(1)分析表"></a>根据FIRST集合和FOLLOW集合构造LL(1)分析表</h2><p>设M[A][a]是一个二维数组，其中行A表示的是栈顶符号，a表示的读头下的符号（A为非终结符，a为终结符），它们存放的是当前状态下所使用的候选式（或存放出错标志，指出A不该面临a的输入），称该数组M为文法的LL(1)分析表。</p>
+<p>为了消除回溯，我们进行了FIRST集合和FOLLOW集合的求解。它们两个组合，达到了预测候选式的目的。为了使计算机比较好处理，把它们的预测结果统计成一张二维表。</p>
+<p>构造LL(1)分析表需要经过如下步骤：</p>
+<ul>
+<li><p>（1）对任意终结符号a ∈First(A)，将 A -&gt; a 填入M[A,a]；</p>
+</li>
+<li><p>（2）如果存在ε ∈First(A)，则对任意终结符号a ∈Follow(A)，将 A -&gt; a 填入M[A,a]；</p>
+</li>
+<li><p>（3）将所有没有定义的M[A,b]设置为出错。</p>
+</li>
+</ul>
+<p>对本专题所给的文法构造LL(1)分析表如下：</p>
+<p>|井|(|)|<em>|+|-|/|=|i<br>:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:<br>A|||||+|_|||<br>E||TR|||||||TR<br>F||(E)|||||||i<br>M||||</em>|||/||<br>R|ε||ε||ATR|ATR|||<br>S|||||||||V=E<br>T||FY|||||||FY<br>V|||||||||<br>Y|ε||ε|MFY|ε|ε|MFY||</p>
+<p>该分析表中未填入内容的位置则表示该位置的非终结符号无法预测后跟该位置的终结符号。如果匹配到这样的位置，则证明表达式出错。</p>
+<h2 id="根据LL-1-分析表进行预测分析"><a href="#根据LL-1-分析表进行预测分析" class="headerlink" title="根据LL(1)分析表进行预测分析"></a>根据LL(1)分析表进行预测分析</h2><p>构造好分析表之后，便可根据分析表进行预测分析。</p>
+<p>流程如下：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/2.png" alt="图2" title="Optional title"></p>
+<h2 id="文件结构及函数简介"><a href="#文件结构及函数简介" class="headerlink" title="文件结构及函数简介"></a>文件结构及函数简介</h2><p>本专题大部分文件和功能函数与专题1同名，具体的文件结构和功能函数简介见《编译原理：词法分析程序》。</p>
+<p>新增文件FirstAndFollow.h，内含的函数用作预测分析的准备工作，即求文法的First集合、求文法的Follow集合和构造分析表。</p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>详细的主函数流程如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化参数</span></span><br><span class="line">    initAll();</span><br><span class="line">    <span class="comment">//读取lab1中输出的二元组结果文件</span></span><br><span class="line">    readFile_Result();</span><br><span class="line">    <span class="comment">//读取lab1中输出的标识符结果文件</span></span><br><span class="line">    readFile_Identifier();</span><br><span class="line">    <span class="comment">//过滤读取结果，得到纯粹的标识符内容</span></span><br><span class="line">    getPureMorphemeAndSentence();</span><br><span class="line">    <span class="comment">//输出过滤后的语句</span></span><br><span class="line">    printSentenceInfo();</span><br><span class="line">    <span class="comment">//读取经过处理的LL(1)文法，求得包含所有的非终结符号的不重复集合</span></span><br><span class="line">    readFile_Formula();</span><br><span class="line">    <span class="comment">//求得文法的first集合和follow集合以及由此构造分析表，并写入txt文件中</span></span><br><span class="line">    getFirstAndFollow();</span><br><span class="line">    <span class="comment">//求得包含所有的终结符号的不重复集合</span></span><br><span class="line">    getAllVT();</span><br><span class="line">    <span class="comment">//根据first集合和follow集合求得该文法的LL(1)分析表</span></span><br><span class="line">    getAnalyseTable();</span><br><span class="line">    <span class="comment">//进行预测分析</span></span><br><span class="line">    <span class="keyword">if</span>(getAnalyseResult())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配成功!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="comment">//匹配成功，输出分析栈结果</span></span><br><span class="line">        printAnalyseResultInfo();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//匹配失败，输出错误位置信息</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配失败!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        printError();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>本专题要求的输入是专题1输出的词素结果二元组和标识符信息，读取函数介绍见《编译原理：递归下降分析》。</p>
+<p>本次分析需要操作各种符号进行匹配比对，所以使用最多的操作就是查找和字符比较。为此，设置以下结构来存储该过程中的数据。使用C++ STL的原因是如map等的结构自带排序，且键值对的存储方式对于遍历操作十分友好；再如string，自带字符串比较函数compare，对于匹配操作也很友好。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//产生式</span></span><br><span class="line"><span class="built_in">multimap</span>&lt;<span class="keyword">char</span>, <span class="built_in">string</span>&gt; Sentence;</span><br><span class="line"><span class="comment">//产生式反向</span></span><br><span class="line"><span class="built_in">multimap</span>&lt;<span class="built_in">string</span>, <span class="keyword">char</span>&gt; ReverseSentence;</span><br><span class="line"><span class="comment">//非终结符集合</span></span><br><span class="line"><span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; VN;</span><br><span class="line"><span class="comment">//终结符集合</span></span><br><span class="line"><span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; VT;</span><br><span class="line"><span class="comment">//读取产生式的等号左部内容，一般都是单字符，所以用char</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">char</span>&gt; Left;</span><br><span class="line"><span class="comment">//读取产生式的等号右部内容，长度不定，使用string</span></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; Right;</span><br><span class="line"><span class="comment">//非终结符能否推出空</span></span><br><span class="line"><span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="keyword">bool</span>&gt; VtToEmpty;</span><br><span class="line"><span class="comment">//求First和Follow集合是否成功的标志</span></span><br><span class="line"><span class="keyword">bool</span> IfFirstOrFollowSuccess;</span><br><span class="line"><span class="comment">//First集合，char对应的是每个非终结符号，set&lt;char&gt;对应每个非终结符号的每个First集合中的内容</span></span><br><span class="line"><span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt; FirstSet;</span><br><span class="line"><span class="comment">//Follow集合，解释同上</span></span><br><span class="line"><span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt; FollowSet;</span><br><span class="line"><span class="comment">//文法的开始符号</span></span><br><span class="line"><span class="keyword">char</span> Begin;</span><br><span class="line"><span class="comment">//LL(1)分析表</span></span><br><span class="line"><span class="built_in">string</span> AnalyseTable[<span class="number">100</span>][<span class="number">100</span>];</span><br><span class="line"><span class="comment">//分析过程四元组</span></span><br><span class="line"><span class="built_in">string</span> AnalyseProcess[<span class="number">100</span>][<span class="number">4</span>];</span><br><span class="line"><span class="comment">//分析步骤计数</span></span><br><span class="line"><span class="keyword">int</span> step;</span><br><span class="line"><span class="comment">//分析栈</span></span><br><span class="line"><span class="built_in">stack</span>&lt;<span class="built_in">string</span>&gt; AnalyseStack;</span><br></pre></td></tr></table></figure>
+
+<p>对于first集合和follow集合，根据上面介绍的方法进行循环求解即可。需要注意的是要设置跳出的条件：当某一轮循环之后的集合大小与内容和上一轮循环无变化，则表明寻找完成，需要跳出。</p>
+<p>根据first集合和follow集合构造分析表时需要注意的是，对于非终结符号X直接推导为单个终结符号a的情况，有两种处理情况：当该非终结符号仅有一种推导出单终结符号的情况，M[X,a]可写作{a}；当该非终结符号有多于一种的推导出单终结符号的情况（设所有情况为a1……ai），可按照每个终结符号的具体情况去设置，即<strong>M[X,ai]={ai}**，这种做法与第一种情况相同，或者使用另一个符号b去替代所有情况，即</strong>M[X,ai]={b}，这种做法需要将该非终结符号能产生的在所给语句中的所有非终结符号替换为b**。本专题中仅出现了第一种情况，故按照第一种情况去处理即可。</p>
+<p>预测分析程序的流程见上面的流程图，具体代码及注释如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">getAnalyseResult</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//#入栈</span></span><br><span class="line">    AnalyseStack.push(<span class="string">&quot;#&quot;</span>);</span><br><span class="line">    <span class="comment">//开始符号入栈</span></span><br><span class="line">    <span class="built_in">string</span> temp=&amp;Begin;</span><br><span class="line">    AnalyseStack.push(temp);</span><br><span class="line">    <span class="comment">//存储当前语句匹配位置的非终结符号，同a</span></span><br><span class="line">    <span class="built_in">string</span> pFormula=<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="comment">//存储当前栈顶</span></span><br><span class="line">    <span class="built_in">string</span> X=<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">        <span class="comment">//写入分析过程</span></span><br><span class="line">        AnalyseProcess[step][<span class="number">0</span>]=to_string(step+<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">int</span> stackSize=AnalyseStack.size();</span><br><span class="line">        <span class="built_in">string</span> stackTemp[<span class="number">100</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;stackSize;i++)&#123;</span><br><span class="line">            stackTemp[i]=AnalyseStack.top();</span><br><span class="line">            AnalyseStack.pop();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=stackSize<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">            AnalyseStack.push(stackTemp[i]);</span><br><span class="line">            AnalyseProcess[step][<span class="number">1</span>]+=stackTemp[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//X记录当前栈顶</span></span><br><span class="line">        X=AnalyseStack.top();</span><br><span class="line">        <span class="comment">//pFormula记录语句当前匹配位置的内容</span></span><br><span class="line">        <span class="keyword">if</span>(matchIdentifier())&#123;</span><br><span class="line">            pFormula=<span class="string">&quot;i&quot;</span>;</span><br><span class="line">            pMorpheme-=<span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            pFormula=morpheme[pMorpheme];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//写入分析过程</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=pMorpheme;k&lt;morphemeCounter;k++)&#123;</span><br><span class="line">            AnalyseProcess[step][<span class="number">2</span>]+=morpheme[k];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//X是终结符号？</span></span><br><span class="line">        <span class="keyword">if</span>(matchVT(X))&#123;</span><br><span class="line">            <span class="comment">//X=pFormula</span></span><br><span class="line">            <span class="comment">//X==#？</span></span><br><span class="line">            <span class="keyword">if</span>(!X.compare(<span class="string">&quot;#&quot;</span>))&#123;</span><br><span class="line">                <span class="comment">//X=#</span></span><br><span class="line">                <span class="comment">//X==pFormula？</span></span><br><span class="line">                <span class="keyword">if</span>(!X.compare(pFormula))&#123;</span><br><span class="line">                    <span class="comment">//X=pFormula</span></span><br><span class="line">                    <span class="comment">//写入分析过程</span></span><br><span class="line">                    AnalyseProcess[step][<span class="number">3</span>]+=<span class="string">&quot;Success&quot;</span>;</span><br><span class="line">                    step+=<span class="number">1</span>;</span><br><span class="line">                    <span class="comment">//分析成功</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="comment">//X!=pFormula</span></span><br><span class="line">                    <span class="comment">//分析失败</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//X==pFormula？</span></span><br><span class="line">            <span class="keyword">if</span>(!X.compare(pFormula))&#123;</span><br><span class="line">                <span class="comment">//X=pFormula,当前符号匹配成功，记录步数</span></span><br><span class="line">                step+=<span class="number">1</span>;</span><br><span class="line">                <span class="comment">//栈顶符号出栈</span></span><br><span class="line">                AnalyseStack.pop();</span><br><span class="line">                <span class="comment">//当前匹配语句指针后移</span></span><br><span class="line">                pMorpheme+=<span class="number">1</span>;</span><br><span class="line">                <span class="comment">//继续分析</span></span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//分析失败</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//M[X,a]有产生式？</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(ifHasFormula(X, pFormula))&#123;</span><br><span class="line">            <span class="comment">//M[X,a]有产生式，查询并取出内容</span></span><br><span class="line">            <span class="built_in">string</span> f=getFormula(X, pFormula);</span><br><span class="line">            <span class="comment">//栈顶符号出栈</span></span><br><span class="line">            AnalyseStack.pop();</span><br><span class="line">            <span class="comment">//写入分析过程</span></span><br><span class="line">            AnalyseProcess[step][<span class="number">3</span>]+=X+<span class="string">&quot;-&gt;&quot;</span>+f;</span><br><span class="line">            <span class="comment">//将M[X,a]的内容反序入栈</span></span><br><span class="line">            <span class="keyword">if</span>(!f.compare(<span class="string">&quot;ε&quot;</span>))&#123;</span><br><span class="line">                step+=<span class="number">1</span>;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=f.length()<span class="number">-1</span>;i&gt;=<span class="number">0</span>;i--)&#123;</span><br><span class="line">                <span class="keyword">char</span> ff=f[i];</span><br><span class="line">                <span class="built_in">string</span> fff=<span class="string">&quot;&quot;</span>;</span><br><span class="line">                fff+=ff;</span><br><span class="line">                AnalyseStack.push(fff);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//记录步数</span></span><br><span class="line">            step+=<span class="number">1</span>;</span><br><span class="line">            <span class="comment">//继续分析</span></span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//分析失败</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="结果测试"><a href="#结果测试" class="headerlink" title="结果测试"></a>结果测试</h2><p>首先依据所给文法写出一正确的语句：</p>
+<pre><code>var_a=((var_b+var_c*var_d)/(var_e-var_f/var_g))/var_i</code></pre>
+<p>将此表达式写入专题1中的SourceProgram.txt文件，运行专题1程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/3.png" alt="图3" title="Optional title"></p>
+<p>查看标识符文件Identifier.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/4.png" alt="图4" title="Optional title"></p>
+<p>查看词素二元组文件ResultofLexicalAnalysis.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/5.png" alt="图5" title="Optional title"></p>
+<p>可以看到对于专题1来说，上述语句是符合要求的。</p>
+<p>接下来运行本专题的LL(1)程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/6.png" alt="图6" title="Optional title"><br><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/7.png" alt="图7" title="Optional title"></p>
+<p>上述测试结果证明了两个程序可按设计本意顺利完成各项功能。</p>
+<p>对于本专题来说，还有一个重要的功能是FIRST集合和FOLLOW集合的求解以及分析表的构造。对于此功能，文法输入文件为Formula.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/8.png" alt="图8" title="Optional title"></p>
+<p>该文法输入文件的格式是：产生式的左右部以单空格区分；每一行仅含有一个单产生式；每一个字符代表一个终结符号或非终结符号，无双字符符号；将所有的大写字母看作是非终结符号，除此之外的所有符号看作终结符号；以“$”标志文件结束。</p>
+<p>所求得的FIRST集合和FOLLOW集合输出到FirstAndFollow.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/9.png" alt="图9" title="Optional title"></p>
+<p>构造好的分析表输出到AnalyseTable.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/10.png" alt="图10" title="Optional title"></p>
+<p>综上，该程序的输入有二：一是专题1所输出的二元组文件，另一是经过手工处理的LL(1)文法内容文件。而输出有三：一是控制台输出分析结果：成功匹配则输出分析过程，失败匹配则输出出错位置；另一是输出所求得的FIRST集合和FOLLOW集合；再一是输出所构造的分析表。</p>
+<p>接下来，修改我们所给出的正确的语句，使它变得”错误”。当然这里所说的错误指的是在本专题的情景下是错误的。这些语句无论如何修改，都必须符合专题1的情景。</p>
+<ul>
+<li><p>(1)var_a+var_error=((var_b+var_c*var_d)/(var_e-var_f/var_g))/var_i</p>
+</li>
+<li><p>(2)var_a==((var_b+var_c*var_d)/(var_e-var_f/var_g))/var_i</p>
+</li>
+<li><p>(3)var_a=((var_b+var_c*var_d)=(var_e-var_f/var_g))/var_i</p>
+</li>
+</ul>
+<p>标示出来的是我们添加的错误。</p>
+<p>分别对如上情形进行测试：</p>
+<ul>
+<li>（1）:</li>
+</ul>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/11.png" alt="图11" title="Optional title"></p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/12.png" alt="图12" title="Optional title"></p>
+<ul>
+<li>（2）:</li>
+</ul>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/13.png" alt="图13" title="Optional title"></p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/14.png" alt="图14" title="Optional title"></p>
+<ul>
+<li>（3）:</li>
+</ul>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/15.png" alt="图15" title="Optional title"></p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/3/16.png" alt="图16" title="Optional title"></p>
+<p>根据上述结果可以看出，本程序可以实现所给LL（1）文法的LL(1)语法分析，并能指出具体错误的位置。</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9ALL(1)%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/">http://example.com/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9ALL(1)%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90/" title="编译原理：算符优先分析"><span>< PreviousPost</span><br><span class="prevTitle">编译原理：算符优先分析</span></a><a class="nextSlogan" href="/2019/05/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9B%9B%EF%BC%9A%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/" title="操作系统四：页面置换算法"><span>NextPost ></span><br><span class="nextTitle">操作系统四：页面置换算法</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">目标任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E"><span class="toc-number">1.2.</span> <span class="toc-text">设计说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%A6%81%E6%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">设计要求</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">2.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#LL-1-%E5%88%86%E6%9E%90"><span class="toc-number">2.1.</span> <span class="toc-text">LL(1)分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="toc-number">2.2.</span> <span class="toc-text">设计思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A6%E9%80%92%E5%BD%92%E7%9A%84%E6%B6%88%E9%99%A4"><span class="toc-number">2.3.</span> <span class="toc-text">左递归的消除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FIRST%E9%9B%86%E5%90%88"><span class="toc-number">2.4.</span> <span class="toc-text">FIRST集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FOLLOW%E9%9B%86%E5%90%88"><span class="toc-number">2.5.</span> <span class="toc-text">FOLLOW集合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AEFIRST%E9%9B%86%E5%90%88%E5%92%8CFOLLOW%E9%9B%86%E5%90%88%E6%9E%84%E9%80%A0LL-1-%E5%88%86%E6%9E%90%E8%A1%A8"><span class="toc-number">2.6.</span> <span class="toc-text">根据FIRST集合和FOLLOW集合构造LL(1)分析表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AELL-1-%E5%88%86%E6%9E%90%E8%A1%A8%E8%BF%9B%E8%A1%8C%E9%A2%84%E6%B5%8B%E5%88%86%E6%9E%90"><span class="toc-number">2.7.</span> <span class="toc-text">根据LL(1)分析表进行预测分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%8F%8A%E5%87%BD%E6%95%B0%E7%AE%80%E4%BB%8B"><span class="toc-number">2.8.</span> <span class="toc-text">文件结构及函数简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">2.9.</span> <span class="toc-text">代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E6%B5%8B%E8%AF%95"><span class="toc-number">2.10.</span> <span class="toc-text">结果测试</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

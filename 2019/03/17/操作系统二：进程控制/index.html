@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>操作系统二：进程控制 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">操作系统二：进程控制</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>03-17-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="操作系统"> 操作系统</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！<br>代码、文章及图片挂载地址：<a target="_blank" rel="noopener" href="https://github.com/MoyangSensei/OS">https://github.com/MoyangSensei/OS</a></p>
+</blockquote>
+<h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><ul>
+<li><p>1 进程的创建：Linux中，载入内存并执行程序映像的操作与创建一个新进程的操作是分离的。将程序映像载入内存，并开始运行它，这个过程称为运行一个新的程序，相应的系统调用称为exec系统调用。而创建一个新的进程的系统调用是fork系统调用。</p>
+</li>
+<li><p>2 exec系统调用：execl()将path所指路径的映像载入内存，arg是它的第一个参数。参数可变长。参数列表必须以NULL结尾。通常execl()不会返回。成功的调用会以跳到新的程序入口点作为结束。发生错误时，execl()返回-1，并设置errno值。</p>
+</li>
+<li><p>3 fork系统调用：成功调用fork()会创建一个新的进程，它与调用fork()的进程大致相同。发生错误时，fork()返回-1，并设置errno值。</p>
+</li>
+<li><p>4 终止进程：exit()、段地址错误、kill -9</p>
+</li>
+<li><p>5 进程挂起：pause()。函数pause会把进程挂起，直到接收到信号。在信号接收后，进程会从pause函数中退出，继续运行。</p>
+</li>
+<li><p>5 等待子进程中断或结束：wait()</p>
+</li>
+<li><p>6 vim常用命令</p>
+</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/0.png" alt="vim常用命令" title="Optional title"></p>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><ul>
+<li>1 打开一个vi进程。通过ps命令以及选择合适的参数，只显示名字为vi的进程。寻找vi进程的父进程，直到init进程为止。记录过程中所有进程的ID和父进程ID。将得到的进程树和由pstree命令的得到的进程树进行比较。</li>
+</ul>
+<ul>
+<li>2 编写程序，首先使用fork系统调用，创建子进程。在父进程中继续执行空循环操作；在子进程中调用exec打开vi编辑器。然后在另外一个终端中，通过ps –Al命令、ps aux或者top等命令，查看vi进程及其父进程的运行状态，理解每个参数所表达的意义。选择合适的命令参数，对所有进程按照cpu占用率排序。</li>
+</ul>
+<ul>
+<li>3 使用fork系统调用，创建如下进程树，并使每个进程输出自己的ID和父进程的ID。观察进程的执行顺序和运行状态的变化。</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/00.png" title="Optional title"></p>
+<ul>
+<li>4 修改上述进程树中的进程，使得所有进程都循环输出自己的ID和父进程的ID。然后终止p2进程(分别采用kill -9 、自己正常退出exit()、段错误退出)，观察p1、p3、p4、p5进程的运行状态和其他相关参数有何改变。</li>
+</ul>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="1"><a href="#1" class="headerlink" title="1"></a>1</h2><ul>
+<li><p>（1）创建vi进程：启动Linux终端，直接输入“vi”并回车就可进入vi界面。</p>
+</li>
+<li><p>（2）由于我们需要寻找到刚才所打开的进程的PID。值得注意的是，在本题目中我们所要寻找的进程非常的容易寻见，因为在我们运行Linux的时候，并没有进行其他的操作，即此时并没有特别多的进程在运行。此时直接使用如下命令：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ps -A</span><br></pre></td></tr></table></figure>
+
+<p>然后直接在所有进程中人工匹配进程名即可。</p>
+<p>但我们都知道，实际情况并不是理想的。我们需要一条命令，通过进程的名称帮助我们匹配和查找进程的具体信息。首先我们用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pgrep [str] </span><br></pre></td></tr></table></figure>
+
+<p>进行模糊匹配，找到匹配该特征串的进程ID，再根据进程ID显示指定的进程信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ps --pid [pid]；</span><br></pre></td></tr></table></figure>
+
+<p>因为查找出来的进程ID需要被作为参数传递给ps命令，故使用xargs命令，通过管道符号连接。最后我们需要进程的详细信息，故需要加上-u参数。</p>
+<p>综上，如果我们需要通过名称“vi”来匹配查找某些进程的具体信息，则可以使用以下的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pgrep vi | xargs ps -u --pid</span><br></pre></td></tr></table></figure>
+
+<p>于是，我们启动另一个终端，输入上述命令，就可以在已经进行过名称匹配的进程中查找我们需要的内容。</p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/1.1.png" alt="图1.1" title="Optional title"></p>
+<p>如上图标注，我们要寻找的vi的进程号为42907。</p>
+<ul>
+<li>（3）寻找vi进程的父进程，我们需要使用它的进程号并使用如下命令：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ps -ef |grep pid</span><br></pre></td></tr></table></figure>
+
+<p>其中，ps命令将某个进程显示出来，它是LINUX下最常用的也是非常强大的进程查看命令；grep命令是的功能查找，它是一种强大的文本搜索工具，能使用正则表达式搜索文本，并把匹配的行打印出来，其全称是Global Regular Expression；而中间的“|”是管道命令，是指ps命令与grep同时执行。</p>
+<p>通过多步查找，直到查找到<strong>init进程</strong>，其进程号为<strong>1</strong>。</p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/1.2.png" alt="图1.2" title="Optional title"></p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/1.3.png" alt="图1.3" title="Optional title"></p>
+<ul>
+<li>（4）我们可以使用如下命令来查看进程树，并打印每个进程的PID：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># pstree -p</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/1.4.png" alt="图1.4" title="Optional title"></p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/1.5.png" alt="图1.5" title="Optional title"></p>
+<p>根据图中标注，我们可以看到vi进程的进程树为：<strong>1 -&gt; 953 -&gt; 1209 -&gt; 1360 -&gt; 42888 -&gt; 42894 -&gt; 42907</strong>，与上面的结果完全一致。</p>
+<h2 id="2"><a href="#2" class="headerlink" title="2"></a>2</h2><ul>
+<li>（1）根据题意编写代码如下：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;sys/types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;unistd.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdlib.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> p1,p2;</span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>((p1=fork()) == <span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">if</span>(!p1)&#123;</span><br><span class="line">        <span class="keyword">while</span>((p2=fork()) == <span class="number">-1</span>);</span><br><span class="line">        <span class="comment">//使用进程2打开vi</span></span><br><span class="line">        <span class="keyword">if</span>(!p2)&#123;</span><br><span class="line">            <span class="keyword">int</span> ret;</span><br><span class="line">            ret = execlp(<span class="string">&quot;vi&quot;</span>,<span class="string">&quot;&quot;</span>,<span class="literal">NULL</span>);</span><br><span class="line">            <span class="keyword">if</span> (ret == <span class="number">-1</span>)</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;ERROR!\n&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="comment">//进程1设置为无限循环</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>（2）使用<strong>ps -Al</strong>命令查看信息，结果如下：</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/2.1.png" alt="图2.1" title="Optional title"></p>
+<p>参数如下图所示：</p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/2.11.png" alt="图2.2" title="Optional title"></p>
+<p>这些参数所表示的意义为：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">F</td>
+<td align="center">flag，4表示用户为超级用户</td>
+</tr>
+<tr>
+<td align="center">S</td>
+<td align="center">stat，状态</td>
+</tr>
+<tr>
+<td align="center">PID</td>
+<td align="center">进程ID</td>
+</tr>
+<tr>
+<td align="center">PPID</td>
+<td align="center">父进程ID</td>
+</tr>
+<tr>
+<td align="center">C</td>
+<td align="center">CPU使用资源的百分比</td>
+</tr>
+<tr>
+<td align="center">PRI</td>
+<td align="center">priority，优先级</td>
+</tr>
+<tr>
+<td align="center">NI</td>
+<td align="center">Nice值</td>
+</tr>
+<tr>
+<td align="center">ADDR</td>
+<td align="center">核心功能，指出该进程在内存的哪一部分</td>
+</tr>
+<tr>
+<td align="center">SZ</td>
+<td align="center">用掉的内存的大小</td>
+</tr>
+<tr>
+<td align="center">WCHAN</td>
+<td align="center">当前进程是否正在运行，若为“-”表示正在进行</td>
+</tr>
+<tr>
+<td align="center">TTY</td>
+<td align="center">登陆者的终端位置</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">用掉的CPU的时间</td>
+</tr>
+<tr>
+<td align="center">CMD</td>
+<td align="center">所执行的指令</td>
+</tr>
+</tbody></table>
+<ul>
+<li>（3）使用<strong>ps -aux</strong>命令查看信息，结果如下：</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/2.2.png" alt="图2.3" title="Optional title"></p>
+<p>参数如下图所示：</p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/2.22.png" alt="图2.4" title="Optional title"></p>
+<p>这些参数所表示的意义为：</p>
+<table>
+<thead>
+<tr>
+<th align="center">参数名</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">USER</td>
+<td align="center">进程的属主</td>
+</tr>
+<tr>
+<td align="center">PID</td>
+<td align="center">进程ID</td>
+</tr>
+<tr>
+<td align="center">PPID</td>
+<td align="center">父进程ID</td>
+</tr>
+<tr>
+<td align="center">%CPU</td>
+<td align="center">进程占用的CPU百分比</td>
+</tr>
+<tr>
+<td align="center">%MEM</td>
+<td align="center">占用内存的百分比</td>
+</tr>
+<tr>
+<td align="center">NI</td>
+<td align="center">NICE值，数值大，表示较少占用CPU时间</td>
+</tr>
+<tr>
+<td align="center">VSZ</td>
+<td align="center">发进程使用的虚拟内存量（KB）</td>
+</tr>
+<tr>
+<td align="center">RSS</td>
+<td align="center">该进程占用的固定内存量（KB）（驻留中页的数量）</td>
+</tr>
+<tr>
+<td align="center">TTY</td>
+<td align="center">该进程在哪个终端上运行，若与终端无关，则显示“？”；若为pts/0等，则表示由网络连接主机进程</td>
+</tr>
+<tr>
+<td align="center">WCHAN</td>
+<td align="center">当前进程是否正在进行，若为“-”表示正在进行</td>
+</tr>
+<tr>
+<td align="center">START</td>
+<td align="center">该进程的启动时间</td>
+</tr>
+<tr>
+<td align="center">TIME</td>
+<td align="center">占用CPU的时间</td>
+</tr>
+<tr>
+<td align="center">COMMAND</td>
+<td align="center">命令的名称和参数</td>
+</tr>
+</tbody></table>
+<h2 id="3"><a href="#3" class="headerlink" title="3"></a>3</h2><ul>
+<li>（1）由题图可编写如下程序：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;sys/types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;unistd.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdlib.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> p1,p2,p3,p4,p5;</span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>((p1=fork()) == <span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">if</span>(!p1)&#123;</span><br><span class="line">        <span class="keyword">while</span>((p2=fork()) == <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!p2)&#123;</span><br><span class="line">            <span class="keyword">while</span> ((p4=fork())==<span class="number">-1</span>);</span><br><span class="line">            <span class="keyword">if</span> (!p4)&#123;</span><br><span class="line">                <span class="built_in">printf</span>(<span class="string">&quot;Node p4 is p2&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span> ((p5=fork())==<span class="number">-1</span>);</span><br><span class="line">                <span class="keyword">if</span> (!p5)&#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;Node p5 is p2&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Node p2 is p1&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">while</span>((p3=fork()) == <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!p3)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Node p3 is p1&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Node p1 is parent with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>（2）分别运行两次该程序，可发现它们的输出顺序是不同的。或者说是随机的，但这个随机是在满足如上所示的进程树的情况下的“随机”，且仅是一个节点的左右节点会出现顺序的随机，不会出现“越级”的随机。</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/3.png" alt="图3.1" title="Optional title"></p>
+<h2 id="4"><a href="#4" class="headerlink" title="4"></a>4</h2><ul>
+<li>（1）根据第三题的代码修改，为每个进程的输出加上无限循环**while(1)**即可：</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdio.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;sys/types.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;unistd.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stdlib.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> p1,p2,p3,p4,p5;</span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>((p1=fork()) == <span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">if</span>(!p1)&#123;</span><br><span class="line">        <span class="keyword">while</span>((p2=fork()) == <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!p2)&#123;</span><br><span class="line">            <span class="keyword">while</span> ((p4=fork())==<span class="number">-1</span>);</span><br><span class="line">            <span class="keyword">if</span> (!p4)&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">                    <span class="built_in">printf</span>(<span class="string">&quot;Node p4 is p2&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">        sleep(<span class="number">2</span>);&#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">while</span> ((p5=fork())==<span class="number">-1</span>);</span><br><span class="line">                <span class="keyword">if</span> (!p5)&#123;</span><br><span class="line">            <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">                        <span class="built_in">printf</span>(<span class="string">&quot;Node p5 is p2&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">                sleep(<span class="number">2</span>);&#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Node p2 is p1&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">        sleep(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//exit退出进程</span></span><br><span class="line">        <span class="comment">//exit(0);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//使用段地址错误退出进程</span></span><br><span class="line">        <span class="comment">//int *ptr = (int *)0;</span></span><br><span class="line">        <span class="comment">//*ptr = 100;</span></span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">while</span>((p3=fork()) == <span class="number">-1</span>);</span><br><span class="line">        <span class="keyword">if</span>(!p3)&#123;</span><br><span class="line">        <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Node p3 is p1&#x27;s child with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">        sleep(<span class="number">2</span>);&#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Node p1 is parent with pid %d, it&#x27;s parent pid %d.\n&quot;</span>,getpid(),getppid());</span><br><span class="line">    sleep(<span class="number">2</span>);&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同第三题一样，它们内部的输出顺序是由略微不同的，但整体的输出是5个节点全部输出完成之后再进行下一回合的输出。sleep函数用于减慢输出速度便于观察。</p>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/4.1.png" alt="图4.1" title="Optional title"></p>
+<ul>
+<li>（2）使用kill -9终止进程2。首先，kill是Linux里非常常用的一个命令，其作用如同字面意思一样，用来“杀死”进程。而kill -n中的数字n表示信号编号(signnum)。默认参数下，kill发送SIGTERM（15）信号给进程，告诉进程需要被关闭，请自行停止运行并退出。而kill -9 发送SIGKILL信号给进程，告诉进程，你被终结了，请立刻退出。TERM(或数字9）表示“无条件终止”；因此 kill - 9 表示强制杀死该进程；与SIGTERM相比，这个信号不能被捕获或忽略，同时接收这个信号的进程在收到这个信号时不能执行任何清理。</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/4.2.png" alt="图4.2" title="Optional title"></p>
+<ul>
+<li>（3）使用exit()终止进程2。exit()函数为退出函数，将其放入p2的循环中即可。</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/4.3.png" alt="图4.3" title="Optional title"></p>
+<ul>
+<li>（4）使用段地址错误终止进程2。段错误就是指访问的内存超出了系统所给这个程序的内存空间，如（1）中代码所示，我们为进程2的无限循环加上一个“野指针”即可达到目的。</li>
+</ul>
+<p><img src="/images/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/lab2/4.4.png" alt="图4.4" title="Optional title"></p>
+<ul>
+<li>（5）可以发现，通过各种方式“杀死”进程2之后，进程2不再存在，其子程序进程4和5却仍然存在，并能完成输出信息的任务，但其PPID变为1号进程的PPID。这是因为，调用fork产生一个子进程，同时父进程退出。我们所有后续工作都在子进程中完成。这样做我们可以交出控制台的控制权,并为子进程作为进程组长作准备;由于父进程已经先于子进程退出，会造成子进程没有父进程，变成一个孤儿进程（orphan）。<strong>每当系统发现一个孤儿进程，就会自动由1号进程收养它，这样，原先的子进程就会变成1号进程的子进程，即1360号进程。</strong></li>
+</ul>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/03/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BA%8C%EF%BC%9A%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6/">http://example.com/2019/03/17/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BA%8C%EF%BC%9A%E8%BF%9B%E7%A8%8B%E6%8E%A7%E5%88%B6/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/04/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%89%EF%BC%9A%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" title="操作系统三：同步问题"><span>< PreviousPost</span><br><span class="prevTitle">操作系统三：同步问题</span></a><a class="nextSlogan" href="/2019/03/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%80%EF%BC%9A%E5%88%9D%E6%AD%A5/" title="操作系统一：初步"><span>NextPost ></span><br><span class="nextTitle">操作系统一：初步</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">基础知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">2.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">3.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1"><span class="toc-number">3.1.</span> <span class="toc-text">1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2"><span class="toc-number">3.2.</span> <span class="toc-text">2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">3.3.</span> <span class="toc-text">3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4"><span class="toc-number">3.4.</span> <span class="toc-text">4</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

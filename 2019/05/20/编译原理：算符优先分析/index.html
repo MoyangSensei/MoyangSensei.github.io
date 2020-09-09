@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>编译原理：算符优先分析 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">编译原理：算符优先分析</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>05-20-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="编译原理"> 编译原理</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<blockquote>
+<p>今天是个更博的好日子。</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>至此，编译原理实验已经写到第四个实验了。</p>
+<p>回想起之前在学期刚开始之前，都说这门课的难度非常之高。现在是教学周第十三周，那么也就没几周就<del>又</del>要进行考试了。要说我对这门课程的看法，那就是“痛并快乐着”。</p>
+<p>这门课程的实验，讲实话，是我到目前为止学到的课程的课程实验中最有用的。对我个人而言，只有做了这些实验才明白了到底学了些什么东西。<del>大概上课都在跑神，什么都没听懂233333</del></p>
+<p>而且这些实验的设置对于我这种养成癖好的人来说简直是太有成就感了！第一个实验的结果在之后的实验中都会被用到，这无疑增加了我在进行所有实验时的综合考量：我要把数据结构写成什么样子才能在之后的实验中好用？我要用什么样的方式展示这几次实验之间的关联？这样的话，我每次在写实验的时候，仿佛写的不是一个实验<del>大概是写编译原理这本书233333</del>。这根本就不是一次次无生命的博客写作，而是我倾注了心血的杰作<del>女朋友</del>!</p>
+<p>作为一个大三的、今后上学无望的菜鸟，我一直在思考，我把作业写得这样认真到底为了什么（我自认为我的实验代码和文档博客都写的非常认真，至少在我认识的人里面，我的认真程度排前三大概是没有问题）。毕竟成绩对我来说已经不重要了。我还没有寻到答案，姑且就算现在的认真是这种养成和堆砌的成就感带给我的。</p>
+<p>做人需要认真，认真就要具象。</p>
+<p>做人更要抽象，抽象才会快乐。</p>
+<p><strong>努力认真，8懂就问，能快乐多久就快乐多久。</strong></p>
+<hr>
+<h1 id="目标任务"><a href="#目标任务" class="headerlink" title="目标任务"></a>目标任务</h1><h2 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h2><p>完成以下描述赋值语句的 LL(1)文法的 LL(1)分析过程。</p>
+<pre><code>G[E]:
+E→E+T∣E-T∣T 
+T→T*F∣T/F∣F
+F→(E)∣i</code></pre>
+<h2 id="设计说明"><a href="#设计说明" class="headerlink" title="设计说明"></a>设计说明</h2><p>终结符号i为用户定义的简单变量，即标识符的定义。</p>
+<h2 id="设计要求"><a href="#设计要求" class="headerlink" title="设计要求"></a>设计要求</h2><ul>
+<li><p>(1)构造该算符优先文法的优先关系矩阵或优先函数;</p>
+</li>
+<li><p>(2)输入串应是词法分析的输出二元式序列，即某算术表达式“专题1”的输出结果。输出为输入串是否为该文法定义的算术表达式的判断结果。</p>
+</li>
+<li><p>(3)算符优先分析过程应能发现输入串出错。</p>
+</li>
+<li><p>(4)设计两个测试用例(尽可能完备，正确和出错)，并给出测试结果;</p>
+</li>
+<li><p>(5)考虑编写程序根据算符优先文法构造算符优先关系矩阵，并添加到你的算符优先分析程序中。</p>
+</li>
+</ul>
+<hr>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="算符优先分析法"><a href="#算符优先分析法" class="headerlink" title="算符优先分析法"></a>算符优先分析法</h2><p>算符优先分析法(Operator Precedence Parse)是仿效四则运算的计算过程而构造的一种语法分析方法。算符优先分析法的关键是比较两个相继出现的终结符的优先级而决定应采取的动作。</p>
+<p><strong>算符优先分析法是一种自下而上的分析方法。</strong></p>
+<p>该分析法的优点是：简单，有效，适合表达式的分析。而它的缺点有：<strong>只适合于算符优先文法</strong>，是一个不大的文法类。</p>
+<h2 id="算符优先文法"><a href="#算符优先文法" class="headerlink" title="算符优先文法"></a>算符优先文法</h2><p>其文法的特点是文法的产生式中不含两个相邻的非终结符。其定义如下：</p>
+<p>假定G是不含ε- 产生式的算符文法。对于任何一对终结符a、b，我们说：</p>
+<ul>
+<li><p>（1）a等于b当且仅当文法G中含有形如P→ ···ab···或P→···aQb···的产生式；</p>
+</li>
+<li><p>（2）a小于b当且仅当G中含有形如P→···aR···的产生式，而R(+=&gt;)b···或R(+=&gt;)Qb···；</p>
+</li>
+<li><p>（3）a大于b当且仅当G中含有形如P→···Rb···的产生式，而R(+=&gt;)···a或R(+=&gt;)···aQ；</p>
+</li>
+</ul>
+<p>如果一个算符文法G中的任何终结符对（a,b）最多满足下述三个条件之一：</p>
+<pre><code>a=b,a&lt;b,a&gt;b</code></pre>
+<p>则称G是一个算符优先文法。</p>
+<h2 id="设计思想"><a href="#设计思想" class="headerlink" title="设计思想"></a>设计思想</h2><p>若想进行算符优先分析，首先我们需要对所给的文法做检查：<strong>该文法是否是算符优先文法？</strong></p>
+<p>接下来是一系列的准备工作：</p>
+<p>（1）对该算符优先文法中的所有非终结符号求FristVT集合；</p>
+<p>（2）对该算符优先文法中的所有非终结符号求LastVT集合；</p>
+<p>（3）根据所求得的FristVT集合和LastVT集合，构造该算符优先文法的算符优先关系矩阵。</p>
+<p>一系列准备工作做完之后，就可根据算符优先分析法的流程对语句进行分析。</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/1.png" alt="图1" title="Optional title"></p>
+<h2 id="检查是否是算符优先文法"><a href="#检查是否是算符优先文法" class="headerlink" title="检查是否是算符优先文法"></a>检查是否是算符优先文法</h2><p><strong>算符优先分析法的分析范围仅限于算符优先文法</strong>，所以这一步骤是有必要的。</p>
+<p>但是，由于是题目所给的文法，在这里可以又省略过这个步骤。</p>
+<p>实际上，<strong>在进行算符优先关系矩阵的构造时，上述算符优先文法的三条定义都会体现出来</strong>。需要我们检查的只是该文法中是否有ε-产生式：显然，该文法是没有ε-产生式的。</p>
+<h2 id="构造FristVT集合和LastVT集合"><a href="#构造FristVT集合和LastVT集合" class="headerlink" title="构造FristVT集合和LastVT集合"></a>构造FristVT集合和LastVT集合</h2><h3 id="为什么要构造这两个集合？"><a href="#为什么要构造这两个集合？" class="headerlink" title="为什么要构造这两个集合？"></a>为什么要构造这两个集合？</h3><p>在前面对算符之间优先级关系的定义中，有一个现象是要去找一个非终结符的首终结符和尾终结符，为了便于计算机操作，定义如下两个概念：</p>
+<ul>
+<li><p>首终结符集：FIRSTVT(B） = {b | B → b… 或 B → Cb… }</p>
+</li>
+<li><p>尾终结符集：LASTVT(B) = {b| B → …b 或 B → …bC}</p>
+</li>
+</ul>
+<p>所以，对之前关于算符之间的优先级关系有了新的表示：</p>
+<ul>
+<li><p>= 关系： A → …ab… 或 A → …aBb…</p>
+</li>
+<li><p>&lt; 关系： A → …aB…，对于每一个 b ∈ FIRSTVT(B) ， 都有a &lt; b</p>
+</li>
+<li><p>&gt; 关系： A → …Bb…，对于每一个 a ∈ LASTVT(B)，都有 a &gt; b</p>
+</li>
+</ul>
+<h3 id="如何构造这两个集合？"><a href="#如何构造这两个集合？" class="headerlink" title="如何构造这两个集合？"></a>如何构造这两个集合？</h3><p>对于文法中的任意非终结符号B，FIRSTVT(B)直接根据定义递归构造：</p>
+<ul>
+<li><p>（1）若有产生式B→a…或B→Qa…，则 a ∈ FIRSTVT(B)；</p>
+</li>
+<li><p>（2）若有产生式P→Q…，则有 FIRSTVT(Q) ∈ FIRSTVT(B)。</p>
+</li>
+</ul>
+<p>同理，LASTVT(B)直接根据定义递归构造：</p>
+<ul>
+<li><p>（1）若有产生式 B→…a 或 B→…aQ，则 a ∈ LASTVT(B)；</p>
+</li>
+<li><p>（2）若有产生式 B→…Q，则有 LASTVT(Q) ∈ LASTVT(B)。</p>
+</li>
+</ul>
+<p><strong>此处需要递归的原因有二：一是该算法需要执行到非终结符号B的FIRSTVT集合或LASTVT集合不再增大为止；二是对于上述定义，两集合的第二条定义都需要其他的非终结符号的FIRSTVT集合或LASTVT集合来帮助构造目标符号B的FIRSTVT集合或LASTVT集合。</strong></p>
+<p>对于本次所给的文法，执行上面的构造算法，可得如下结果：</p>
+<ul>
+<li>FirstVT[E] = { ( * + - / i }</li>
+<li>FirstVT[F] = { ( i }</li>
+<li>FirstVT[T] = { ( * / i }</li>
+<li>LastVT[E] = { ) * + - / i }</li>
+<li>LastVT[F] = { ) i }</li>
+<li>LastVT[T] = { ) * / i }</li>
+</ul>
+<h2 id="构造算符优先关系矩阵"><a href="#构造算符优先关系矩阵" class="headerlink" title="构造算符优先关系矩阵"></a>构造算符优先关系矩阵</h2><p>算符优先分析法的基本原理是：识别句柄并归约。</p>
+<p>该分析方法的具体做法是：利用&lt;识别句柄尾，利用&gt;识别句柄头，分析栈存放已识别部分，比较栈顶和下一输入符号的关系，如果是句柄尾，则沿栈顶向下寻找句柄头，找到后弹出句柄，归约为非终结符。</p>
+<p>对于所给句子，我们需要时刻查询相邻终结符号的优先关系。此时就需要将各种优先关系存放在一张查询表中，称为算符优先关系矩阵。</p>
+<p>算符优先关系矩阵可通过如下步骤构造：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(每条产生式  P -&gt; X1X2X3...Xn) &#123;</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">1</span>;i &lt;= n<span class="number">-1</span>; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span>(X(i) 和 X(i+<span class="number">1</span>) 均为终结符) &#123;</span><br><span class="line">            X(i) = X(i+<span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(i &lt;= n<span class="number">-2</span> &amp;&amp; X(i) 和X(i+<span class="number">2</span>)均为终结符 &amp;&amp; X(i+<span class="number">1</span>) 为非终结符) &#123;</span><br><span class="line">            X(i) = X(i+<span class="number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(X(i) 为终结符 &amp;&amp; X(i+<span class="number">1</span>)为非终结符) &#123;</span><br><span class="line">            <span class="keyword">for</span>(FIRSTVT(X(i+<span class="number">1</span>))中的每一个元素a) &#123;</span><br><span class="line">                  Xi &lt; a</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(X(i) 为非终结符 &amp;&amp; X(i+<span class="number">1</span>)为终结符) &#123;</span><br><span class="line">            <span class="keyword">for</span>(LASTVT(X(i))中的每一个元素a) &#123;</span><br><span class="line">                  a &gt; X(i+<span class="number">1</span>)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之前讨论过算符优先文法的检查，这里可以给出一种方法：<strong>如果一个文法G按上述算法构造出的优先矩阵是没有重定义项的，文法G是算符优先文法。</strong></p>
+<p>对于本次所给的文法，执行上面的构造算法，可得如下结果：</p>
+<p>|井|(|)|*|+|-|/|i<br>-|-|-|-|-|-|-|-|-<br>井|A|&lt;||&lt;|&lt;|&lt;|&lt;|&lt;<br>(||&lt;|=|&lt;|&lt;|&lt;|&lt;|&lt;<br>)|&gt;||&gt;|&gt;|&gt;|&gt;|&gt;|<br>*|&gt;|&lt;|&gt;|&gt;|&gt;|&gt;|&gt;|&lt;<br>+|&gt;|&lt;|&gt;|&lt;|&gt;|&gt;|&lt;|&lt;<br>-|&gt;|&lt;|&gt;|&lt;|&gt;|&gt;|&lt;|&lt;<br>/|&gt;|&lt;|&gt;|&gt;|&gt;|&gt;|&gt;|&lt;<br>i|&gt;||&gt;|&gt;|&gt;|&gt;|&gt;|</p>
+<h2 id="根据算符优先关系矩阵进行分析"><a href="#根据算符优先关系矩阵进行分析" class="headerlink" title="根据算符优先关系矩阵进行分析"></a>根据算符优先关系矩阵进行分析</h2><p>构造好算符优先关系矩阵之后，便可进行分析。</p>
+<p>流程如下：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/2.png" alt="图2" title="Optional title"></p>
+<h2 id="文件结构及函数简介"><a href="#文件结构及函数简介" class="headerlink" title="文件结构及函数简介"></a>文件结构及函数简介</h2><p>本专题大部分文件和功能函数与专题1同名，具体的文件结构和功能函数简介见《编译原理：词法分析程序》。</p>
+<p>新增文件OPGMatrix.h，内含的函数用作预测分析的准备工作，即求算符优先文法的FirstVT集合、LastVT集合和构造算符优先关系矩阵。</p>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2><p>详细的主函数流程如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span> </span>&#123;</span><br><span class="line">    <span class="comment">//初始化参数</span></span><br><span class="line">    initAll();</span><br><span class="line">    <span class="comment">//读取lab1中输出的二元组结果文件</span></span><br><span class="line">    readFile_Result();</span><br><span class="line">    <span class="comment">//读取lab1中输出的标识符结果文件</span></span><br><span class="line">    readFile_Identifier();</span><br><span class="line">    <span class="comment">//过滤读取结果，得到纯粹的标识符内容</span></span><br><span class="line">    getPureMorphemeAndSentence();</span><br><span class="line">    <span class="comment">//输出过滤后的语句</span></span><br><span class="line">    printSentenceInfo();</span><br><span class="line">    <span class="comment">//读取文法，求得包含所有的非终结符号的不重复集合</span></span><br><span class="line">    readFile_Formula();</span><br><span class="line">    <span class="comment">//求得包含所有的终结符号的不重复集合</span></span><br><span class="line">    getAllVT();</span><br><span class="line">    <span class="comment">//求得文法的FirstVT集合和LastVT集合以及由此构造分析表，并写入txt文件中</span></span><br><span class="line">    getFirstVT();</span><br><span class="line">    getLastVT();</span><br><span class="line">    <span class="comment">//求得算符优先矩阵，并写入txt文件中</span></span><br><span class="line">    getOPGMatrix();</span><br><span class="line">    writeFile_OPGMatrix();</span><br><span class="line">    <span class="comment">//进行分析</span></span><br><span class="line">    <span class="keyword">if</span>(getAnalyseResult())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配成功!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        <span class="comment">//匹配成功，输出分析栈结果</span></span><br><span class="line">        printAnalyseResultInfo();</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//匹配失败，输出错误位置信息</span></span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;<span class="string">&quot;匹配失败!&quot;</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        printError();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数getFirstVT()用来求得文法的FirstVT集合。根据FirstVT的构造定义，第一条规则的构造是非常容易理解的，简言之，<strong>只要将处在产生式第一个位置的终结符号和处在产生式第二个位置的终结符号（此处第一个位置必须是非终结符号）填入目标非终结符号的FirstVT集合中即可。该规则仅需对所有产生式进行一次遍历即可完成。</strong></p>
+<p>而对于第二条规则，则需要借助上一步所求得的所有非终结符号的部分FirstVT集。设置一标志位，进行<strong>无限循环</strong>：如果在一次循环中，所有的非终结符号中的一个或多个的FirstVT集有扩充，该标志位就被设置为false，代表着还需要进行下一轮的构造。构造停止的标志是：经过上一轮的构造，该文法中的任意非终结符号的FirstVT集均没有再进行扩充。</p>
+<p><strong>上述写法避免了递归调用函数，但缺点需要针对两条规则分别设置条件进行循环，且在进行第二条规则的构造之前，必须将第一条规则的内容构造完整且保证正确。</strong></p>
+<p>getLastVT()函数同理。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getFirstVT</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//将处在产生式第一个位置的终结符号和处在产生式第二个位置的终结符号（此处第一个位置必须是非终结符号）填入目标非终结符号的FirstVT集合</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator iterVN=VN.begin();iterVN!=VN.end();iterVN++)&#123;</span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; firstVT;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>, <span class="built_in">string</span>&gt;::iterator iterF=Sentence.begin();iterF!=Sentence.end();iterF++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(iterF-&gt;first==*iterVN)&#123;</span><br><span class="line">                <span class="comment">//产生式右部的第一个符号是终结符号</span></span><br><span class="line">                <span class="keyword">char</span> ch=iterF-&gt;second[<span class="number">0</span>];</span><br><span class="line">                <span class="keyword">if</span>(!isCaptain(ch))&#123;</span><br><span class="line">                    firstVT.insert(ch);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//产生式右部的第一个符号是非终结符号</span></span><br><span class="line">                <span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="comment">//产生式长度大于2是才做此判断</span></span><br><span class="line">                    <span class="keyword">if</span>(iterF-&gt;second.length()&gt;<span class="number">1</span>)&#123;</span><br><span class="line">                        <span class="comment">//产生式右部的第二个符号是非终结符号</span></span><br><span class="line">                        ch=iterF-&gt;second[<span class="number">1</span>];</span><br><span class="line">                        <span class="keyword">if</span>(!isCaptain(ch))&#123;</span><br><span class="line">                            firstVT.insert(ch);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将初步构造好的FirstVT集合填入容器中</span></span><br><span class="line">        FirstVTSet.insert(<span class="built_in">make_pair</span>(*iterVN, firstVT));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//对第二条规则进行无限循环的构造</span></span><br><span class="line">    <span class="comment">//跳出条件是：经过上一轮的构造，该文法中的任意非终结符号的FirstVT集均没有再进行扩充</span></span><br><span class="line">    <span class="keyword">bool</span> ifFindAll=<span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">while</span>(!ifFindAll)&#123;</span><br><span class="line">        ifFindAll=<span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>, <span class="built_in">string</span>&gt;::iterator iterF=Sentence.begin();iterF!=Sentence.end();iterF++)&#123;</span><br><span class="line">            <span class="comment">//产生式右部的第一个符号是非终结符号</span></span><br><span class="line">            <span class="keyword">if</span>(isCaptain(iterF-&gt;second[<span class="number">0</span>]))&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iterFVTS1=FirstVTSet.begin();iterFVTS1!=FirstVTSet.end();iterFVTS1++)&#123;</span><br><span class="line">                    <span class="keyword">if</span>(iterFVTS1-&gt;first==iterF-&gt;first)&#123;</span><br><span class="line">                        <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>,<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iterFVTS2=FirstVTSet.begin();iterFVTS2!=FirstVTSet.end();iterFVTS2++)&#123;</span><br><span class="line">                            <span class="keyword">int</span> len=iterFVTS1-&gt;second.size();</span><br><span class="line">                            <span class="keyword">if</span>(iterFVTS2-&gt;first==iterF-&gt;second[<span class="number">0</span>])&#123;</span><br><span class="line">                                <span class="comment">//B-&gt;A...，将A的FirstVT集合合并到B的FirstVT集合</span></span><br><span class="line">                                iterFVTS1-&gt;second.insert(iterFVTS2-&gt;second.begin(),iterFVTS2-&gt;second.end());</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="comment">//如果任意非终结符号的FirstVT集合有扩充，更改循环标志位</span></span><br><span class="line">                            <span class="comment">//false代表需要进行下一轮的构造</span></span><br><span class="line">                            <span class="keyword">if</span>(len!=iterFVTS1-&gt;second.size())&#123;</span><br><span class="line">                                ifFindAll=<span class="literal">false</span>;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>构造算符优先关系矩阵时，按照定义的四个入口进行构造即可。需要注意的是，要对新添规则进行构造：</p>
+<pre><code>E&#39; -&gt; 井E井</code></pre>
+<p>同时也要在终结符号集合中手动添加井。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">getOPGMatrix</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//初始化OPG优先关系矩阵，填上表头</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;VN.size()+<span class="number">1</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;VT.size()+<span class="number">1</span>;j++)&#123;</span><br><span class="line">            opgMatrix[i][j]=<span class="string">&quot;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> i=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator iVT=VT.begin(); iVT!=VT.end(); ++iVT) &#123;</span><br><span class="line">        <span class="keyword">char</span> ch=*iVT;</span><br><span class="line">        opgMatrix[i][<span class="number">0</span>]=ch;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> j=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator jVT=VT.begin(); jVT!=VT.end(); ++jVT) &#123;</span><br><span class="line">        <span class="keyword">char</span> ch=*jVT;</span><br><span class="line">        opgMatrix[<span class="number">0</span>][j]=ch;</span><br><span class="line">        j++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//四个入口</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">multimap</span>&lt;<span class="keyword">char</span>, <span class="built_in">string</span>&gt;::iterator iter=Sentence.begin();iter!=Sentence.end();iter++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;iter-&gt;second.length()<span class="number">-1</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!isCaptain(iter-&gt;second[i]))&#123;</span><br><span class="line">                <span class="keyword">if</span>(!isCaptain(iter-&gt;second[i+<span class="number">1</span>]))&#123;</span><br><span class="line">                    <span class="comment">//入口1</span></span><br><span class="line">                    <span class="comment">//X(i) 和 X(i+1) 均为终结符)</span></span><br><span class="line">                    <span class="comment">//X(i) = X(i+1)</span></span><br><span class="line">                    OPGMatrixInsert(iter-&gt;second[i],iter-&gt;second[i+<span class="number">1</span>],<span class="string">&#x27;=&#x27;</span>);</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">if</span>(i&lt;iter-&gt;second.length()<span class="number">-2</span>&amp;&amp;!isCaptain(iter-&gt;second[i+<span class="number">2</span>]))&#123;</span><br><span class="line">                        <span class="comment">//入口2</span></span><br><span class="line">                        <span class="comment">//i &lt;= n-2 &amp;&amp; X(i) 和X(i+2)均为终结符 &amp;&amp; X(i+1) 为非终结符</span></span><br><span class="line">                        <span class="comment">//X(i) = X(i+2)</span></span><br><span class="line">                        OPGMatrixInsert(iter-&gt;second[i],iter-&gt;second[i+<span class="number">2</span>],<span class="string">&#x27;=&#x27;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                        <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iter_aA=FirstVTSet.begin();iter_aA!=FirstVTSet.end();iter_aA++)&#123;</span><br><span class="line">                            <span class="keyword">if</span>(iter-&gt;second[i+<span class="number">1</span>]==iter_aA-&gt;first)&#123;</span><br><span class="line">                                <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator ins=iter_aA-&gt;second.begin();ins!=iter_aA-&gt;second.end();ins++)&#123;</span><br><span class="line">                                    <span class="comment">//入口3</span></span><br><span class="line">                                    <span class="comment">//X(i) 为终结符 &amp;&amp; X(i+1)为非终结符</span></span><br><span class="line">                                    <span class="comment">//Xi &lt; a</span></span><br><span class="line">                                    OPGMatrixInsert(iter-&gt;second[i],*ins,<span class="string">&#x27;&lt;&#x27;</span>);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(!isCaptain(iter-&gt;second[i+<span class="number">1</span>]))&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iter_Aa=LastVTSet.begin();iter_Aa!=LastVTSet.end();iter_Aa++)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(iter-&gt;second[i]==iter_Aa-&gt;first)&#123;</span><br><span class="line">                            <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator ins=iter_Aa-&gt;second.begin();ins!=iter_Aa-&gt;second.end();ins++)&#123;</span><br><span class="line">                                <span class="comment">//入口4</span></span><br><span class="line">                                <span class="comment">//X(i) 为非终结符 &amp;&amp; X(i+1)为终结符</span></span><br><span class="line">                                <span class="comment">//a &gt; X(i+1)</span></span><br><span class="line">                                OPGMatrixInsert(*ins,iter-&gt;second[i+<span class="number">1</span>],<span class="string">&#x27;&gt;&#x27;</span>);</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//单独对#做处理:E&#x27;-&gt;#E#</span></span><br><span class="line">    <span class="comment">// # &lt; FirstVT(E)</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iter_aA=FirstVTSet.begin();iter_aA!=FirstVTSet.end();iter_aA++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(Begin==iter_aA-&gt;first)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator ins=iter_aA-&gt;second.begin();ins!=iter_aA-&gt;second.end();ins++)&#123;</span><br><span class="line">                OPGMatrixInsert(<span class="string">&#x27;#&#x27;</span>,*ins,<span class="string">&#x27;&lt;&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// LastVT(E) &gt; #</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="built_in">map</span>&lt;<span class="keyword">char</span>, <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;&gt;::iterator iter_Aa=LastVTSet.begin();iter_Aa!=LastVTSet.end();iter_Aa++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(Begin==iter_Aa-&gt;first)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt;::iterator ins=iter_Aa-&gt;second.begin();ins!=iter_Aa-&gt;second.end();ins++)&#123;</span><br><span class="line">                OPGMatrixInsert(*ins,<span class="string">&#x27;#&#x27;</span>,<span class="string">&#x27;&gt;&#x27;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//#和#的关系为ACC</span></span><br><span class="line">    OPGMatrixInsert(<span class="string">&#x27;#&#x27;</span>,<span class="string">&#x27;#&#x27;</span>,<span class="string">&#x27;A&#x27;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，算符优先分析算法<strong>完全按照上面的流程图</strong>进行构造。不再赘述。 </p>
+<h2 id="结果测试"><a href="#结果测试" class="headerlink" title="结果测试"></a>结果测试</h2><p>首先依据所给文法写出一正确的语句：</p>
+<pre><code>var_a+var_b*(var_c-var_d)/(var_e-(var_f-var_g+var_h))+var_i</code></pre>
+<p>将此表达式写入专题1中的SourceProgram.txt文件，运行专题1程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/3.png" alt="图3" title="Optional title"></p>
+<p>查看标识符文件Identifier.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/4.png" alt="图4" title="Optional title"></p>
+<p>查看词素二元组文件ResultofLexicalAnalysis.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/5.png" alt="图5" title="Optional title"></p>
+<p>可以看到对于专题1来说，上述语句是符合要求的。</p>
+<p>接下来运行本专题的算符优先分析程序：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/6.png" alt="图6" title="Optional title"><br><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/7.png" alt="图7" title="Optional title"></p>
+<p>查看生成的算符优先文法矩阵文件OPGMatrix.txt：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/8.png" alt="图8" title="Optional title"></p>
+<p>上述测试结果证明了两个程序可按设计本意顺利完成各项功能。</p>
+<p>接下来，修改我们所给出的正确的语句，使它变得”错误”。当然这里所说的错误指的是在本专题的情景下是错误的。<strong>这些语句无论如何修改，都必须符合专题1的情景。</strong></p>
+<ul>
+<li>var_a <strong>=</strong> var_b*(var_c-var_d)/(var_e-(var_f-var_g+var_h))+var_i</li>
+</ul>
+<p>标示出来的是我们添加的错误。</p>
+<p>对如上情形进行测试：</p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/9.png" alt="图9" title="Optional title"></p>
+<p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/10.png" alt="图10" title="Optional title"></p>
+<p>根据上述结果可以看出，本程序可以实现所给算符优先文法的分析，并能指出具体错误的位置。</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90/">http://example.com/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/05/21/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%EF%BC%9A%E5%8C%85%E8%A3%85%E7%94%9F%E4%BA%A7%E7%BA%BF%E8%A3%85%E7%93%B6%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B/" title="数字图像处理：包装生产线装瓶质量检测"><span>< PreviousPost</span><br><span class="prevTitle">数字图像处理：包装生产线装瓶质量检测</span></a><a class="nextSlogan" href="/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9ALL(1)%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90/" title="编译原理：LL(1)语法分析"><span>NextPost ></span><br><span class="nextTitle">编译原理：LL(1)语法分析</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E4%BB%BB%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">目标任务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A6%81%E6%B1%82"><span class="toc-number">2.1.</span> <span class="toc-text">要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%AF%B4%E6%98%8E"><span class="toc-number">2.2.</span> <span class="toc-text">设计说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E8%A6%81%E6%B1%82"><span class="toc-number">2.3.</span> <span class="toc-text">设计要求</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A3%E7%AD%94"><span class="toc-number">3.</span> <span class="toc-text">解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90%E6%B3%95"><span class="toc-number">3.1.</span> <span class="toc-text">算符优先分析法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E6%96%87%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">算符优先文法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="toc-number">3.3.</span> <span class="toc-text">设计思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E6%98%AF%E5%90%A6%E6%98%AF%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E6%96%87%E6%B3%95"><span class="toc-number">3.4.</span> <span class="toc-text">检查是否是算符优先文法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0FristVT%E9%9B%86%E5%90%88%E5%92%8CLastVT%E9%9B%86%E5%90%88"><span class="toc-number">3.5.</span> <span class="toc-text">构造FristVT集合和LastVT集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9E%84%E9%80%A0%E8%BF%99%E4%B8%A4%E4%B8%AA%E9%9B%86%E5%90%88%EF%BC%9F"><span class="toc-number">3.5.1.</span> <span class="toc-text">为什么要构造这两个集合？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9E%84%E9%80%A0%E8%BF%99%E4%B8%A4%E4%B8%AA%E9%9B%86%E5%90%88%EF%BC%9F"><span class="toc-number">3.5.2.</span> <span class="toc-text">如何构造这两个集合？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%85%B3%E7%B3%BB%E7%9F%A9%E9%98%B5"><span class="toc-number">3.6.</span> <span class="toc-text">构造算符优先关系矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%85%B3%E7%B3%BB%E7%9F%A9%E9%98%B5%E8%BF%9B%E8%A1%8C%E5%88%86%E6%9E%90"><span class="toc-number">3.7.</span> <span class="toc-text">根据算符优先关系矩阵进行分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E5%8F%8A%E5%87%BD%E6%95%B0%E7%AE%80%E4%BB%8B"><span class="toc-number">3.8.</span> <span class="toc-text">文件结构及函数简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">3.9.</span> <span class="toc-text">代码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E6%B5%8B%E8%AF%95"><span class="toc-number">3.10.</span> <span class="toc-text">结果测试</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

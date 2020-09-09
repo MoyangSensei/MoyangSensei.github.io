@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>深度学习笔记（1）:来去之路 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">深度学习笔记（1）:来去之路</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>04-07-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="深度学习"> 深度学习</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>作为一名科班出身、将来极有可能从事计算机行业的人，“追赶潮流”是我们必须要拥有的品质。倘若我们追赶不上计算机及其领域思想的更新换代，那么就相当于被淘汰掉了。对于深度学习这个概念来说更是如此，自它和它的父、子概念面世以来，就受到了世人的追捧，以至于到现在已经变得有些“泡沫“起来。“但凡是一个会写代码的人都会用深度学习方法”，这种话已经实现了大半了，诸多的开源平台已经把这门学科的门槛拉到了极低的地步。与我个人而言，现在的学习时机算不上是最早的，但却是最好的。所以将深度学习做一个系列的学习笔记，不定时记录自己的学习过程。</p>
+<hr>
+<h1 id="什么是深度学习？"><a href="#什么是深度学习？" class="headerlink" title="什么是深度学习？"></a>什么是深度学习？</h1><blockquote>
+<p>深度学习（Deep Learning）的概念源于人工神经网络的研究。含多隐层的多层感知器就是一种深度学习结构。深度学习通过组合低层特征形成更加抽象的高层表示属性类别或特征，以发现数据的分布式特征表示。</p>
+<p>深度学习的概念由Hinton等人于2006年提出。基于深度置信网络(DBN)提出非监督贪心逐层训练算法，为解决深层结构相关的优化难题带来希望，随后提出多层自动编码器深层结构。此外Lecun等人提出的卷积神经网络是第一个真正多层结构学习算法，它利用空间相对关系减少参数数目以提高训练性能。</p>
+<p>深度学习是机器学习中一种基于对数据进行表征学习的方法。观测值（例如一幅图像）可以使用多种方式来表示，如每个像素强度值的向量，或者更抽象地表示成一系列边、特定形状的区域等。而使用某些特定的表示方法更容易从实例中学习任务（例如，人脸识别或面部表情识别）。深度学习的好处是用非监督式或半监督式的特征学习和分层特征提取高效算法来替代手工获取特征。</p>
+</blockquote>
+<p>上述概念来源于百度百科，这样的表述对于接触过这个领域的人来说是易懂的。我们从中可以得到深度学习一个关键的来源：<strong>人工神经网络</strong>。这对于上过机器学习课程的我来说并不是陌生词汇，同时产生的疑惑却是：这不是机器学习里面的算法吗？深度学习和机器学习之间有什么关系呢？</p>
+<hr>
+<h1 id="什么是机器学习？"><a href="#什么是机器学习？" class="headerlink" title="什么是机器学习？"></a>什么是机器学习？</h1><blockquote>
+<p>机器学习(Machine Learning, ML)是一门多领域交叉学科，涉及概率论、统计学、逼近论、凸分析、算法复杂度理论等多门学科。专门研究计算机怎样模拟或实现人类的学习行为，以获取新的知识或技能，重新组织已有的知识结构使之不断改善自身的性能。</p>
+<p>它是人工智能的核心，是使计算机具有智能的根本途径，其应用遍及人工智能的各个领域，它主要使用归纳、综合而不是演绎。</p>
+</blockquote>
+<p>上述概念还是来源于百度百科，这样的表述还是简单易懂的。我们从中可以得到深度学习一个关键的来源：<strong>人工智能</strong>。说到这里，大多数人肯定就脱口而出了：<strong>那不就是AI么！</strong>说起这个AI来，实际上我也上过同名的课程，只不过仅仅学习了一些经典的算法，考试内容也多是关于算法，概念性的东西当时也没有在乎。所以我们可以接着往下探索了。</p>
+<hr>
+<h1 id="什么是人工智能？"><a href="#什么是人工智能？" class="headerlink" title="什么是人工智能？"></a>什么是人工智能？</h1><blockquote>
+<p>人工智能（Artificial Intelligence），英文缩写为AI。它是研究、开发用于模拟、延伸和扩展人的智能的理论、方法、技术及应用系统的一门新的技术科学。</p>
+<p>人工智能是计算机科学的一个分支，它企图了解智能的实质，并生产出一种新的能以人类智能相似的方式做出反应的智能机器，该领域的研究包括机器人、语言识别、图像识别、自然语言处理和专家系统等。人工智能从诞生以来，理论和技术日益成熟，应用领域也不断扩大，可以设想，未来人工智能带来的科技产品，将会是人类智慧的“容器”。人工智能可以对人的意识、思维的信息过程的模拟。人工智能不是人的智能，但能像人那样思考、也可能超过人的智能。</p>
+<p>人工智能是一门极富挑战性的科学，从事这项工作的人必须懂得计算机知识，心理学和哲学。人工智能是包括十分广泛的科学，它由不同的领域组成，如机器学习，计算机视觉等等，总的说来，人工智能研究的一个主要目标是使机器能够胜任一些通常需要人类智能才能完成的复杂工作。但不同的时代、不同的人对这种“复杂工作”的理解是不同的。2017年12月，人工智能入选“2017年度中国媒体十大流行语”。</p>
+</blockquote>
+<p>上述概念你们自己猜一猜来源于哪儿。探索到这里，已经非常清晰明了了。简言之，这是以计算机科学为基础的一门学科，其目的是让计算机使用人的思考方式替代人们思考复杂工作。</p>
+<p>至此，我们开始向上回溯。</p>
+<hr>
+<h1 id="AL、ML和DL"><a href="#AL、ML和DL" class="headerlink" title="AL、ML和DL"></a>AL、ML和DL</h1><p>具象的展示这三者的关系如下：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/1/1.png" alt="AL、ML和DL" title="Optional title"></p>
+<p>这几者的包含关系是层次递进的。这样的递进不仅仅是概念上的递进，而且是时间上的递进。</p>
+<p>那么，人工智能是最早出现的，也是最大、最外侧的同心圆；其次是机器学习，稍晚一点；最内侧，是深度学习，当今人工智能大爆炸的核心驱动。五十年代，人工智能曾一度被极为看好。之后，人工智能的一些较小的子集发展了起来。先是机器学习，然后是深度学习。深度学习又是机器学习的子集。</p>
+<p>这门学科的发展流程几经波折，却又自然而然：</p>
+<ul>
+<li>1956年，几个计算机科学家相聚在达特茅斯会议（Dartmouth Conferences），提出了“人工智能”的概念。而我们目前能实现的，一般被称为“弱人工智能”（Narrow AI）。弱人工智能是能够与人一样，甚至比人更好地执行特定任务的技术。例如，Pinterest上的图像分类；或者Facebook的人脸识别。这些是弱人工智能在实践中的例子。<strong>这些技术实现的是人类智能的一些具体的局部</strong>。</li>
+<li>自被公认为是人工智能的核心以后，机器学习成为了人工智能研究最热门的分支，它的发展过程大体上可分为4个时期。第一阶段是在20世纪50年代中叶到60年代中叶，属于热烈时期。第二阶段是在20世纪60年代中叶至70年代中叶，被称为机器学习的冷静时期。第三阶段是从20世纪70年代中叶至80年代中叶，称为复兴时期。机器学习的最新阶段始于1986年。至今，机器学习的发展已经渐趋完善了。传统算法包括决策树学习、推导逻辑规划、聚类、强化学习和贝叶斯网络等等。众所周知，我们还没有实现强人工智能。早期机器学习方法甚至都无法实现弱人工智能。<strong>机器学习最成功的应用领域是计算机视觉</strong>。</li>
+<li>随着时间的推进，学习<strong>算法</strong>的发展改变了一切。人工神经网络（Artificial Neural Networks）是早期机器学习中的一个重要的算法，历经数十年风风雨雨。神经网络的原理是受我们大脑的生理结构——互相交叉相连的神经元启发。但与大脑中一个神经元可以连接一定距离内的任意神经元不同，人工神经网络具有离散的层、连接和数据传播的方向。当人们发觉了这个模型能够在这样的分解下以任意的形态构建出解释问题的模型时，深度学习的思想被单独提了出来，发展至今。</li>
+</ul>
+<p>深度学习造成了前所未有的巨大的影响，这个相信接触过的人都能够或多或少地感受过。至于我们所熟知的机器学习和深度学习，它们之间的差异说简单也简单，但也并不是能用一两句话就能够说清楚的。我将在之后的笔记中再做详细介绍。</p>
+<hr>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/9180">百度百科-人工智能：https://baike.baidu.com/item/人工智能/9180</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">百度百科-机器学习：https://baike.baidu.com/item/机器学习</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/3729729">百度百科-深度学习：https://baike.baidu.com/item/深度学习/3729729</a></p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ccnucb/article/details/79722714">AI、机器学习和深度学习之间的区别是什么？：https://blog.csdn.net/ccnucb/article/details/79722714</a></p>
+</blockquote>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/04/07/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89-%E6%9D%A5%E5%8E%BB%E4%B9%8B%E8%B7%AF/">http://example.com/2019/04/07/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%881%EF%BC%89-%E6%9D%A5%E5%8E%BB%E4%B9%8B%E8%B7%AF/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/04/07/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90%E7%A8%8B%E5%BA%8F/" title="编译原理：词法分析程序"><span>< PreviousPost</span><br><span class="prevTitle">编译原理：词法分析程序</span></a><a class="nextSlogan" href="/2019/04/06/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%89%EF%BC%9A%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" title="操作系统三：同步问题"><span>NextPost ></span><br><span class="nextTitle">操作系统三：同步问题</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">什么是深度学习？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">什么是机器学习？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">什么是人工智能？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AL%E3%80%81ML%E5%92%8CDL"><span class="toc-number">5.</span> <span class="toc-text">AL、ML和DL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

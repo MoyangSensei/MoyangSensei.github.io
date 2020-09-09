@@ -1,0 +1,212 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：SRCNN · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：SRCNN</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>07-18-2020</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Learning a Deep Convolutional Network for Image Super-Resolution</p>
+</blockquote>
+<p><strong>SRCNN是深度学习用在超分辨率重建上的开山之作。</strong></p>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>SRCNN的网络结构非常简单，仅仅用了三个卷积层，网络结构如下所示：</p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/17.png" title="Optional title"></p>
+<p>SRCNN网络包含三个模块：Patch extraction and representation（块析出与表示）、Non-linear mapping（非线性映射）、Reconstruction（重构）。<strong>这三个模块对应三个卷积操作。</strong></p>
+<ul>
+<li><p>第一层CNN：对输入图片的特征提取。（9x9x64卷积核）；</p>
+</li>
+<li><p>第二层CNN：对第一层提取的特征的非线性映射（1x1x32卷积核）；</p>
+</li>
+<li><p>第三层CNN：对映射后的特征进行重建，生成高分辨率图像（5x5x1卷积核）。</p>
+</li>
+</ul>
+<p>在进行卷积操作之前，SRCNN对图像进行了一个预处理：将输入的低分辨率图像进行bicubic插值，将低分辨率图像放大成目标尺寸。接下来才是上面提到的三层卷积网络拟合非线性映射，最后输出高分辨率图像结果。</p>
+<blockquote>
+<p>插值后的图像依旧称为“低分辨率图像”，并用Y表示；将ground-truth（真实的高分辨率图像）用X表示；将网络记为映射函数F（·）；</p>
+</blockquote>
+<p>网络的总思路来源于稀疏编码，作者将上述三个过程表述为：</p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/18.png" title="Optional title"></p>
+<h2 id="Patch-extraction-and-representation"><a href="#Patch-extraction-and-representation" class="headerlink" title="Patch extraction and representation"></a>Patch extraction and representation</h2><p>块析出和表示的目的是通过输入图像Y获得一系列特征图：</p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/19.png" title="Optional title"></p>
+<p>其中W1和B1表示滤波器（卷积核）的权重和偏置，max操作对应ReLU激活函数。</p>
+<blockquote>
+<p>Here W1 is of a size c × f1 × f1 × n1, where c is the number of channels in the input image, f1 is the spatial size of a filter, and n1 is the number of filters.<br>B1 is an n1-dimensional vector, whose each element is associated with a filter.</p>
+</blockquote>
+<blockquote>
+<p>卷积+激活操作。</p>
+</blockquote>
+<h2 id="Non-linear-mapping"><a href="#Non-linear-mapping" class="headerlink" title="Non-linear mapping"></a>Non-linear mapping</h2><p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/20.png" title="Optional title"></p>
+<p>其中W2和B2表示滤波器的权重和偏置，max操作依旧对应ReLU激活函数。</p>
+<blockquote>
+<p>第二层和第一层的思路完全一致，实际上这里想表述的是可以添加更多的层，但是这样的操作会显著增加网络的计算开销。</p>
+<blockquote>
+<p>It is possible to add more convolutional layers (whose spatial supports are 1× 1) to increase the non-linearity. But this can significantly increase the complexity of the model, and thus demands more training data and time. In this paper, we choose to use a single convolutional layer in this operation, because it has already provided compelling quality.</p>
+</blockquote>
+</blockquote>
+<h2 id="Reconstruction"><a href="#Reconstruction" class="headerlink" title="Reconstruction"></a>Reconstruction</h2><p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/21.png" title="Optional title"></p>
+<blockquote>
+<p>Here W3 is of a size n2 ×f3 ×f3 ×c, and B3 is a c-dimensional vector.<br>W3：线型滤波器</p>
+<blockquote>
+<p>we expect that W3 behaves like first projecting the coefficients onto the<br>image domain and then averaging. In either way, W3 is a set of linear filters.</p>
+</blockquote>
+</blockquote>
+<p>重构依旧是卷积操作，但是这里没有激活函数了。</p>
+<p><strong>根据上面的三个公式，SRCNN仅有6个需要学习的参数：W1、B1、W2、B2、W3、B3。</strong></p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><p>损失的计算也仅仅需要网络的输出F(Y)与真实高分图像X，<strong>损失函数选择MSE损失：</strong></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/22.png" title="Optional title"></p>
+<p>选择MSE作为Loss的原因：有利于提高PSNR。</p>
+<blockquote>
+<p>Using MSE as the loss function favors a high PSNR.</p>
+</blockquote>
+<p>实际上，卷积神经网络对损失函数的限制只有一个，即损失函数为可导函数。<strong>如果在训练过程中给出一个更好的感知激励指标，则网络可以灵活地适应该指标。</strong>但原文提到“会做研究但很难实现”。</p>
+<blockquote>
+<p>The PSNR is a widely-used metric for quantitatively evaluating image restoration quality, and is at least partially related to the perceptual quality. It is worth noticing that the convolu- tional neural networks do not preclude the usage of other kinds of loss functions, if only the loss functions are derivable. If a better perceptually motivated metric is given during training, it is flexible for the network to adapt to that metric. We will study this issue in the future. On the contrary, such a flexibility is in general difficult to achieve for traditional “hand-crafted” methods.</p>
+</blockquote>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><h2 id="实验结论"><a href="#实验结论" class="headerlink" title="实验结论"></a>实验结论</h2><p>分别以Running Time和PSNR为指标并与多种方法进行了对比实验。</p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/23.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/24.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/25.png" title="Optional title"></p>
+<blockquote>
+<p>SC：sparse coding，稀疏编码</p>
+<blockquote>
+<p>Image super-resolution via sparse representation, 2010</p>
+</blockquote>
+<p>K-SVD</p>
+<blockquote>
+<p>On single image scale-up using sparse representations, 2012</p>
+</blockquote>
+<p>NE+LLE：neighbour embedding + locally linear embedding，邻域嵌入+局部线性嵌入</p>
+<blockquote>
+<p>Super-resolution through neighbor embedding, 2004</p>
+</blockquote>
+<p>NE+NNLS：neighbour embedding + non-negative least squares，邻域嵌入+非负最小二乘法</p>
+<blockquote>
+<p>Low-complexity single image super-resolution based on nonnegative neighbor embedding, 2012</p>
+</blockquote>
+<p>ANR：Anchored Neighbourhood Regression，锚定邻域回归</p>
+<blockquote>
+<p>Anchored neighborhood regression for fast example-based super-resolution, 2013</p>
+</blockquote>
+</blockquote>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/26.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/27.png" title="Optional title"></p>
+<p>给出了4个种类的图片的SR结果及对比。原文中提到，在“baby”的类别上PSNR并未达到最好的效果。以下给出两组。</p>
+<blockquote>
+<p>经典的“Butterfly”和原文中提到的PSNR不达标的“Baby”。</p>
+<blockquote>
+<p>In spite of the best average PSNR values, the proposed SRCNN does not achieve the highest PSNR on images “baby” and “head” from Set5. Nevertheless, our results are still visually appealing (see Figure 10).</p>
+</blockquote>
+</blockquote>
+<h2 id="模型对数据量的敏感性"><a href="#模型对数据量的敏感性" class="headerlink" title="模型对数据量的敏感性"></a>模型对数据量的敏感性</h2><p>文章使用SRCNN分别在ImageNet和Timofte数据集这两个数据集上分别进行了实验。在ImageNet上获得的PSNR值明显高于在Timofte数据集上的结果。这里的结论是：<strong>在迭代次数相同的情况下，数据量的增加可能会提高网络的性能。</strong></p>
+<h2 id="模型对卷积核数量的敏感性"><a href="#模型对卷积核数量的敏感性" class="headerlink" title="模型对卷积核数量的敏感性"></a>模型对卷积核数量的敏感性</h2><p>SRCNN中第一层包含n1=64个卷积核，第二层包含n2=32个卷积核。<strong>根据理论，增加网络的卷积核数量必然会提升模型的性能。</strong></p>
+<p>作者尝试做了额外的增加以及减少卷积核数量两种情况：</p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/28.png" title="Optional title"></p>
+<p>从上表可以看出，增加卷积核数量确实会获得更高的PSNR值，但是同时会增加计算时间。<strong>所以需要在时间和质量之间做一个权衡。</strong></p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>训练数据集：Timofte数据集（包含91幅图像）和ImageNet数据集（数据量超大）；</p>
+</li>
+<li><p>文章：<a target="_blank" rel="noopener" href="http://personal.ie.cuhk.edu.hk/~ccloy/files/eccv_2014_deepresolution.pdf">http://personal.ie.cuhk.edu.hk/~ccloy/files/eccv_2014_deepresolution.pdf</a> ；</p>
+</li>
+<li><p>code：<a target="_blank" rel="noopener" href="http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html">http://mmlab.ie.cuhk.edu.hk/projects/SRCNN.html</a> ,有matlab版本和Caffe版本；</p>
+</li>
+<li><p>文章比较简单，内容都在字面上，比较好理解。方法超前但是借鉴的痕迹很重，因此没有那种“专事专办”的味道。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRCNN/">http://example.com/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRCNN/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRGAN/" title="论文研读：SRGAN"><span>< PreviousPost</span><br><span class="prevTitle">论文研读：SRGAN</span></a><a class="nextSlogan" href="/2020/07/18/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/" title="基础：图像超分辨率"><span>NextPost ></span><br><span class="nextTitle">基础：图像超分辨率</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Patch-extraction-and-representation"><span class="toc-number">1.1.</span> <span class="toc-text">Patch extraction and representation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Non-linear-mapping"><span class="toc-number">1.2.</span> <span class="toc-text">Non-linear mapping</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reconstruction"><span class="toc-number">1.3.</span> <span class="toc-text">Reconstruction</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">3.</span> <span class="toc-text">结论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E8%AE%BA"><span class="toc-number">3.1.</span> <span class="toc-text">实验结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%AF%B9%E6%95%B0%E6%8D%AE%E9%87%8F%E7%9A%84%E6%95%8F%E6%84%9F%E6%80%A7"><span class="toc-number">3.2.</span> <span class="toc-text">模型对数据量的敏感性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%AF%B9%E5%8D%B7%E7%A7%AF%E6%A0%B8%E6%95%B0%E9%87%8F%E7%9A%84%E6%95%8F%E6%84%9F%E6%80%A7"><span class="toc-number">3.3.</span> <span class="toc-text">模型对卷积核数量的敏感性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

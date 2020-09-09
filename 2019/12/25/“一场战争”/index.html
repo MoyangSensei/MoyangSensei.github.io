@@ -1,0 +1,135 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>“一场战争” · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">“一场战争”</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>12-25-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="闲谈"> 闲谈</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，不可转载。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>这是一场战争，我从战场归来。</p>
+</blockquote>
+<p>半年的时光就这么匆匆过去，我也完成了这场不知结果的考试。</p>
+<p>现在我在图书馆，坐在这半年里我一直坐着的位置。按理说现在应该是休息的时间，只是我睡不着。说来也奇怪，考研养成的早起习惯，到今天都没有消退掉。想想之前，早起过一段时间，只要放假的日子侵蚀一两天，也就变得懒散至极，10点钟起床是常有的事情。</p>
+<p>其实，我并不想赋予这场考试和我这半年的努力以太多的意义，因为这本身就可能是无意义的事情。和我一样战斗的朋友们也有很多，沉浸在这样的氛围里，不自觉地就把自己的所作所为当成了一种必要，当成了一种无畏的勇气和自然的选择。倒不是说这样子有什么不好，只是对我自己，我更习惯保持一种平和。</p>
+<p>我幻想过考完之后的狂欢：睡觉睡到天昏地暗，打游戏打到日月无光。考前的那个周五晚上，我甚至下了决心，我要把我这半年欠着的所有游戏，在一周之内打得干干净净。想法是真的美好，现实也是真的无力。考完的那晚上就已经非常没劲头了。放假的第一天，上午处理了点学期末的正事，然后开始过肥宅生活直到今早。打游戏？一个小时就变得索然无味。看视频？电视剧综艺我本来就不爱看，考研前攒着的一些喜欢的up主的视频，完事之后就不想看了。睡觉？我熬夜到一两点，早晨照样7点钟醒。</p>
+<p>仿佛一起事情都在这场战争宣告结束之后变得没有意义了起来。所以我就思考，是这场考试赋予我意义，还是我赋予这场考试意义？我觉着都不是。</p>
+<p>在我看来，“宠辱偕忘”是人生的最高境界，也是我追求和向往的人格。不管是考前还是考后，其实我一直在给自己洗脑：你考不上的，这个考试你就是分母，就是炮灰，你就是人菜瘾大。其实这还是有点反向效果的，越是这样我就越想考上，越是这样我就越想翻身，越是这样我就觉得我越不该是这样。我本来就不该是这样。只不过这么想呢，宠倒是忘了大半，辱的感觉越来越重了。毕竟以毒攻毒和双管齐下是两种疗法，这我懂。</p>
+<p>说起来，这半年也体味了非比寻常的生活。我不止一次的想过如果我坚持不下去了会怎样。失眠的晚上总是止不住的心跳加速，我真的好怕自己就交代在这儿了。坐在图书馆里摸鱼的时候，前半分钟想的是我怎么这么堕落，后半分钟想的是我前半分钟看的那个视频真有意思。晚上从图书馆出来，不想回宿舍，就绕着学校一圈一圈的走，走到路上都没有几个人了，才慢慢走回去。</p>
+<p>我原本以为我是很强大的，不管是从内心还是在表面。我已经过了两年没有什么人陪伴的生活，再过半年“强化版”的也无大所谓。可事实上，每一天我都比前一天更加渴望有人能够一起交流。我这样的性格，要去主动找一个研友，在我自己这里显得没多大必要。另外一个考研的舍友是一位极度佛系的人，总之叫人家来图书馆学习是一件很难的事情，人家更享受宿舍的生活。宿舍里另有一位同学，倒是经常一起聊天，只不过并不是同一战场的朋友。图书馆里经常碰到的一位同班的同学成了这段时间的好朋友，大家关系一般，他也是一个独立惯了的人，只是枯燥的生活逼得大家团结在一起。我信任这种力量，这样的力量是比所学到的知识更加有用的收获。</p>
+<p>中间还有过一段玻璃心的日子。其实后半段的两三个月都非常玻璃心。我关掉了朋友圈，关掉了qq，微博取关了周围的大部分人，只是不想看到他们的生活过得比我好。每天也不怎么和人交流，因为我也不知道说些什么样的话。沉默是另一种力量，是一种磨砺，哪怕在沉默中灭亡，都要比叽叽喳喳的人更有尊严。我更明白了沉默的意义，比以前。即使这半年的努力全部都是白给，但这种生活的体味，一定是不可多得的财富。</p>
+<p>考完政治英语的那一天晚上，临睡前，莫名的想到了家人，都是一些悲观的设想。我突然觉得我对自己和家人是不是都没有做到位？如果这半年都是白费的，那么我给予周围人、家人和我自己的这么多负面情绪，连一个好的解释都没有。考前我的母亲就说要去医院体检，这件事我一直挂在心上。可现在考完了也是一堆事情压在身上，想要早回家都不现实。所以我一定要把这种残忍给我的家人们吗？多陪陪他们和实现自己的梦想，到底该选什么？我做不出选择，因为我都想要。我觉得我不称职，我只能感谢能够理解我的人。</p>
+<p>我想要更加热爱生活，我想要做好生活中的每一件事情。追逐是一个过程，结果不是一场宣判，没有什么东西可以充当宣判，如果有的话，那只能是我自己。因为这半年的时间让我明白，不管是怎样难过的日子，都会过来的。这放在以前只是一句无力的安慰，但是我现在真切的感受到了，除了死亡，没有什么过不去的事情。只是我更希望我以后不要再体会到这些了，因为这些都是在每一个睡不着的晚上，给自己的遗言。</p>
+<p>痛苦的意义是让以后的日子不再痛苦，成长的过程是让以后的日子少些幼稚。即使幼稚，即使痛苦，即使这样的标签会跟随一生，那又怎样？我有前进的欲望，足矣。珍惜现在的生活，才是最有意义的，除此之外，都是虚妄。现在的我，很淡然，足矣。</p>
+<p>感谢在这半年里鼓励过着我的人，有从小玩到大的发小，有一同战斗的战友，有给予我深刻思考的信友，有老师，有家人。今后的我会不吝自己的热忱和真诚，只因为曾经有人在我战斗的时候给予我力量，也为了以后的我在战斗的时候能有更多的力量源泉。</p>
+<p>这是一场战争，我从战场归来。不知道这是败退还是凯旋，我无谓输赢，我必然是赢家。</p>
+<hr>
+<p align="right">2019年12月25日 星期三
+上午11时
+主区图书馆
+</p>
+
+
+
+
+
+
+
+
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/12/25/%E2%80%9C%E4%B8%80%E5%9C%BA%E6%88%98%E4%BA%89%E2%80%9D/">http://example.com/2019/12/25/%E2%80%9C%E4%B8%80%E5%9C%BA%E6%88%98%E4%BA%89%E2%80%9D/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/12/30/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/" title="“去雨”相关论文研读"><span>< PreviousPost</span><br><span class="prevTitle">“去雨”相关论文研读</span></a><a class="nextSlogan" href="/2019/06/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BA%94%EF%BC%9A%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" title="操作系统五：文件管理系统"><span>NextPost ></span><br><span class="nextTitle">操作系统五：文件管理系统</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

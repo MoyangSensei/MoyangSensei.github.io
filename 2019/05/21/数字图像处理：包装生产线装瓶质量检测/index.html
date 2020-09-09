@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>数字图像处理：包装生产线装瓶质量检测 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">数字图像处理：包装生产线装瓶质量检测</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>05-21-2019</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="数字图像处理"> 数字图像处理</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>包装生产线的质量检测：一家用瓶子装各种工业化学品的装瓶公司听说你成功解决了成像问题，并雇佣你设计一种检测瓶子未装满的方法。当瓶子在传送带上运动，并通过自动装填机和封盖机进行包装时有如下图所示的情景。当液体平面低于瓶颈底部和瓶子肩部的中间点时，认为瓶子未装满。瓶子的横断面上的倾斜部分及侧面定义为瓶子的肩部，瓶子在不断移动。公司有一个图像系统，装备了有效捕捉静止图像的前端闪光照明设备。所以你可以得到非常清晰的图像。基于以上你得到的资料，提出一种检测未完全装满的瓶子的解决方案。清楚地表述你做的所有设想和很可能对你提出的解决方案产生影响的假设。并实现它。</p>
+<hr>
+<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><ul>
+<li><p>所选用的编程语言为python3.6；</p>
+</li>
+<li><p>编译环境：<br>Jupyter Notebook（此前被称为 IPython notebook）是一个交互式笔记本，支持运行 40 多种编程语言。<br>Jupyter Notebook 的本质是一个 Web 应用程序，便于创建和共享文学化程序文档，支持实时代码，数学方程，可视化和markdown。用途包括：数据清理和转换，数值模拟，统计建模，机器学习等等。</p>
+</li>
+</ul>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/11.png" alt="搭载在Anaconda上的Jupyter Notebook" title="Optional title"></p>
+<hr>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>本问题的核心需求是检测图片中未满足要求的部分并标出。</p>
+<p>首先，<strong>什么部分是“未满足要求”的部分？</strong>根据题意我们可以定义：每一个没有装满的容器会被视为未满足要求的部分。</p>
+<p>接下来的问题是，<strong>“没有装满”的容器指的是什么样的容器？</strong>或者换一个问法：什么样的容器是合格的？对于我们来说，我们可以很轻松的判断出来，没有装满的容器是所给图片中间的那一个，而其余四个容器仅有瓶口部分是没有装满的，这样的容器我们把它视作合格。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/22.png" alt="没有装满（不合格）的容器" title="Optional title"></p>
+<p>根据上面的标注，我们可以找到一个最明显的标志：未合格容器的空白部分明显比合格部分的空白面积大。分析到此，此题的核心需求就变成了：<strong>求出每一个容器未装满部分在图片中的面积，并将高于正常值的容器指出。</strong></p>
+<h2 id="假设"><a href="#假设" class="headerlink" title="假设"></a>假设</h2><p>根据问题分析和题目标注，需要先针对所给情景作出如下断言和假设：</p>
+<ul>
+<li><p>原题中叙述：“公司有一个图像系统，装备了有效捕捉静止图像的前端闪光照明设备。所以你可以得到非常清晰的图像”，<strong>由此断言：所得图像的质量稳定的，即图像大小和图像内容分布（容器在图片中的相对位置）是不变的；</strong></p>
+</li>
+<li><p>所给的图片中仅有中间的一个容器所装的液体是明显不足的，其他四个容器的液体平面是一样高的，<strong>由此假设：其余四个容器为合格的产品，它们在瓶口处的空余部分是正常的。</strong>这一假设非常重要，<strong>它将帮助我们定义不合格产品的阈值。</strong></p>
+</li>
+</ul>
+<h2 id="图像对象检测"><a href="#图像对象检测" class="headerlink" title="图像对象检测"></a>图像对象检测</h2><p>本问题所属的问题大类为图像对象检测：图像对象检测是利用图像处理与模式识别等领域的理论和方法，从图像中定位感兴趣的目标，需要准确地判断每个目标的具体类别，并给出每个目标的<strong>边界框</strong>。</p>
+<p>对于本情景而言，所给图像为灰度图像，若想从这一角度来探索问题的解决方法，最容易想到的思想就是<strong>二值化</strong>。</p>
+<p>在数字图像处理中，二值图像占有非常重要的地位，<strong>图像的二值化使图像中数据量大为减少，从而能凸显出目标的轮廓</strong>。本体背景和所检测部位已经分别是黑白两色，非常适合这个思路。</p>
+<p>读取图像<br>首先介绍本程序主要用到的py包： scikit-image（aka skimage）是图像处理和计算机视觉算法的集合。<strong>主要的软件包skimage提供了一些用于在图像数据类型之间转换的实用程序</strong>。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/33.png" alt="导入文件包，读取图像，输出结果" title="Optional title"></p>
+<p>读取图像，输出图像结果，可以看到，<strong>imread函数会将图像按照行列存储为二维数组，且是归一化的灰度图</strong>。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/44.png" alt="输出读取结果及图像大小" title="Optional title"></p>
+<p>输出图像及其大小，验证是否读取正确。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/55.png" alt="图像文件信息" title="Optional title"></p>
+<p>输出的大小为（556，1004），再查看图片文件，发现可以匹配，同时说明该数据结构是按照像素的行列进行读取和存储的。</p>
+<h2 id="二值化"><a href="#二值化" class="headerlink" title="二值化"></a>二值化</h2><p>对图像进行二值化：以归一化值域中心0.5为界线，像素值低于0.5的区域变为黑色，否则变为白色。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/66.png" alt="图像二值化" title="Optional title"></p>
+<h2 id="图像无用部分处理"><a href="#图像无用部分处理" class="headerlink" title="图像无用部分处理"></a>图像无用部分处理</h2><p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/77.png" alt="二值化后的图像" title="Optional title"></p>
+<p>二值化后的图片如上所示，可以看出，<strong>即使对图片进行了二值化，我们想要关注的部分的轮廓也并不是非常清晰的：蓝色标记才是我们想要关注的部分，但是还有很多其他的没有被处理为背景的部分（红色标记）也出现在图中</strong>，这些部分很可能是容器侧壁的反光造成的。尤其是对于中间未合格的容器来说，它的空余部分下面还有一部分侧壁的空白与之相连，<strong>这样就造成了所要检测的区域和无关区域一同构成了连通域</strong>。</p>
+<p>很容易明晰的一点是：我们说某一个容器所装的液体量不合格，<strong>意思是只要该容器有很小的该装液体的部分被检测到没有装液体</strong>，至于该不合格产品到底少装了多少，我们并不关心。所以我们只要看容器从瓶口部分及其往下面衍生的一部分即可，至于瓶体的下半身完全可以不用检测。</p>
+<p>基于此，我们对该图像的无用区域进行切割和处理：按照4:6的比例分割图像，并把下60%部分舍去，直接作为背景。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/88.png" alt="二值化图像无用部分处理" title="Optional title"></p>
+<h2 id="连通域"><a href="#连通域" class="headerlink" title="连通域"></a>连通域</h2><p>根据上述处理结果，我们就可以很明显的看出合格品和不合格品差别了。接下来，我们需要对图片中的每一块白色部分的面积做统计，这些白色部分在数字图像处理中被统称为“连通域”。</p>
+<p>首先使用skimage.measure的字函数label获取连通域信息。这个函数的作用是：输入二值化后的数字图像矩阵，返回的内容为连通域的个数和带有连通域标记的矩阵。对于每一个连通域，都为他们赋予一个整数值。</p>
+<p>输出的数量为16，则我们可以知道，该图像中共有17个连通域，出去编号为0的黑色背景，共有16个白色的区域，它们的编号为1-16。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/99.png" alt="输出连通域信息：无排序" title="Optional title"></p>
+<p>将各连通域面积进行排序输出：</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1010.png" alt="输出连通域信息：排序后" title="Optional title"></p>
+<p>数据如下：</p>
+<pre><code>[1.0000e+00 3.0000e+00 1.0000e+01 1.3000e+01 2.0000e+01 2.1000e+01
+ 2.5000e+01 3.2000e+01 6.6000e+01 7.1000e+01 1.2900e+02 6.8410e+03
+1.0780e+04 1.3383e+04 1.3391e+04 2.7571e+04]</code></pre>
+<p>再根据我们对于图片内容的观察，我们可以很容易的从数据中推断出一些内容：<strong>最大的数2.7571e+04代表了不合格区域的面积，即中间的容器</strong>，接下来的4个数6.8410e+03、1.0780e+04、1.3383e+04、1.3391e+04代表了四个合格容器，而在这四个数中，<strong>6.8410e+03与另外三个数不在一个数量级上的原因是：它代表了最右边那个不完整的合格容器</strong>。1.0780e+04比6.8410e+03稍大一些，从图中可以看出它代表了最左边那个不完整的合格容器。</p>
+<p><strong>剩下的两个数1.3383e+04、1.3391e+04非常接近，我们便可由此断言：合格容器的空白部分上限就在这两个值附近。在这里，我们定义了判断是否合格的阈值。</strong></p>
+<h2 id="过滤无关连通域"><a href="#过滤无关连通域" class="headerlink" title="过滤无关连通域"></a>过滤无关连通域</h2><p>上面分析了有用的值，剩下的值很明显就是无用的，因为我们在图中仅有上述5个区域需要进行判断，那么其余的连通域就是无关的连通域。我们需要将这些连通域处理为背景。</p>
+<p>在进行上述处理前，需要先得到排序过后的面积和原面积数组的映射关系：</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1111.png" alt="排序映射" title="Optional title"></p>
+<p>接下来，过滤无关连通域：</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1212.png" alt="过滤无关连通域" title="Optional title"></p>
+<h2 id="判断并得到结果"><a href="#判断并得到结果" class="headerlink" title="判断并得到结果"></a>判断并得到结果</h2><p>先来查看过滤后的结果，为不同标记的连通域赋予不同的颜色，背景依旧为黑色：</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1313.png" alt="过滤无关连通域之后的结果" title="Optional title"></p>
+<p>可以看到，需要被判断的5个连通域都被我们用不同的标记给出了。接下来，只需要用我们在上面给出的阈值对每个连通域进行判断即可。</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1414.png" alt="对连通域的面积进行判断" title="Optional title"></p>
+<p>查看判断后的最终结果：</p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1515.png" title="Optional title"><br><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1616.png" alt="最终结果" title="Optional title"></p>
+<p>可以看到，<strong>正确的部分被彩色填充，错误的部分依旧是白色的</strong>。</p>
+<p>将这个结果和我们在一开始时对于图片的判断进行对比，发现结果完全正确，我们的程序可以达到预期的结果。</p>
+<hr>
+<h1 id="附录：代码"><a href="#附录：代码" class="headerlink" title="附录：代码"></a>附录：代码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#导入文件包</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> skimage <span class="keyword">as</span> img</span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">from</span> skimage.measure <span class="keyword">import</span> label</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment">#读取图像</span></span><br><span class="line"><span class="comment">#io.imread返回的存储结构为 &lt;class &#x27;numpy.ndarray&#x27;&gt;</span></span><br><span class="line">bottle = io.imread(<span class="string">&#x27;bottle.png&#x27;</span>, as_gray=<span class="literal">True</span>)</span><br><span class="line"><span class="comment">#输出读取的结果</span></span><br><span class="line">print(bottle)</span><br><span class="line"></span><br><span class="line"><span class="comment">#显示所读取的图像信息</span></span><br><span class="line">print(<span class="string">&quot;size: &quot;</span>)</span><br><span class="line">print(bottle.shape)</span><br><span class="line">io.imshow(bottle)</span><br><span class="line"></span><br><span class="line"><span class="comment">#图像二值化：以归一化值域中心0.5为界线，像素值低于0.5的区域变为黑色，否则变为白色</span></span><br><span class="line">rows,cols=bottle.shape</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(rows):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">        <span class="keyword">if</span> (bottle[i,j]&lt;=<span class="number">0.5</span>):</span><br><span class="line">            bottle[i,j]=<span class="number">0</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            bottle[i,j]=<span class="number">1</span></span><br><span class="line"><span class="comment">#显示二值化后的图像</span></span><br><span class="line">io.imshow(bottle)</span><br><span class="line"></span><br><span class="line"><span class="comment">#按照4:6的比例分割图像，并把下60%部分舍去，直接作为背景</span></span><br><span class="line">rows,cols=bottle.shape</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(int(rows*<span class="number">0.4</span>),rows):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">            bottle[i,j]=<span class="number">0</span></span><br><span class="line"><span class="comment">#原图像的最上面有一条无关的白线，去除掉</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,int(rows*<span class="number">0.05</span>)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">            bottle[i,j]=<span class="number">0</span></span><br><span class="line">io.imshow(bottle)</span><br><span class="line"></span><br><span class="line"><span class="comment">#标记连通域</span></span><br><span class="line"><span class="comment">#label返回的存储结构为 &lt;class &#x27;tuple&#x27;&gt;</span></span><br><span class="line">bottle_label=label(bottle,background =<span class="number">0</span>,return_num=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#查看所得到的连通域标记数组</span></span><br><span class="line">print(bottle_label)</span><br><span class="line"><span class="comment">#存储结果</span></span><br><span class="line">np.savetxt(<span class="string">&quot;bottle_label.txt&quot;</span>,bottle_label[<span class="number">0</span>],fmt=<span class="string">&quot;%s&quot;</span>,delimiter=<span class="string">&quot;,&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#按照标记统计各个连通域的面积</span></span><br><span class="line">area=np.zeros(bottle_label[<span class="number">1</span>]+<span class="number">1</span>)</span><br><span class="line">temp=np.zeros(bottle_label[<span class="number">1</span>]+<span class="number">1</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(rows):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">        area[int(bottle_label[<span class="number">0</span>][i][j])]+=<span class="number">1</span></span><br><span class="line">        temp[int(bottle_label[<span class="number">0</span>][i][j])]+=<span class="number">1</span></span><br><span class="line">print(area)</span><br><span class="line"></span><br><span class="line"><span class="comment">#按对连通域的面积进行从小到大排序</span></span><br><span class="line">temp=temp[<span class="number">1</span>:]</span><br><span class="line">temp.sort()</span><br><span class="line"><span class="comment">#查看排序后的数组</span></span><br><span class="line">print(temp)</span><br><span class="line"></span><br><span class="line"><span class="comment">#将排序后前的数组顺序映射到排队后的数组</span></span><br><span class="line">area_sort_num=np.zeros(bottle_label[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range (bottle_label[<span class="number">1</span>]):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range (<span class="number">1</span>,bottle_label[<span class="number">1</span>]+<span class="number">1</span>):</span><br><span class="line">        <span class="keyword">if</span>(int(temp[i])==int(area[j])):</span><br><span class="line">            area_sort_num[i]=j</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"><span class="comment">#查看结果</span></span><br><span class="line">print(area_sort_num)</span><br><span class="line"></span><br><span class="line"><span class="comment">#过滤无关的连通域</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#a：过滤阈值b在排序前数组中的位置映射，用来做循环</span></span><br><span class="line">a=<span class="number">-1</span></span><br><span class="line"><span class="comment">#过滤的阈值b：如果连通域面积小于b，则会被视作背景</span></span><br><span class="line">b=(<span class="number">1.2900e+02</span>)+<span class="number">1</span></span><br><span class="line"><span class="comment">#寻找b的值，赋给a</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(temp)):</span><br><span class="line">    <span class="keyword">if</span>(temp[i]&gt;b):</span><br><span class="line">        a=i;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"><span class="comment">#过滤掉无关的连通域面积，使之成为背景</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(rows):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(a):</span><br><span class="line">            <span class="keyword">if</span>(int(bottle_label[<span class="number">0</span>][i][j])==area_sort_num[k]):</span><br><span class="line">                bottle_label[<span class="number">0</span>][i][j]=<span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#查看过滤后的结果</span></span><br><span class="line"><span class="comment">#为不同标记的连通域赋予不同的颜色，背景依旧为黑色</span></span><br><span class="line">io.imshow(bottle_label[<span class="number">0</span>],cmap=plt.cm.hot)</span><br><span class="line"></span><br><span class="line"><span class="comment">#a：过滤阈值b在排序前数组中的位置映射，用来做循环</span></span><br><span class="line">d=[]</span><br><span class="line"><span class="comment">#过滤的阈值b：如果连通域面积小于b，则会被视作背景</span></span><br><span class="line">c=(<span class="number">1.2900e+02</span>)+<span class="number">1</span></span><br><span class="line"><span class="comment">#寻找b的值，赋给a</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(temp)):</span><br><span class="line">    <span class="keyword">if</span>(temp[i]&gt;<span class="number">1.3391e+04</span>):</span><br><span class="line">        d.append(i);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(rows):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(cols):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(a):</span><br><span class="line">            <span class="keyword">for</span> k <span class="keyword">in</span> range(len(d)):</span><br><span class="line">                <span class="keyword">if</span>(int(bottle_label[<span class="number">0</span>][i][j])==area_sort_num[d[k]]):</span><br><span class="line">                    bottle_label[<span class="number">0</span>][i][j]=<span class="number">2</span></span><br><span class="line">                <span class="keyword">elif</span>(int(bottle_label[<span class="number">0</span>][i][j])!=<span class="number">0</span>):</span><br><span class="line">                    bottle_label[<span class="number">0</span>][i][j]=<span class="number">1</span></span><br><span class="line">io.imshow(bottle_label[<span class="number">0</span>],cmap=plt.cm.hot)</span><br></pre></td></tr></table></figure></article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/05/21/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%EF%BC%9A%E5%8C%85%E8%A3%85%E7%94%9F%E4%BA%A7%E7%BA%BF%E8%A3%85%E7%93%B6%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B/">http://example.com/2019/05/21/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%EF%BC%9A%E5%8C%85%E8%A3%85%E7%94%9F%E4%BA%A7%E7%BA%BF%E8%A3%85%E7%93%B6%E8%B4%A8%E9%87%8F%E6%A3%80%E6%B5%8B/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/05/31/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E5%9F%BA%E4%BA%8ESLR-1-%E5%88%86%E6%9E%90%E6%B3%95%E7%9A%84%E8%AF%AD%E6%B3%95%E5%88%B6%E5%AF%BC%E7%BF%BB%E8%AF%91%E5%8F%8A%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/" title="编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成"><span>< PreviousPost</span><br><span class="prevTitle">编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成</span></a><a class="nextSlogan" href="/2019/05/20/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E5%88%86%E6%9E%90/" title="编译原理：算符优先分析"><span>NextPost ></span><br><span class="nextTitle">编译原理：算符优先分析</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">3.1.</span> <span class="toc-text">问题分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%87%E8%AE%BE"><span class="toc-number">3.2.</span> <span class="toc-text">假设</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%AF%B9%E8%B1%A1%E6%A3%80%E6%B5%8B"><span class="toc-number">3.3.</span> <span class="toc-text">图像对象检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E5%80%BC%E5%8C%96"><span class="toc-number">3.4.</span> <span class="toc-text">二值化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E6%97%A0%E7%94%A8%E9%83%A8%E5%88%86%E5%A4%84%E7%90%86"><span class="toc-number">3.5.</span> <span class="toc-text">图像无用部分处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9E%E9%80%9A%E5%9F%9F"><span class="toc-number">3.6.</span> <span class="toc-text">连通域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E6%97%A0%E5%85%B3%E8%BF%9E%E9%80%9A%E5%9F%9F"><span class="toc-number">3.7.</span> <span class="toc-text">过滤无关连通域</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E5%B9%B6%E5%BE%97%E5%88%B0%E7%BB%93%E6%9E%9C"><span class="toc-number">3.8.</span> <span class="toc-text">判断并得到结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E4%BB%A3%E7%A0%81"><span class="toc-number">4.</span> <span class="toc-text">附录：代码</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

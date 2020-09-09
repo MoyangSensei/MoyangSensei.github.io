@@ -1,0 +1,238 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：SRGAN · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：SRGAN</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>07-18-2020</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Photo-Realistic Single Image Super-Resolution Using a Generative Adversarial Network</p>
+</blockquote>
+<p><strong>这篇文章第一次将将生成对抗网络用在了解决超分辨率问题上。</strong></p>
+<blockquote>
+<p>生成对抗网络，Generative Adversarial Network，GAN；</p>
+<blockquote>
+<p>GAN = G + D + 其他；</p>
+</blockquote>
+<blockquote>
+<p>G：以次充好；D：明辨是非；其他：具体问题具体分析；</p>
+</blockquote>
+</blockquote>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/1.png" title="Optional title"></p>
+<h2 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h2><p>G：残差块 + 卷积层 + BN层 + PReLU</p>
+<h3 id="卷积层"><a href="#卷积层" class="headerlink" title="卷积层"></a>卷积层</h3><p>常规的卷积层。</p>
+<h3 id="BN层"><a href="#BN层" class="headerlink" title="BN层"></a>BN层</h3><blockquote>
+<p>Batch Normalization: Accelerating Deep Network Training by  Reducing Internal Covariate Shift</p>
+</blockquote>
+<p>在多数网络中，BN层的作用主要有以下四个：</p>
+<ul>
+<li>可以选择比较大的初始学习率，显著提高网络的训练速度</li>
+</ul>
+<blockquote>
+<p>在此之前的深度网络的训练，需要慢慢的调整学习率，甚至在网络训练到中间的时候，还需要考虑对学习率进行渐进的调整，有了BN之后，可以采用初始很大的学习率，然后学习率的衰减速度也很大，因为这个算法收敛很快。当然这个算法即使在选择了较小的学习率，也比以前的收敛速度快，因为它具有快速训练收敛的特性。</p>
+</blockquote>
+<ul>
+<li><p>无需再理会过拟合中drop out、L2正则项参数的选择问题。采用BN算法后，网络可以移除这两项了参数，或者可以选择更小的L2正则约束参数了，因为BN具有提高网络泛化能力的特性；</p>
+</li>
+<li><p>再也无需使用使用局部响应归一化层（局部响应归一化是Alexnet网络用到的方法），因为BN本身就是一个归一化网络层；</p>
+</li>
+<li><p>可以把训练数据彻底打乱。</p>
+</li>
+</ul>
+<blockquote>
+<p>防止每批训练的时候，某一个样本都经常被挑选到，原文说可以提高1%的精度。</p>
+</blockquote>
+<p>BN在SRGAN里并不是重点。<strong>ESRGAN有改进到这个点。</strong></p>
+<h3 id="Residual-blocks"><a href="#Residual-blocks" class="headerlink" title="Residual blocks"></a>Residual blocks</h3><blockquote>
+<p>为什么要使用残差块？意义如何？</p>
+</blockquote>
+<p>在生成器的前6层网络中，运用了残差块。</p>
+<p>使用残差块的意义是：当损失函数从D开始反向传播回G的时候，实际上进过来很多层。<strong>众所周知，越深的网络隐藏参数越多，在反向传播的过程中也越容易梯度弥散。</strong>而且残差连接的方法，就有效的保证了梯度信息能够有效的传递而增强生成对抗网络的鲁棒性。</p>
+<p><strong>很多的GAN类模型有这样的操作。</strong></p>
+<p><strong>ESRGAN也针对残差做了改进。</strong></p>
+<h2 id="为什么使用GAN来解决Image-SR的问题？"><a href="#为什么使用GAN来解决Image-SR的问题？" class="headerlink" title="为什么使用GAN来解决Image SR的问题？"></a>为什么使用GAN来解决Image SR的问题？</h2><p>传统插值方法可以看做把像素复制放大倍数后，用某种固定的卷积核去卷积。</p>
+<p>类似于SRCNN这样的基于卷积神经网络的方案也容易理解：学习上述卷积核，根据构建出的超分图像与真实的高分辨率图像(Ground Truth)的差距去更新网络参数。这种方法的损失函数一般都采用均方误差MSE。</p>
+<p>当前监督SR效果的算法（损失函数）的优化目标是使恢复后的HR图像与ground truth间的均方差（MSE）最小化。这样做的目的是：取得很高的PSNR。但是由于PSNR是基于像素级图像（pixel-wise image）的差异来定义的，因此PSNR捕捉到和人的感官非常密切的差异（纹理细节）的能力十分有限，<strong>因此最高的PSNR不一定能反映人感官上最好的结果。</strong>放大倍数越大，越不平滑的情况下PSNR越低。不过从视觉上说最为真实，因为过于平滑会使得图像内部物体的边缘看起来模糊。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/2.png" title="Optional title"></p>
+<p>上图中的图三是SRGAN给出的结果。PSNR虽然比图二低了近0.1，但是图二的脸和手明显是模糊的，看起来很不真实，图三的各个细节都很清晰，真实度比图二更高。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/3.png" title="Optional title"></p>
+<blockquote>
+<p>while GAN drives the reconstruction towards the natural image manifold producing perceptually more convincing solutions.</p>
+</blockquote>
+<p>这张图也说明的是上述问题。一旦放大倍数超过4，那么基于MSE优化的网络产生出来的HR图像在纹理细节方面就会过于平滑，看起来就像是糊成一团，但就是这样PSNR还有很高的得分。</p>
+<p><strong>换言之，SRGAN没有以PSNR/MSE为“最高指示”，它更注重人的主观的评价（SRGAN在PSNR的表现确实很一般）。</strong></p>
+<p>为了证明“高PSNR并不能带来良好的感官效果”这个观点，原文给出了一个指标，称为Mean opinion score（MOS），是26位评判者的打分。在这26位评委眼中，SRGAN产生的图像更真实：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/4.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/5.png" title="Optional title"></p>
+<h2 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h2><p>D：VGG19 + LeakyReLU + max-pooling</p>
+<h3 id="VGG19"><a href="#VGG19" class="headerlink" title="VGG19"></a>VGG19</h3><blockquote>
+<p>Very deep convolutional networks for large-scale image recognition</p>
+</blockquote>
+<p>上面提到了SRGAN以人的主观感受为主旨来进行网络的训练。</p>
+<p>于是会出现一个无法避免的问题：即使在同一个领域内以及对评判人做过筛选，人的感官也是一定是极其主观的评判。<strong>换言之，人的主观感受是无法用数学的语言去确切表达的。</strong>那么该如何实现以感官的标准来指定监督算法（损失函数）呢？</p>
+<p><strong>作者所选择的是基于VGG的内容损失。</strong>先基于预训练的19层VGG网络的ReLU激活层来定义损失函数。内容损失的实质就是从VGG19网络里提取的特征图之间欧式距离的损失函数，无论是超分辨率还是艺术风格的转移，效果都非常好。</p>
+<h2 id="如何使用GAN解决Image-SR的问题？"><a href="#如何使用GAN解决Image-SR的问题？" class="headerlink" title="如何使用GAN解决Image SR的问题？"></a>如何使用GAN解决Image SR的问题？</h2><p>GAN的工作过程：给定一个低分辨率图片作为噪声z的输入，通过生成器的变换把噪声的概率分布空间尽可能的去拟合真实数据的分布空间。</p>
+<p>而在SRGAN中生成器的输入不再是噪声，而是低分辨率图像；而判别器结构跟普通的GAN没有什么区别。</p>
+<p>综上，SRGAN的功能叙述为：<strong>把LR看成是一个噪声z的输入，那么G的作用就是生成的是一个fake的HR，D的作用是要去分辨G生成的fakeHR与原始的HR之间的区别，给出判断。</strong></p>
+<h1 id="min-max方程"><a href="#min-max方程" class="headerlink" title="min-max方程"></a>min-max方程</h1><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/6.png" title="Optional title"></p>
+<p>对于判别器D，希望D最大,所以加号之前的log部分应该最大,意味着判别器D可以很好的识别出，真实的高分辨率图像是”true”。而要让log尽可能的大，加号后的这部分中的ΘD(ΘG(z))要尽可能的小，意味着生成模型复原的图片应该尽可能的被D视为”FALSE”。</p>
+<p>对于生成器G，应该让G尽可能的小，加号前面的式子并没有G，加号后面的式子中要让ΘG尽可能地小,就要ΘD(ΘG(Z))尽可能的大，也就是说本来就一张低分辨率生成的图片，判别器却被迷惑了，以为是一张原始的高分辨率图片。</p>
+<h1 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h1><h2 id="Perceptual-loss-function"><a href="#Perceptual-loss-function" class="headerlink" title="Perceptual loss function"></a>Perceptual loss function</h2><blockquote>
+<p>Perceptual Losses for Real-Time Style Transfer and Super-Resolution and Super-Resolution</p>
+</blockquote>
+<p>最重要的就是本文特别定制的生成器D的损失函数，可以说就是为了这个损失函数才采用GAN的。这个特制的损失函数被称为感知损失，Perceptual loss function。结构如下：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/7.png" title="Optional title"></p>
+<p>其中，加号左边是Content loss（内容损失），加号右边是Adversarial loss（对抗损失，包括系数）。</p>
+<h3 id="Content-loss"><a href="#Content-loss" class="headerlink" title="Content loss"></a>Content loss</h3><p>与先前的基于深度学习的超分方法相比，SRGAN的D在Loss上只有一个明显的变化：Loss不再单是对构建出来图片与真实高分辨率图片求MSE，而是<strong>加上对构建出图片的特征图与真实高分辨率图片在VGG19下的特征图求MSE</strong>。</p>
+<p>简言之，内容损失=原MSE+特征图MSE：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/8.png" title="Optional title"></p>
+<blockquote>
+<p>原文中没有上述公式。</p>
+<p>原文中也并未明确地指出要加和原MSE，只是给出了VGG19特征图的MSE。</p>
+</blockquote>
+<p>加号左边是原MSE：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/9.png" title="Optional title"></p>
+<p>其中，θσ是网络参数，ILR是低分辨率图像，减号后面的部分是重建出来的高分辨率图像，  减号之前的是真实的高分辨率图像，r、W、H分别是图片数量、图片宽和高，都可以看成常数。</p>
+<p>加号右边是VGG19特征图的MSE，称为VGG loss：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/10.png" title="Optional title"></p>
+<p>VGG loss与原MSE相比，多的部分是φij，指的是第i个maxpooling层前的第j个卷积的特征图。</p>
+<blockquote>
+<p>VGG Loss的权重，1e-6是个超参，是TensorLayer的设置，设置到这么小应该是因为用了所有的特征图。</p>
+</blockquote>
+<h3 id="Adversarial-loss"><a href="#Adversarial-loss" class="headerlink" title="Adversarial loss"></a>Adversarial loss</h3><p>除了内容损失以外，还要加上一个GAN原有的对抗损失：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/11.png" title="Optional title"></p>
+<p>其中，log内的部分是判别器对于生成超分图片的输出，-log(x)在（0,1）上是个单调递减的函数。前面提到，生成器D希望log内部分的值越大越好，也就是-log(x)越小越好，因此梯度更新的时候需要最小化对抗损失。</p>
+<h3 id="生成器D的Loss"><a href="#生成器D的Loss" class="headerlink" title="生成器D的Loss"></a>生成器D的Loss</h3><p>综上，生成器D的Loss</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/12.png" title="Optional title"></p>
+<p>这一部分在Tensorflow平台上的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">g_gan_loss = <span class="number">1e-3</span> * tl.cost.sigmoid_cross_entropy(logits_fake, tf.ones_like(logits_fake))</span><br><span class="line">mse_loss = tl.cost.mean_squared_error(fake_patchs, hr_patchs, is_mean=<span class="literal">True</span>)</span><br><span class="line">vgg_loss = <span class="number">2e-6</span> * tl.cost.mean_squared_error(feature_fake, feature_real, is_mean=<span class="literal">True</span>)</span><br><span class="line">g_loss = mse_loss + vgg_loss + g_gan_loss</span><br></pre></td></tr></table></figure>
+
+<p>代码中的logits_real和logits_fake分别判别器对是真实高分图片、GAN生成的高分图片的输出。fake_patchs, hr_patchs分别是生成器的输出、真实的高分图片。feature_fake、feature_real是构建的图片、真实图片在VGG网络中的特征图。</p>
+<h2 id="判别器D的Loss"><a href="#判别器D的Loss" class="headerlink" title="判别器D的Loss"></a>判别器D的Loss</h2><p>D的Loss用到了sigmoid交叉熵。</p>
+<p>这一部分在Tensorflow平台上的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">d_loss1 = tl.cost.sigmoid_cross_entropy(logits_real, tf.ones_like(logits_real))</span><br><span class="line">d_loss2 = tl.cost.sigmoid_cross_entropy(logits_fake, tf.zeros_like(logits_fake))</span><br><span class="line">d_loss = d_loss1 + d_loss2</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>损失函数softmax_cross_entropy、binary_cross_entropy、sigmoid_cross_entropy之间的区别与联系：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/47172eb86b39">https://www.jianshu.com/p/47172eb86b39</a></p>
+</blockquote>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>实验部分给出的结论是</p>
+<ul>
+<li><p>未针对实时视频SR进行优化；</p>
+</li>
+<li><p>较浅的网络有可能提供非常有效的替代方案，但质量性能会有小幅度的降低。而更深层次的网络架构是也可以给出更高的结果。原文针对这一点给出的解释是：推测ResNet的设计对深层网络的性能有很大的影响：即使是更深层次的网络（B&gt;16）也可以进一步提高SRResNet的性能，但代价是需要更长的培训和测试时间。且由于高频伪影的出现，更深层次网络的SRGAN变体越来越难以训练。</p>
+</li>
+</ul>
+<blockquote>
+<p> In contrast to Dong et al. [10], we found deeper network architectures to be beneficial. We speculate that the ResNet design has a substantial impact on the performance of deeper networks. We found that even deeper networks (B &gt; 16) can further increase the performance of SRResNet, however, come at the cost of longer training and testing times (c.f. supple- mentary material). We further found SRGAN variants of deeper networks are increasingly difficult to train due to the appearance of high-frequency artifacts.</p>
+</blockquote>
+<p>对比实验做的是SRGAN在不同的卷积网络的深度下的效果，显然也是网络越深效果越好。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/13.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SRGAN/14.png" title="Optional title"></p>
+<p>VGG54取得了最好的视觉效果，原文给出的解释是：更深层的网络层在远离像素空间的情况下代表更高抽象的特征。</p>
+<blockquote>
+<p>In this work, we found lSR VGG/5.4 to yield the perceptually most convincing results, which we attribute to the potential of deeper network layers to represent features of higher abstraction [68, 65, 40] away from pixel space.</p>
+</blockquote>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>文章：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1609.04802.pdf">https://arxiv.org/pdf/1609.04802.pdf</a></p>
+</li>
+<li><p>code：<a target="_blank" rel="noopener" href="https://github.com/tensorlayer/srgan">https://github.com/tensorlayer/srgan</a> 、<a target="_blank" rel="noopener" href="https://github.com/aitorzip/PyTorch-SRGAN">https://github.com/aitorzip/PyTorch-SRGAN</a></p>
+</li>
+</ul>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRGAN/">http://example.com/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRGAN/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/09/03/%E5%9F%BA%E7%A1%80%EF%BC%9A%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/" title="基础：视频摘要"><span>< PreviousPost</span><br><span class="prevTitle">基础：视频摘要</span></a><a class="nextSlogan" href="/2020/07/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASRCNN/" title="论文研读：SRCNN"><span>NextPost ></span><br><span class="nextTitle">论文研读：SRCNN</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Generator"><span class="toc-number">1.1.</span> <span class="toc-text">Generator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%B7%E7%A7%AF%E5%B1%82"><span class="toc-number">1.1.1.</span> <span class="toc-text">卷积层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BN%E5%B1%82"><span class="toc-number">1.1.2.</span> <span class="toc-text">BN层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Residual-blocks"><span class="toc-number">1.1.3.</span> <span class="toc-text">Residual blocks</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8GAN%E6%9D%A5%E8%A7%A3%E5%86%B3Image-SR%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">为什么使用GAN来解决Image SR的问题？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Discriminator"><span class="toc-number">1.3.</span> <span class="toc-text">Discriminator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VGG19"><span class="toc-number">1.3.1.</span> <span class="toc-text">VGG19</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8GAN%E8%A7%A3%E5%86%B3Image-SR%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">1.4.</span> <span class="toc-text">如何使用GAN解决Image SR的问题？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#min-max%E6%96%B9%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">min-max方程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">损失函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Perceptual-loss-function"><span class="toc-number">3.1.</span> <span class="toc-text">Perceptual loss function</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Content-loss"><span class="toc-number">3.1.1.</span> <span class="toc-text">Content loss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Adversarial-loss"><span class="toc-number">3.1.2.</span> <span class="toc-text">Adversarial loss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%99%A8D%E7%9A%84Loss"><span class="toc-number">3.1.3.</span> <span class="toc-text">生成器D的Loss</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A4%E5%88%AB%E5%99%A8D%E7%9A%84Loss"><span class="toc-number">3.2.</span> <span class="toc-text">判别器D的Loss</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

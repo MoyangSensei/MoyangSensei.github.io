@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>“去雨”相关论文研读（二） · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">“去雨”相关论文研读（二）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>01-01-2020</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="Clearing-the-Skies-A-deep-network-architecture-for-single-image-rain-removal"><a href="#Clearing-the-Skies-A-deep-network-architecture-for-single-image-rain-removal" class="headerlink" title="Clearing the Skies: A deep network architecture for single-image rain removal"></a>Clearing the Skies: A deep network architecture for single-image rain removal</h1><blockquote>
+<p>晴空万里：一种用于单图像雨水去除的深层网络结构</p>
+</blockquote>
+<p>该论文第一次将深度卷积神经网络CNN用于单幅图像去雨，同时在细节层而不是在图像域训练网络。</p>
+<p>之前的方法仅通过低层特性将雨纹从对象细节中分离出来。当物体的结构和方向与雨纹相似时，这些方法很难同时去除雨纹和保存结构信息。另一方面，人类可以利用上下文信息等高级功能，轻松地在一张图像中分辨出雨纹。因此，提出了一种基于深度CNN网络的去雨方法。称为DerainNet。</p>
+<h2 id="DerainNet结构"><a href="#DerainNet结构" class="headerlink" title="DerainNet结构"></a>DerainNet结构</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A82/1.png" title="Optional title"></p>
+<p>首先将输入的含雨图像分离成高频细节层及低频的base 层，将高频细节层作为输入，使用CNN进行特征的提取，得到去雨后的细节层，然后分别对base层及去雨后的细节层进行图像增强，然后相加得到输出图像。</p>
+<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A82/2.png" title="Optional title"></p>
+<h2 id="卷积神经网络"><a href="#卷积神经网络" class="headerlink" title="卷积神经网络"></a>卷积神经网络</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A82/3.png" title="Optional title"></p>
+<h2 id="图像增强"><a href="#图像增强" class="headerlink" title="图像增强"></a>图像增强</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/%E5%8E%BB%E9%9B%A82/4.png" title="Optional title"></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h3><p>DerainNet直接自动从数据中学习了干净层和雨的细节层(即，高分辨率层)之间的非线性映射函数，同时进行了去雨和图像增强来改善视觉效果。</p>
+<p>使用图像处理领域的知识来修正目标函数，提高去雨质量，而不是使用增加神经元或叠加隐藏层等常用策略来有效地逼近期望的映射函数。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>350张室外清晰图片，（UCID、BSD、Google），使用Photoshop生成训练数据集。添加14种不同方向和强度的雨纹。</p>
+<h3 id="数据及代码是否开源"><a href="#数据及代码是否开源" class="headerlink" title="数据及代码是否开源"></a>数据及代码是否开源</h3><p>未提及。</p>
+<hr>
+<h1 id="Uncertainty-Guided-Multi-Scale-Residual-Learning-using-a-Cycle-Spinning-CNN-for-Single-Image-De-Raining"><a href="#Uncertainty-Guided-Multi-Scale-Residual-Learning-using-a-Cycle-Spinning-CNN-for-Single-Image-De-Raining" class="headerlink" title="Uncertainty Guided Multi-Scale Residual Learning-using a Cycle Spinning CNN for Single Image De-Raining"></a>Uncertainty Guided Multi-Scale Residual Learning-using a Cycle Spinning CNN for Single Image De-Raining</h1><blockquote>
+<p>基于循环旋转CNN的不确定性多尺度残差学习</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>CNN<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/liangchunjiang/article/details/79030681">https://blog.csdn.net/liangchunjiang/article/details/79030681</a></p>
+</blockquote>
+<hr>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2020/01/01/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/">http://example.com/2020/01/01/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/03/30/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASingle-Image-Deraining-From-Model-Based-to-Data-Driven-and-Beyond/" title="论文研读：Single Image Deraining: From Model-Based to Data-Driven and Beyond"><span>< PreviousPost</span><br><span class="prevTitle">论文研读：Single Image Deraining: From Model-Based to Data-Driven and Beyond</span></a><a class="nextSlogan" href="/2019/12/30/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/" title="“去雨”相关论文研读"><span>NextPost ></span><br><span class="nextTitle">“去雨”相关论文研读</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Clearing-the-Skies-A-deep-network-architecture-for-single-image-rain-removal"><span class="toc-number">1.</span> <span class="toc-text">Clearing the Skies: A deep network architecture for single-image rain removal</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DerainNet%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">DerainNet结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">目标函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">1.3.</span> <span class="toc-text">卷积神经网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E5%83%8F%E5%A2%9E%E5%BC%BA"><span class="toc-number">1.4.</span> <span class="toc-text">图像增强</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">1.5.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">1.5.1.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE"><span class="toc-number">1.5.2.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%8F%8A%E4%BB%A3%E7%A0%81%E6%98%AF%E5%90%A6%E5%BC%80%E6%BA%90"><span class="toc-number">1.5.3.</span> <span class="toc-text">数据及代码是否开源</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Uncertainty-Guided-Multi-Scale-Residual-Learning-using-a-Cycle-Spinning-CNN-for-Single-Image-De-Raining"><span class="toc-number">2.</span> <span class="toc-text">Uncertainty Guided Multi-Scale Residual Learning-using a Cycle Spinning CNN for Single Image De-Raining</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

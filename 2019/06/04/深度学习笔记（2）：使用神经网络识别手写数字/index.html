@@ -1,0 +1,183 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>深度学习笔记（2）：使用神经网络识别手写数字 · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">深度学习笔记（2）：使用神经网络识别手写数字</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>06-04-2019</span></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>时间长没有深度学习的新博客了，这也快到假期了，这门课程的学习还是得捡起来。</p>
+<p>在此之前一直在考虑一个问题：这门纯属自学的课程，我要按照什么样的方式或者顺序去学呢？想来想去最好的方法还是找一本教科书，按照教科书的内容去学，会比我个人从百度上以查找的方式和联想今天自己该学什么内容这样子会好一些。在此先挂上我所选用的教科书的信息。教科书以后说不定是会换的，但是现阶段还是打算照着这本书的目录进行学习。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/1.png" alt="封面" title="Optional title"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/2.png" alt="版权信息" title="Optional title"></p>
+<h1 id="本章前言"><a href="#本章前言" class="headerlink" title="本章前言"></a>本章前言</h1><p>大多数进行深度学习或者机器学习的人有极大概率接触过<strong>MINST手写数据集</strong>。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/3.png" alt="MINST手写数据集大概长这样" title="Optional title"></p>
+<p>这个数据集在这类课程中的地位大概就和在学习编程语言的时候进行的第一次控制台输出的”hello world!“一样。</p>
+<p><strong>本章的目的，就是通过实现手写数字识别的神经网络，来好好了解一下什么是深度学习。</strong></p>
+<hr>
+<h1 id="感知器"><a href="#感知器" class="headerlink" title="感知器"></a>感知器</h1><blockquote>
+<p>什么是神经网络？神经网络由什么组成？它如何进行工作？</p>
+</blockquote>
+<p>首先解释一种被称为“感知器”的人工神经元：一个感知器接受一个或多个二进制输入，给出一个二进制输出。对于每一个输入，给予<strong>权重</strong>表示该输入相对于输出的重要性。神经元的输出为二值输出，由其阈值决定，该阈值也是神经元的一个参数。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/4.png" alt="感知器" title="Optional title"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/5.png" alt="神经元的输出函数" title="Optional title"></p>
+<p><strong>可以将上述感知器看作依据权重来做出决定的设备。</strong>随着权重和阈值的变化，将得到不同的“设备”（决策模型）。但单个感知器并不可能用来做出全部的决策，因为决策往往是复杂的，是多元的。<strong>既然单个感知器做不到这样的事情，那么我们就用多个感知器如何？</strong>看看下面的感知器网络：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/6.png" alt="一个简单的感知器网络" title="Optional title"></p>
+<p><strong>在这个网络中，每一层网络都能比前一层网络考虑的内容更复杂。换言之，每一层网络都比前一层网络考虑了更多的细节。</strong>实际上我们完全可以用感知器来实现任何逻辑功能，即与或非的运算。这说明感知器的运算是具有通用性的，但从另外一个方向考虑，<strong>难道我们不是在学习一种新的逻辑计算设备？</strong>不过实际情况就是这样，只不过是感知器区别于一般的逻辑计算设备的思路是我们可以设计我们自己的<strong>学习算法，来自动调整人工神经元的权重和偏置（阈值），这一点是非常非常非常重要的。</strong></p>
+<p>最后，<strong>简化感知器的数学描述</strong>，两个变动：将求和写为向量的点乘、将感知器的阈值（-threshold）用偏置b代替。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/7.png" alt="简化感知器的数学描述" title="Optional title"></p>
+<h1 id="S型神经元"><a href="#S型神经元" class="headerlink" title="S型神经元"></a>S型神经元</h1><blockquote>
+<p>学习算法看上去也太理想太好用了，那么如何实现神经元的学习算法？</p>
+</blockquote>
+<p>假设我们有一个感知器网络来帮助我们进行手写数字图像的分类。我们希望该网络能自动的学习权重和偏置，来提高正确分类的成功率。<strong>为了看清楚这个网络是怎样的学习的，我们常规的做法是把网络中的参数作微小的改动。</strong>如果这个微小的改动对于网络的结果输出的影响是巨大的，那么我们就能让学习算法变得可能。</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/8.png" alt="感知器网络对于微小变化的感知" title="Optional title"></p>
+<p>一个例子：假如你的网络总会把8错误的认为成9，那么我们可以通过<strong>反复的进行细微改动网络参数，使8越来越容易被识别成8，这时，我们就说这个网络在进行学习。</strong></p>
+<p>但实际上这个想法里有很大的问题：网络中单个感知器上一个权重或偏置的微小改动有时候会引起那个感知器的输出完全翻转，如0变到1。<strong>这样的翻转可能接下来引起其余网络的行为以极其复杂的方式完全改变。</strong></p>
+<blockquote>
+<p>抓工作不能狗熊掰棒子，去过的每个地方都要抓反馈。——摘自习近平参加十二届全国人大四次会议湖南代表团审议的讲话，2016年3月8日。</p>
+</blockquote>
+<p>因此，虽然8可能被正确分类，但网络在其它图像上的行为很可能以一些很难控制的方式被完全改变。这么做，8是分对了，那么012345679呢？这使得逐步修改权重和偏置来让网络接近期望行为变得困难。</p>
+<p>对于上述问题，引入S神经元来解决问题：S型神经元和感知器类似，不同是S型神经元受整个网络的微小偏置和改动的影响是较小的。</p>
+<p>使用和感知器相同的方式可描述S型神经元，它们都是多输入单输出的单元。它们之间的区别是：<strong>感知器的输入输出都是二值的，而S型神经元的输入不是二值的，它的每一个输入是介于[0，1]的一个值。</strong>同样的，S型神经元也有用来描述重要性的权重$w$和描述阈值的偏置$b$。</p>
+<p>其输出也不是0和1，变为：σ(w·x+b)，其中σ被称为sigmoid函数（sigmoid函数具体是什么不重要，重要的是这个函数绘制出来的形状）：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/9.png" alt="sigmoid函数绘制出来的形状" title="Optional title"></p>
+<p>对于上面的sigmoid函数表达式，设置一个具有输入x、权重w和偏置b的S型神经元的输出为：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/10.png" alt="一个sigmoid函数下的S型神经元示例" title="Optional title"></p>
+<p>对于上述输出中的e^-z来说：</p>
+<ul>
+<li><p>当z=w·x+b是一个很大的正数时，该输出趋近于1；</p>
+</li>
+<li><p>当z=w·x+b是一个很大的负数时，该输出趋近于0；</p>
+</li>
+<li><p>只有在z取中间的一些值的时候，这个S型神经元和感知器才有较大的出入。</p>
+</li>
+</ul>
+<p><strong>如果σ是个阶跃函数，既然输出会依赖于w 4+ 6是正数还是负数2,那么S型神经元会成为一个感知器。所以σ函数的平滑特性，是重点中的重点：σ的平滑意呋着杈重和偏置的微小变化，即∆w和∆σ，会从神经元产生一个微小的输出变化∆output。</strong></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/11.png" alt="output的函数表达" title="Optional title"></p>
+<h1 id="神经网络的架构"><a href="#神经网络的架构" class="headerlink" title="神经网络的架构"></a>神经网络的架构</h1><blockquote>
+<p>有了学习算法之后，我们如何搭建一个神经网络？</p>
+</blockquote>
+<p>看看下面的网络架构：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/12.png" alt="一个典型的神经网络架构" title="Optional title"></p>
+<p>做如下定义：</p>
+<ul>
+<li>最右边的一列称作输出层（output layer）</li>
+<li>最左边的一列称作输入层（input layer）</li>
+<li>所有不是最左边也不是最右边的神经列称作隐藏层（hidden layer）</li>
+</ul>
+<p>设计网络的输入输出层通常是比较直接的。例如，假设我们尝试确定一张手写数字的图像上 是否写的是“9”。那么我们可以将图片像素的强度进行编码作为输入神经元来设计网络。 如果图像是一个64 x 64的灰度图像，那么我们会需要4096 = 64 x 64个输入神经元，每个强度 取0和1之间合适的值。输出层只需要包含一个神经元，当输出值小于0.5时表示“输入图像不 是一个9”，大于0.5的值表不“输入图像是一个9”。</p>
+<p><strong>而对于隐藏层来说，其设计流程是非常复杂的，也是神经网络架构设计中最重要的部分。</strong>目前已有众多的最优法则来帮助我们完成这件事情，让我们所设计的网络的行为更加接近我们内心所想。</p>
+<h1 id="一个简单的分类手写数字的网络"><a href="#一个简单的分类手写数字的网络" class="headerlink" title="一个简单的分类手写数字的网络"></a>一个简单的分类手写数字的网络</h1><blockquote>
+<p>根据上面的理论，构造一个简单的分类手写数字的网络！</p>
+</blockquote>
+<p>首先，一个需要说明的问题是，这里的分类网路针对的问题仅仅是识别问题，而图像分割问题则不在考虑范围之内。<strong>实际上，只要有足够精准的识别算法，分割问题便不难解决。</strong></p>
+<p>我们设想使用一个三层的神经网络来识别单个数字：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/13.png" alt="识别单个数字的三层神经网络" title="Optional title"></p>
+<p>对上面的神经网络做出解释：</p>
+<p>网络的输入层包含绐输入像素的值进行编码的神经元：因为绐网络的训练数据会有很多扫描得到的28x28的手写数字的图像组成，所有输入层包含有784=28x28个神经元。为了简化，上图中已经忽略了784中大部分的输入神经元。输入像素是灰度级的，值为0.0表示白色，值为1.0表示黑色，中间数值表示逐渐暗淡的灰色。</p>
+<p>网络的第二层是一个隐藏层。我们用n来表示神经元的数量，我们将绐n实验不同的数值。示例中用一个小的隐藏层来说明，仅仅包含n=15个神经元。</p>
+<p>网络的输出层包含有10个神经元。如果第一个神经元激活，即输出1，那么表明网络认为 数字是一个0。如果第二个神经元激活，就表明网络认为数字是一个1。依此类推。即此处把输出神经元的输出赋予编号0到9,并计算出那个神经元有最高的激活值。</p>
+<p>接下来的这个问题非常重要，它将帮助我们理解<strong>隐藏层在干什么</strong>：有人可能会好奇为什么用10个输出神经元。毕竟我们的任务是能让神经网络告诉我们哪个数字（0，1，2，…，9)能和输入图片匹配。一个看起来更自然的方式就是使用4个输出神经元，把每一个当做一个二进制值，结果取决于它的输出更靠近0还是1。四个神经元足够编码这个问题了，因为2^3=8 &lt; 10 &lt;2^4=16 。<strong>所以为什么我们反而要用10个神经元呢？这样做难道效率不低吗？</strong></p>
+<p><strong>对于这个问题，大家的第一反应就是：10个输出神经元的神经网络比4个的识别效果更好。</strong>那么接下来的问题是：<strong>为什么使用10个输出神经元的神经网络更有效呢。有没有什么启发性的方法能提前告诉我 们用10个输出编码比使用4个输出编码更有好呢？</strong></p>
+<p>假设我们用到的这10个输出编码，<strong>假设它们之中的每一个的作用是识别图片的一部分（这个假设在这个情景中极其重要！但是在这个情景之外就不重要了）</strong>。如果我们识别0的过程如下：</p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/14.png" alt="要被识别的0" title="Optional title"></p>
+<p><img src="/images/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/2/15.png" alt="将0分成4个识别部分" title="Optional title"></p>
+<p><strong>在上面的识别过程中，如果所有隐藏层的这四个神经元被激活那么我们就可以推断出这个数字是0。</strong>当然，这不是推断出0的唯一方式，还能通过很多其他合理的方式得到0(通过上述图像的转换，或者稍微变形)。但至少在这个例子中我们可以推断出输入的数字是0。</p>
+<p>假设神经网络以上述方式运行，则可以绐出一个合理的理由去解释为什么用10个输出而不是4个：<strong>如果我们有4个输出，那么第一个输出神经元将会尽力去判断数字的最高有效位是什么。把数字的最高有效位和数字的形状联系起来并不是一个简单的问题。</strong></p>
+<p>上面只是一个启发性的方法。<strong>没有什么理由表明这个三层的神经网络必须按照上面描述的方式运行，即隐藏层是用来探测数字的组成形状。</strong>可能一个聪明的学习算法将会找到一些合适的权重能让我们仅仅用4个输出神经元就行。但这个启发性的方法是很有效的，我们可以通过这种方法去构建我们想要的神经网路并使它尽可能达到高效。</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2019/06/04/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89%EF%BC%9A%E4%BD%BF%E7%94%A8%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AF%86%E5%88%AB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97/">http://example.com/2019/06/04/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%882%EF%BC%89%EF%BC%9A%E4%BD%BF%E7%94%A8%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%AF%86%E5%88%AB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2019/06/16/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%BA%94%EF%BC%9A%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F/" title="操作系统五：文件管理系统"><span>< PreviousPost</span><br><span class="prevTitle">操作系统五：文件管理系统</span></a><a class="nextSlogan" href="/2019/05/31/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86%EF%BC%9A%E5%9F%BA%E4%BA%8ESLR-1-%E5%88%86%E6%9E%90%E6%B3%95%E7%9A%84%E8%AF%AD%E6%B3%95%E5%88%B6%E5%AF%BC%E7%BF%BB%E8%AF%91%E5%8F%8A%E4%B8%AD%E9%97%B4%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90/" title="编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成"><span>NextPost ></span><br><span class="nextTitle">编译原理：基于SLR(1)分析法的语法制导翻译及中间代码生成</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="toc-number">1.</span> <span class="toc-text">写在前面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E7%AB%A0%E5%89%8D%E8%A8%80"><span class="toc-number">2.</span> <span class="toc-text">本章前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E7%9F%A5%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">感知器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#S%E5%9E%8B%E7%A5%9E%E7%BB%8F%E5%85%83"><span class="toc-number">4.</span> <span class="toc-text">S型神经元</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%9E%B6%E6%9E%84"><span class="toc-number">5.</span> <span class="toc-text">神经网络的架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%86%E7%B1%BB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E7%9A%84%E7%BD%91%E7%BB%9C"><span class="toc-number">6.</span> <span class="toc-text">一个简单的分类手写数字的网络</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

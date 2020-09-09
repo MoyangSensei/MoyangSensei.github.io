@@ -1,0 +1,256 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：Single Image Deraining: From Model-Based to Data-Driven and Beyond · MoYang's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">MoYang</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：Single Image Deraining: From Model-Based to Data-Driven and Beyond</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>03-30-2020</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>这是一篇关于单图像去雨和视频去雨方法的综述性论文。作者在文中总结了过去20年内的一些去雨方法，并对它们进行分类，对它们的结果做了定性和定量分析以及结果之间的对比。</p>
+<blockquote>
+<blockquote>
+<p>The goal of single-image deraining is to restore the rain-free background scenes of an image degraded by rain streaks and rain accumulation. The early single-image deraining methods employ a cost function, where various priors are developed to represent the properties of rain and background layers. Since 2017, single-image deraining methods step into a deep-learning era, and exploit various types of networks, i.e. convolutional neural networks, recurrent neural networks, generative adversarial networks, etc., demonstrating impressive performance. </p>
+</blockquote>
+<blockquote>
+<p>Given the current rapid development, in this paper, we provide a comprehensive survey of deraining methods over the last decade. We summarize the rain appearance models, and discuss two categories of deraining approaches: model-based and data-driven approaches. For the former, we organize the literature based on their basic models and priors. For the latter, we discuss developed ideas related to architectures, constraints, loss functions, and training datasets. </p>
+</blockquote>
+<blockquote>
+<p>We present milestones of single-image deraining methods, review a broad selection of previous works in different categories, and provide insights on the historical development route from the model-based to data-driven methods. We also summarize performance comparisons quantitatively and qualitatively. Beyond discussing the technicality of deraining methods, we also discuss the future directions.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>单幅图像排空的目标是恢复因雨水条纹和雨水堆积而退化的图像的无雨背景场景。早期的单图像排空方法采用成本函数，其中开发了各种先验以表示雨层和背景层的属性。自2017年以来，单图像排空方法进入了深度学习时代，并利用了各种类型的网络，即卷积神经网络，递归神经网络，生成对抗网络等，展示了令人印象深刻的性能。</p>
+</blockquote>
+<blockquote>
+<p>鉴于当前的快速发展，本文对过去十年中的去雨方法进行了全面的调查。我们总结了降雨外观模型，并讨论了两种减雨方法：基于模型的方法和基于数据驱动的方法。对于前者，我们根据其基本模型和先验知识来整理文献。对于后者，我们讨论与体系结构，约束，损失函数和训练数据集有关的已开发思想。</p>
+</blockquote>
+<blockquote>
+<p>我们介绍了单图像排空方法的里程碑，回顾了不同类别的大量先前作品，并提供了从基于模型的方法到数据驱动方法的历史发展路线的见解。我们还定量和定性总结了性能比较。除了讨论去雨方法的技术性之外，我们还讨论了未来的发展方向。</p>
+</blockquote>
+</blockquote>
+<h1 id="INTRODUCTION"><a href="#INTRODUCTION" class="headerlink" title="INTRODUCTION"></a>INTRODUCTION</h1><blockquote>
+<p>An early study of video deraining was started in 2004 by Garg and Nayar [3]. They analyze rain dynamic appearances, and develop an approach to remove rain streaks from videos. Kang et al. [4] was a pioneer in the single image deraining by publishing a method in 2012. The method extracts the high-frequency layer of a rain image, and decomposes the layer further into rain and non-rain components using dictionary learning and sparse coding. Starting from 2017, by the publications of [1, 18], data-driven deep-learning methods that learn features automatically become dominant in the literature.</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>Garg和Nayar [3]于2004年开始了对视频去雨的早期研究。他们分析了雨水的动态外观，并开发了一种方法来消除视频中的雨水条纹。 </p>
+</blockquote>
+<blockquote>
+<p>Kang等。 [4]是通过在2012年发布一种方法来进行单幅图像去雨的先驱。该方法提取了降雨图像的高频层，并使用字典学习和稀疏编码将其进一步分解为降雨和非降雨成分。 </p>
+</blockquote>
+<blockquote>
+<p>从[1，18]的出版物开始，从2017年开始，学习特征的数据驱动的深度学习方法自动成为文献中的主导。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>单一图像去雨研究的历史：在2017年之前，典型的方法是基于模型的方法（或非深度学习方法）。基于模型的方法的主要发展受到以下观念的推动：图像分解（2012年），稀疏编码（2015年）和基于先验的高斯混合模型（2016年）。自2017年以来，单图像清除方法进入了数据驱动方法（或深度学习方法）时期。</li>
+</ul>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/11.png" title="Optional title"></p>
+<blockquote>
+<p>单一图像排空方法的里程碑：图像分解，稀疏编码，高斯混合模型，深度卷积网络，生成对抗网络以及半/无监督学习。在2017年之前，典型的方法是基于模型的方法（或非深度学习方法）。自2017年以来，单图像去雨方法进入了数据驱动方法（或深度学习方法）时期。</p>
+</blockquote>
+<ul>
+<li>基于模型的方法及相关论文。</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>Model-based methods rely more on the statistical analysis of rain streaks and background scenes. The methods enforce handcrafted priors on both rain and background layers, then build a cost function and optimize it. The priors are extracted from various ways: Luo et al. [5] learn dictionaries for both rain streak and background layers, Li et al. [6] build Gaussian mixture models from clean images to model background scenes, and from rain patches of the input image to model rain streaks, Zhu et al. [7] enforce a certain rain direction based on rain-dominated regions so that the background textures can be differentiated from rain streaks.</p>
+</blockquote>
+<blockquote>
+<p>基于模型的方法更多地依赖于雨条纹和背景场景的统计分析。该方法在雨层和背景层都执行手工制作的先验，然后构建成本函数并对其进行优化。先验是通过各种方式提取的：Luo等。 [5] Li等人学习了有关雨条纹和背景层的词典。［6］建立了高斯混合模型，从干净的图像到背景场景，从输入图像的雨斑到雨条纹，朱等人。 [7]基于降雨为主的地区实施一定的降雨方向，以便可以将背景纹理与降雨条纹区分开。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>基于数据驱动的相关方法和论文：数据驱动方法的主要发展：深度卷积网络（2017），生成对抗网络（2019）和半/无监督方法（2019）。在2017-2019年间，关于这种深度学习方法的论文超过30篇，大大超过了2017年之前的枯竭论文数量。</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>In recent years, the popularity of data-driven methods has overtaken model-based methods. These methods exploits deep net- works to automatically extract hierarchical features, enabling them to model more complicated mappings from rain images to clean ones. Some rain-related constraints are usually injected into the networks to learn more effective features, such as rain masks [1], background features [8], etc. Architecture wise, some methods utilize recurrent network [1], or recursive network [9] to remove rain progressively. There are also a series of works focusing on the hierarchical information of deep features, e.g. [10, 11].<br>While deep networks lead to a rapid progress in deraining performance, many of these deep-learning deraining methods train the networks in a fully supervised way. This can cause a problem, since to obtain paired images of rain and rain-free images is intractable. The simplest solution is to utilize synthetic images. Yet, there are domain gaps between synthetic rain and real rain images, which can make the deraining performance not optimum. To overcome the problem, unsupervised/semi-supervised methods thatexploitrealrainimages [12]and [13]areintroduced.</p>
+</blockquote>
+<blockquote>
+<p>近年来，数据驱动方法的普及已经取代了基于模型的方法。这些方法利用深层网络自动提取层次结构特征，从而使它们能够建模从降雨图像到干净图像的更复杂的映射。通常会向网络中注入一些与雨水相关的约束条件，以学习更有效的功能，例如防雨罩[1]，背景特征[8]等。在架构上，某些方法利用循环网络[1]或递归网络[9] ]逐步去除雨水。还有一系列针对深度特征的分层信息的作品，例如[10，11]。<br>虽然深层网络在去雨性能方面取得了迅速的进步，但许多深度学习去雨方法都以完全受监督的方式训练网络。这可能会引起问题，因为难以获得雨水和无雨水图像的配对图像。最简单的解决方案是利用合成图像。然而，合成降雨和真实降雨图像之间存在域间隙，这可能会使去雨性能不是最佳的。为了克服这个问题，引入了无监督/半监督的方法来利用真实的雨像[12]和[13]。</p>
+</blockquote>
+</blockquote>
+<h1 id="RAINDROP-APPEARANCE-MODELS"><a href="#RAINDROP-APPEARANCE-MODELS" class="headerlink" title="RAINDROP APPEARANCE MODELS"></a>RAINDROP APPEARANCE MODELS</h1><p>此段结合雨滴的物理特性，给出合成雨模型的合成方法。</p>
+<blockquote>
+<blockquote>
+<p>The shape of a raindrop is usually approximated by a spherical shape [14]. </p>
+</blockquote>
+<blockquote>
+<p>雨滴的形状通常近似为球形[14]。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>As a result, in most rain synthetic models, rain streaks are assumed to be superimposed on the background image.</p>
+</blockquote>
+<blockquote>
+<p>最终，在大多数降雨合成模型中，降雨条纹是假定叠加在背景图像上。</p>
+</blockquote>
+</blockquote>
+<h1 id="LITERATURE-SURVEY"><a href="#LITERATURE-SURVEY" class="headerlink" title="LITERATURE SURVEY"></a>LITERATURE SURVEY</h1><h2 id="Synthetic-Rain-Models"><a href="#Synthetic-Rain-Models" class="headerlink" title="Synthetic Rain Models"></a>Synthetic Rain Models</h2><p>六种合成雨模型。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/33.png" title="Optional title"></p>
+<blockquote>
+<blockquote>
+<p>However, as we mentioned in the beginning of this section that all these models are heuristic; implying that they might not entirely correct physically. Nevertheless, as shown in the literature, they can be effective, at least to some extent, for image deraining.</p>
+</blockquote>
+<blockquote>
+<p>但是，正如我们在本节开始时提到的那样，所有这些模型都是启发式的。暗示它们可能在物理上不完全正确。 然而，如文献所示，它们可以至少在一定程度上有效地消除图像。</p>
+</blockquote>
+</blockquote>
+<h3 id="Additive-Composite-Model-（ACM）"><a href="#Additive-Composite-Model-（ACM）" class="headerlink" title="Additive Composite Model （ACM）"></a>Additive Composite Model （ACM）</h3><p>现有研究中使用的最简单和流行的降雨模型是加法复合模型[4，6]，它遵循方程式：O = B + S。</p>
+<blockquote>
+<p>其中B表示背景层，S表示雨条纹层。 O是由于雨条纹而劣化的图像。在此，该模型假设降雨条纹的外观仅与背景重叠，并且在降雨退化图像中没有降雨积聚。</p>
+</blockquote>
+<h3 id="Screen-Blend-Model-（SBM）"><a href="#Screen-Blend-Model-（SBM）" class="headerlink" title="Screen Blend Model （SBM）"></a>Screen Blend Model （SBM）</h3><p>罗等[5]提出了一种非线性复合模型，称为背景混合模型：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/22.png" title="Optional title"></p>
+<blockquote>
+<p>其中◦表示逐点乘法运算。不同于加性复合模型，背景层和雨层相互影响。 罗等[5]声称，背景混合模型可以对真实降雨图像的某些视觉属性（例如内部反射的效果）进行建模，从而生成视觉上更真实的降雨图像。雨层和背景层的组合取决于信号。这意味着，当背景昏暗时，雨层将主导雨图像的外观；并且，当背景明亮时，背景层将主导图像。</p>
+</blockquote>
+<h3 id="Heavy-Rain-Model-（HRM）"><a href="#Heavy-Rain-Model-（HRM）" class="headerlink" title="Heavy Rain Model （HRM）"></a>Heavy Rain Model （HRM）</h3><blockquote>
+<p>杨等[1]提出了一个包括降雨条纹和降雨积聚的降雨模型。这是去雨文献中包含两个降雨现象的第一个模型。雨水积聚或遮雨效果是大气中的水颗粒和无法单独看到的远距离雨水条纹的结果。雨水积累的视觉效果类似于雾气或雾气，导致对比度低。 考虑到降雨的两个主要方面：Koschmieder模型（用于近似浑浊介质中场景的视觉外观）以及方向和形状不同的重叠降雨条纹，引入了一种新颖的降雨模型.</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/55.png" title="Optional title"></p>
+<blockquote>
+<p>其中，St表示条纹方向相同的雨条纹层。t标记雨条纹层，而s是最大雨条纹层数。A是整体大气光，α是大气透射率。</p>
+</blockquote>
+<h3 id="Rain-Model-with-Occlusion-（ROM）"><a href="#Rain-Model-with-Occlusion-（ROM）" class="headerlink" title="Rain Model with Occlusion （ROM）"></a>Rain Model with Occlusion （ROM）</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/44.png" title="Optional title"></p>
+<blockquote>
+<p>刘等[15]将大雨模型扩展为可识别视频中雨的遮挡意识雨模型。该模型将雨条纹分为两种类型：添加到背景层的透明雨条纹和完全遮盖背景层的不透明雨条纹。这些不透明雨条纹的位置由称为信赖图的地图指示。</p>
+</blockquote>
+<h3 id="Comprehensive-Rain-Model-CRM"><a href="#Comprehensive-Rain-Model-CRM" class="headerlink" title="Comprehensive Rain Model (CRM)"></a>Comprehensive Rain Model (CRM)</h3><blockquote>
+<p>杨等[2]结合以上所有内容在综合降雨模型中提到了退化因素用于在视频中模拟雨的外观。它考虑了时间雨景的属性，尤其是快速变化的降雨通常会引起闪烁的杂音。这种可见强度发生变化沿时间维度的时间称为降雨积累流。此外，它还考虑了其他因素，包括降雨条纹，降雨积聚和降雨遮挡。</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/66.png" title="Optional title"></p>
+<h3 id="Depth-Aware-Rain-Model-（DARM）"><a href="#Depth-Aware-Rain-Model-（DARM）" class="headerlink" title="Depth-Aware Rain Model （DARM）"></a>Depth-Aware Rain Model （DARM）</h3><blockquote>
+<p>Hu等[16]进一步将α连接到场景深度d，以创建深度感知雨模型.</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SID/77.png" title="Optional title"></p>
+<h2 id="Deraining-Challenges"><a href="#Deraining-Challenges" class="headerlink" title="Deraining Challenges"></a>Deraining Challenges</h2><ul>
+<li>建模雨水图像的困难在现实世界中，雨水可能以多种不同的方式在视觉上出现。雨条纹的大小，形状，比例，密度，方向等可能会有所不同。同样，雨的积累取决于各种水颗粒和大气条件。此外，下雨的外观也极大地依赖于背景场景的纹理和深度。所有这些都导致对降雨的外观进行建模的困难，因此导致渲染物理上正确的降雨图像是一项复杂的任务。</li>
+<li>去雨问题的不适性即使使用仅考虑雨条纹的简单降雨模型，从退化的图像估计背景场景也是不适性的问题。原因是我们只有由带有雨和背景场景的融合信息的光产生的像素强度值。更糟的是，在某些情况下，背景信息可能会完全被雨条纹或浓雨积累或两者同时遮挡。</li>
+<li>难以找到合适的先验信息。由于特征空间中的雨水和背景信息可能会重叠，因此将它们分开并不容易。 背景纹理可能被错误地认为是雨，导致不正确的排水。 因此，有必要对背景纹理和雨水有很强的先验性。 但是，要找到这些先验是困难的，因为背景纹理是多种多样的，并且某些与雨条纹或雨水堆积的外观相似。</li>
+<li>真正的配对真相。大多数深度学习方法都依赖配对的雨水和干净的背景图像来训练其网络。但是，要获得真实的降雨图像及其确切的干净背景图像对是很棘手的。 即使对于静态背景，照明条件也总是会变化。这个困难不仅影响深度学习方法，而且影响评估任何方法的有效性。当前，为了进行定性评估，所有方法都依赖于人类主观判断，以确定恢复后的图像是否良好。 对于定量评估，所有当前方法都依赖于合成图像。不幸的是，到目前为止，合成图像和真实图像之间还存在很大差距。</li>
+</ul>
+<h2 id="Single-image-Deraining-Methods"><a href="#Single-image-Deraining-Methods" class="headerlink" title="Single-image Deraining Methods"></a>Single-image Deraining Methods</h2><h3 id="Model-based-Methods"><a href="#Model-based-Methods" class="headerlink" title="Model-based Methods"></a>Model-based Methods</h3><h4 id="Sparse-Coding-Methods"><a href="#Sparse-Coding-Methods" class="headerlink" title="Sparse Coding Methods"></a>Sparse Coding Methods</h4><p>[56]将输入向量表示为基本向量的稀疏线性组合。这些基向量的集合称为字典，其用于重建特定类型的信号，例如信号。排水问题中有雨条纹和背景信号。</p>
+<p>Lin等[4]首次尝试使用形态学成分分析通过图像分解进行单图像排水。通过字典学习和稀疏编码，将最初提取的雨图像的高频分量进一步分解为雨分量和非雨分量。这项先锋工作成功地消除了稀疏的小雨条纹。但是，它极大地依赖于双边过滤器的预处理，因此会产生模糊的背景细节。</p>
+<p>在后续工作中，Luo等人[5]增强了降雨的稀疏性，并将互斥性引入了区分性稀疏编码（DSC）中，以帮助准确地将降雨/背景层与其非线性复合物分离。由于具有互斥性，DSC保留了干净的纹理细节；但是，它在输出中显示出一些残留的降雨条纹，特别是对于大而密集的降雨条纹。</p>
+<p>为了进一步提高建模能力，Zhu等人[7]构建了一个迭代的层分离过程，以使用背景特定的先验技术从背景层中去除雨水条纹，并从雨层中去除背景的纹理细节。从数量上讲，该方法在某些合成数据集上可获得与同期发布的基于深度学习的方法（即JORDER [1]和DDN [18]）相当的性能。但是，从质量上说，在真实图像上，该方法在处理大雨的情况下往往会失败，因为大雨可能会在不同的方向上移动。</p>
+<p>为了模拟雨条纹的方向和稀疏度，邓等人[17]制定了方向群稀疏模型（DGSM），其中包括三个稀疏项，代表着雨纹的内在方向和结构知识。它可以有效消除模糊的雨纹，但不能消除锐利的雨纹。</p>
+<h4 id="Gaussian-Mixture-Model"><a href="#Gaussian-Mixture-Model" class="headerlink" title="Gaussian Mixture Model"></a>Gaussian Mixture Model</h4><p>Li等[6]应用高斯混合模型（GMM）来模拟雨层和背景层。背景层的GMM是从具有不同背景场景的真实图像中离线获取的。建议从输入图像中选择不具有背景纹理的雨斑来训练雨层的GMM。利用总变化量来消除小火花雨。该方法能够有效地去除小规模和中等规模的雨斑，但是不能处理大而尖的雨斑。</p>
+<h3 id="Deep-Learning-Based-Methods"><a href="#Deep-Learning-Based-Methods" class="headerlink" title="Deep Learning Based Methods"></a>Deep Learning Based Methods</h3><h4 id="Deep-CNNs"><a href="#Deep-CNNs" class="headerlink" title="Deep CNNs"></a>Deep CNNs</h4><p>[1]构建一个联合降雨检测和清除网络。它可以处理大雨，重叠的雨条纹和雨水堆积。该网络可以通过预测二元防雨罩来检测雨水的位置，并采用递归框架来去除雨水条纹并逐步清除雨水积聚。该方法在下大雨的情况下取得了良好的效果。但是，它可能会错误地去除垂直纹理并生成曝光不足的照明。</p>
+<p>同年，傅等人[18，19]尝试通过深层细节网络（DetailNet）去除雨水条纹。该网络仅将高频细节作为输入，并预测雨水残留和清晰的图像。该论文表明，删除网络输入中的背景信息是有益的，因为这样做可以使训练更容易，更稳定。但是，该方法仍然不能处理大而尖的雨纹。</p>
+<p>继杨等[1]和傅等[18，19]，提出了许多基于CNN的方法[8，10，20-23]。这些方法采用了更先进的网络架构，并注入了与降雨相关的新先验。他们在数量和质量上都取得了更好的结果。但是，由于它们受完全监督的学习范式的局限性（即使用合成降雨图像），它们在处理训练中从未见过的真实降雨条件时往往会失败。</p>
+<h4 id="Generative-Adversarial-Networks"><a href="#Generative-Adversarial-Networks" class="headerlink" title="Generative Adversarial Networks"></a>Generative Adversarial Networks</h4><p>生成对抗网络为了捕获无法建模和合成的某些视觉降雨属性，引入对抗学习以减少生成的结果与真实清晰图像之间的领域差距。典型的网络体系结构由两部分组成：生成器和鉴别器，其中鉴别器试图评估所生成的结果是真实的还是伪造的，这提供了额外的反馈以使生成器正规化，以产生更令人愉悦的结果。</p>
+<p>张等[24]直接将条件生成对抗网络（CGAN）用于单图像除雨任务。CGAN能够捕获超出信号保真度的视觉属性，并以更好的照明，颜色和对比度分布呈现结果。但是，当测试降雨图像的背景与训练集中的背景不同时，CGAN有时可能会生成视觉伪像。</p>
+<p>Li等[13]提出了一种结合物理驱动网络和对抗学习精炼网络的单幅图像去雨方法。第一阶段从合成数据中学习并估算与物理相关的成分，即降雨条纹，透射率和大气光。在第二细化阶段，提出了深度引导GAN，以补偿丢失的细节并在第一阶段抑制引入的伪影。从真实的降雨数据中学习，通过这些方法得出的结果在视觉上具有显着性改进，即彻底清除雨水堆积，并实现更加平衡的亮度分布。然而，因为基于GAN的方法并不擅长捕获细粒度细节信号，这些方法也无法正确模拟真实的雨水条纹的外观。</p>
+<h1 id="代码和数据"><a href="#代码和数据" class="headerlink" title="代码和数据"></a>代码和数据</h1><p>作者在github发布了一个存储库，包括74篇雨水去除论文的直接链接，9种视频雨水去除方法和20种单图像雨水去除方法的源代码，19个相关项目页面，6个合成数据集和4个真实数据集，以及4个常用的图像质量度量。</p>
+<p>&lt;hongwang01/Video-and-Single-Image-Deraining&gt;</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>按照原文的序号列出。</p>
+<p>之前进行过阅读的论文序号：</p>
+<ul>
+<li>[1]：基于模型的去雨方法。</li>
+<li>[19]：基于深度CNN网络的去雨方法，称为DerainNet。</li>
+<li>[22]：提出一种密度感知多路稠密连接神经网络算法，DID-MDN。</li>
+<li>[24、28]：GAN相关。</li>
+<li>[29]：基于循环旋转CNN的不确定性多尺度残差学习。</li>
+</ul>
+<p>[1] W. Yang, R. T. Tan, J. Feng, J. Liu, Z. Guo, and S. Yan, “Deep joint rain detection and removal from a single image,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, July 2017.<br>[2] W. Yang, J. Liu, and J. Feng, “Frame-consistent recurrent video deraining with dual-level flow,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[3] K. Garg and S. K. Nayar, “Detection and removal of rain from videos,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, vol. 1, 2004, pp. I–528.<br>[4] L. W. Kang, C. W. Lin, and Y. H. Fu, “Automatic single- image-based rain streaks removal via image decomposition,” IEEE Trans. on Image Processing, vol. 21, no. 4, pp. 1742– 1755, April 2012.<br>[5] Y. Luo, Y. Xu, and H. Ji, “Removing rain from a single image via discriminative sparse coding,” in Proc. IEEE Int’l Conf. Computer Vision, 2015, pp. 3397–3405.<br>[6] Y. Li, R. T. Tan, X. Guo, J. Lu, and M. S. Brown, “Rain streak removal using layer priors,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, 2016, pp. 2736–2744.<br>[7] L. Zhu, C. Fu, D. Lischinski, and P. Heng, “Joint bi- layer optimization for single-image rain streak removal,” in Proc. IEEE Int’l Conf. Computer Vision, Oct 2017, pp. 2545– 2553.<br>[8] Z. Fan, H. Wu, X. Fu, Y. Huang, and X. Ding, “Residual- guide network for single image deraining,” in ACM Trans. Multimedia, 2018, pp. 1751–1759.<br>[9] D. Ren, W. Zuo, Q. Hu, P. Zhu, and D. Meng, “Progressive image deraining networks: A better and simpler baseline,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[10] G. Li, X. He, W. Zhang, H. Chang, L. Dong, and L. Lin, “Non-locally enhanced encoder-decoder network for single image de-raining,” in ACM Trans. Multimedia. ACM, 2018, pp. 1056–1064.<br>[11] X. Fu, B. Liang, Y. Huang, X. Ding, and J. Paisley, “Lightweight pyramid networks for image deraining,” IEEE Trans. on Neural Networks and Learning Systems, pp. 1–14, 2019.<br>[12] X.Jin,Z.Chen,J.Lin,Z.Chen,andW.Zhou,“Unsupervised single image deraining with self-supervised constraints,” in Proc. IEEE Int’l Conf. Image Processing, Sep. 2019, pp. 2761–2765.<br>[13] R. Li, L.-F. Cheong, and R. T. Tan, “Heavy rain image restoration: Integrating physics model and conditional adver- sarial learning,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[14] K. Garg and S. K. Nayar, “Vision and rain,” Int. J. Comput. Vision, vol. 75, no. 1, pp. 3–27, October 2007.<br>[15] J. Liu, W. Yang, S. Yang, and Z. Guo, “Erase or fill? deep joint recurrent rain removal and reconstruction in videos,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2018, pp. 3233–3242.<br>[16] X. Hu, C.-W. Fu, L. Zhu, and P.-A. Heng, “Depth-attentional features for single-image rain removal,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[17] L.-J. Deng, T.-Z. Huang, X.-L. Zhao, and T.-X. Jiang, “A di- rectional global sparse model for single image rain removal,” Applied Mathematical Modelling, vol. 59, pp. 662 – 679, 2018.<br>[18] X. Fu, J. Huang, X. Ding, Y. Liao, and J. Paisley, “Re- moving rain from single images via a deep detail network,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, Honolulu, Hawaii, USA, July 2017.<br>[19] ——, “Clearing the skies: A deep network architecture for single-image rain removal,” IEEE Trans. on Image Process- ing, vol. 26, no. 6, pp. 2944–2956, June 2017.<br>[20] R. Li, L.-F. Cheong, and R. T. Tan, “Single Image Deraining using Scale-Aware Multi-Stage Recurrent Network,” arXiv e-prints, p. arXiv:1712.06830, Dec 2017.<br>[21] X. Li, J. Wu, Z. Lin, H. Liu, and H. Zha, “Recurrent squeeze-and-excitation context aggregation net for single image deraining,” in Proc. IEEE European Conf. Computer Vision, 2018, pp. 262–277.<br>[22] H. Zhang and V. M. Patel, “Density-aware single image de- raining using a multi-stream dense network,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2018.<br>[23] J. Pan, S. Liu, D. Sun, J. Zhang, Y. Liu, J. Ren, Z. Li, J. Tang, H. Lu, Y.-W. Tai, and M.-H. Yang, “Learning dual convolu-tional neural networks for low-level vision,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2018.<br>[24] H. Zhang, V. Sindagi, and V. M. Patel, “Image De-raining Using a Conditional Generative Adversarial Network,” arXiv e-prints, p. arXiv:1701.05957, Jan 2017.<br>[25] W. Wei, D. Meng, Q. Zhao, Z. Xu, and Y. Wu, “Semi- supervised transfer learning for image rain removal,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recog- nition, June 2019.<br>[26] S. Li, I. B. Araujo, W. Ren, Z. Wang, E. K. Tokuda, R. H. Junior, R. Cesar-Junior, J. Zhang, X. Guo, and X. Cao, “Single image deraining: A comprehensive benchmark anal- ysis,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[27] D. Eigen, D. Krishnan, and R. Fergus, “Restoring an image taken through a window covered with dirt or rain,” in Proc. IEEE Int’l Conf. Computer Vision, December 2013.<br>[28] R. Qian, R. T. Tan, W. Yang, J. Su, and J. Liu, “Attentive generative adversarial network for raindrop removal from a single image,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2018.<br>[29] R. Yasarla and V. M. Patel, “Uncertainty guided multi-scale residual learning-using a cycle spinning cnn for single image de-raining,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[30] W. Yang, J. Liu, S. Yang, and Z. Guo, “Scale-free single image deraining via visibility-enhanced recurrent wavelet learning,” IEEE Trans. on Image Processing, vol. 28, no. 6, pp. 2948–2961, June 2019.<br>[31] X. Li, J. Wu, Z. Lin, H. Liu, and H. Zha, “Rescan: Re- current squeeze-and-excitation context aggregation net,” in Proc. IEEE European Conf. Computer Vision, Oct. 2018.<br>[32] Y. Wang, S. Liu, C. Chen, and B. Zeng, “A hierarchical approach for rain or snow removing in a single color image,” IEEE Trans. on Image Processing, vol. 26, no. 8, pp. 3936– 3950, Aug 2017.<br>[33] W. Yang, R. T. Tan, J. Feng, J. Liu, S. Yan, and Z. Guo, “Joint rain detection and removal from a single image with contex- tualized deep networks,” IEEE Trans. on Pattern Analysis and Machine Intelligence, pp. 1–1, 2019.<br>[34] T. Wang, X. Yang, K. Xu, S. Chen, Q. Zhang, and R. W. Lau, “Spatial attentive single-image deraining with a high quality real rain dataset,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2019.<br>[35] R. Li, L.-F. Cheong, and R. T. Tan, “Single Image Deraining using Scale-Aware Multi-Stage Recurrent Network,” ArXiv e-prints, December 2017.<br>[36] M. S. Gerald Schaefer, “Ucid: an uncompressed color image database,” 2003.<br>[37] P. K. Nathan Silberman, Derek Hoiem and R. Fergus, “In- door segmentation and support inference from rgbd images,” in Proc. IEEE European Conf. Computer Vision, 2012.<br>[38] C. Godard, O. Mac Aodha, and G. J. Brostow, “Unsupervised monocular depth estimation with left-right consistency,” 2017.<br>[39] M. Cordts, M. Omran, S. Ramos, T. Rehfeld, M. Enzweiler, R. Benenson, U. Franke, S. Roth, and B. Schiele, “The cityscapes dataset for semantic urban scene understanding,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, 2016.<br>[40] P. Arbelaez, M. Maire, C. Fowlkes, and J. Malik, “Contour detection and hierarchical image segmentation,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 33, no. 5, pp. 898–916, May 2011.<br>[41] Zhou Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, “Image quality assessment: from error visibility to structural similarity,” IEEE Trans. on Image Processing, vol. 13, no. 4, pp. 600–612, April 2004.<br>[42] S. Gu, D. Meng, W. Zuo, and L. Zhang, “Joint convolutional analysis and synthesis sparse representation for single image layer separation,” in Proc. IEEE Int’l Conf. Computer Vision, Oct 2017, pp. 1717–1725.<br>[43] A. C. Brooks, X. Zhao, and S. Member, “Structural similarity quality metrics in a coding context: Exploring the space of realistic distortions,” IEEE Trans. on Image Processing, pp. 1261–1273, 2008.<br>[44] A. Mittal, R. Soundararajan, and A. C. Bovik, “Making a completely blind image quality analyzer,” IEEE Signal Processing Letters, vol. 20, no. 3, pp. 209–212, March 2013.<br>[45] N. Venkatanath, D. Praneeth, B. M. Chandrasekhar, S. S. Channappayya, and S. S. Medasani, “Blind image quality evaluation using perception based features,” in Proc. IEEE National Conf. Communications, 2008.<br>[46] A. Mittal, A. K. Moorthy, and A. C. Bovik, “Blind/referenceless image spatial quality evaluator,” in Conf. Record of Asilomar Conf. on Signals, Systems and Computers, Nov 2011, pp. 723–727.<br>[47] L. Zhang, L. Zhang, and A. C. Bovik, “A feature-enriched completely blind image quality evaluator,” IEEE Trans. on Image Processing, vol. 24, no. 8, pp. 2579–2591, Aug 2015.<br>[48] L. Liu, B. Liu, H. Huang, and A. C. Bovik, “No-reference image quality assessment based on spatial and spectral en- tropies,” Signal Processing: Image Communication, vol. 29, no. 8, pp. 856 – 863, 2014.<br>[49] C. Ma, C.-Y. Yang, X. Yang, and M.-H. Yang, “Learn- ing a no-reference quality metric for single-image super- resolution,” Comput. Vis. Image Underst., vol. 158, pp. 1–16, May 2017.<br>[50] X. Chen, Q. Zhang, M. Lin, G. Yang, and C. He, “No- reference color image quality assessment: from entropy to perceptual quality,” EURASIP Journal on Image and Video Processing, vol. 2019, no. 1, p. 77, Sep 2019. [Online]. Available: <a target="_blank" rel="noopener" href="https://doi.org/10.1186/s13640-019-0479-7">https://doi.org/10.1186/s13640-019-0479-7</a><br>[51] S. Gabarda and G. Cristo ́bal, “Blind image quality assess- ment through anisotropy,” J. Opt. Soc. Am. A, vol. 24, no. 12, pp. B42–B51, Dec 2007.<br>[52] L. Zhang, L. Zhang, and A. C. Bovik, “A feature-enriched completely blind image quality evaluator,” IEEE Trans. on Image Processing, vol. 24, no. 8, pp. 2579–2591, Aug 2015.<br>[53] M. A. Saad, A. C. Bovik, and C. Charrier, “A dct statistics- based blind image quality index,” IEEE Signal Processing Letters, vol. 17, no. 6, pp. 583–586, June 2010.<br>[54] H. Wang, Y. Wu, M. Li, Q. Zhao, and D. Meng, “A Survey on Rain Removal from Video and Single Image,” arXiv e- prints, p. arXiv:1909.08326, Sep 2019.<br>[55] R. A. Bradley and M. E. Terry, “Rank analysis of incom- plete block designs: The method of paired comparisons,” Biometrika, vol. 39, no. 3-4, pp. 324–345, 12 1952.<br>[56] M. Elad and M. Aharon, “Image denoising via learned dictionaries and sparse representation,” in Proc. IEEE Int’l Conf. Computer Vision and Pattern Recognition, June 2006,pp. 895–900.<br>[57] A.Yamashita,Y.Tanaka,andT.Kaneko,“Removalofadher-<br>ent waterdrops from images acquired with stereo camera,” in IEEE/RSJ Int’l Conf. on Intelligent Robots and Systems, Aug 2005, pp. 400–405.<br>[58] A. Yamashita, I. Fukuchi, and T. Kaneko, “Noises removal from image sequences acquired with moving camera by esti- mating camera motion from spatio-temporal information,” in IEEE/RSJ Int’l Conf. on Intelligent Robots and Systems, Oct 2009, pp. 3794–3801.<br>[59] S. You, R. T. Tan, R. Kawakami, Y. Mukaigawa, and K. Ikeuchi, “Adherent raindrop modeling, detectionand re- moval in video,” IEEE Trans. on Pattern Analysis and Machine Intelligence, vol. 38, no. 9, pp. 1721–1733, Sep. 2016.</p>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2020/03/30/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASingle-Image-Deraining-From-Model-Based-to-Data-Driven-and-Beyond/">http://example.com/2020/03/30/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASingle-Image-Deraining-From-Model-Based-to-Data-Driven-and-Beyond/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/07/18/%E5%9F%BA%E7%A1%80%EF%BC%9A%E5%9B%BE%E5%83%8F%E8%B6%85%E5%88%86%E8%BE%A8%E7%8E%87/" title="基础：图像超分辨率"><span>< PreviousPost</span><br><span class="prevTitle">基础：图像超分辨率</span></a><a class="nextSlogan" href="/2020/01/01/%E2%80%9C%E5%8E%BB%E9%9B%A8%E2%80%9D%E7%9B%B8%E5%85%B3%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/" title="“去雨”相关论文研读（二）"><span>NextPost ></span><br><span class="nextTitle">“去雨”相关论文研读（二）</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%91%98%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">摘要</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#INTRODUCTION"><span class="toc-number">2.</span> <span class="toc-text">INTRODUCTION</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RAINDROP-APPEARANCE-MODELS"><span class="toc-number">3.</span> <span class="toc-text">RAINDROP APPEARANCE MODELS</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LITERATURE-SURVEY"><span class="toc-number">4.</span> <span class="toc-text">LITERATURE SURVEY</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Synthetic-Rain-Models"><span class="toc-number">4.1.</span> <span class="toc-text">Synthetic Rain Models</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Additive-Composite-Model-%EF%BC%88ACM%EF%BC%89"><span class="toc-number">4.1.1.</span> <span class="toc-text">Additive Composite Model （ACM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Screen-Blend-Model-%EF%BC%88SBM%EF%BC%89"><span class="toc-number">4.1.2.</span> <span class="toc-text">Screen Blend Model （SBM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Heavy-Rain-Model-%EF%BC%88HRM%EF%BC%89"><span class="toc-number">4.1.3.</span> <span class="toc-text">Heavy Rain Model （HRM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rain-Model-with-Occlusion-%EF%BC%88ROM%EF%BC%89"><span class="toc-number">4.1.4.</span> <span class="toc-text">Rain Model with Occlusion （ROM）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comprehensive-Rain-Model-CRM"><span class="toc-number">4.1.5.</span> <span class="toc-text">Comprehensive Rain Model (CRM)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Depth-Aware-Rain-Model-%EF%BC%88DARM%EF%BC%89"><span class="toc-number">4.1.6.</span> <span class="toc-text">Depth-Aware Rain Model （DARM）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Deraining-Challenges"><span class="toc-number">4.2.</span> <span class="toc-text">Deraining Challenges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Single-image-Deraining-Methods"><span class="toc-number">4.3.</span> <span class="toc-text">Single-image Deraining Methods</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-based-Methods"><span class="toc-number">4.3.1.</span> <span class="toc-text">Model-based Methods</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Sparse-Coding-Methods"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">Sparse Coding Methods</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Gaussian-Mixture-Model"><span class="toc-number">4.3.1.2.</span> <span class="toc-text">Gaussian Mixture Model</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Learning-Based-Methods"><span class="toc-number">4.3.2.</span> <span class="toc-text">Deep Learning Based Methods</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Deep-CNNs"><span class="toc-number">4.3.2.1.</span> <span class="toc-text">Deep CNNs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Generative-Adversarial-Networks"><span class="toc-number">4.3.2.2.</span> <span class="toc-text">Generative Adversarial Networks</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%92%8C%E6%95%B0%E6%8D%AE"><span class="toc-number">5.</span> <span class="toc-text">代码和数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-number">6.</span> <span class="toc-text">参考文献</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
