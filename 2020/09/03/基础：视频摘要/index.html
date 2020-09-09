@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="John Doe"><meta name="renderer" content="webkit"><meta name="copyright" content="John Doe"><meta name="keywords" content="Cxo"><meta name="description" content="123"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>基础：视频摘要 · Mr.Long's Blog</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="Cxo" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">longlongyu</div><div class="profile-signature">for me</div><div class="friends"><div>FRIENDS</div><span><a href="//github.com/Longlongyu" target="_black">friendA</a></span><span><a href="//github.com/" target="_black">friendB</a></span><span><a href="//github.com/" target="_black">friendC</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">Mr.Long's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">基础：视频摘要</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>2020-09-03</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="基础知识"> 基础知识</a></span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="视频摘要概念简介"><a href="#视频摘要概念简介" class="headerlink" title="视频摘要概念简介"></a>视频摘要概念简介</h2><blockquote>
+<p>什么是视频摘要？为什么要研究这项技术？</p>
+</blockquote>
+<p>近年来，随着人们对社会公共安全的需求不断增长，各大公共场所都安装了大量的监控摄像头，用于提高安防系统的侦查和报警水平。大量的监控摄像头实时录制了海量的视频数据，<strong>但这些视频数据的利用率极低</strong>。因为监控探头在每一天的24小时不间断记录，而往往人们所需要的信息只是很短的一部分，通常都是在成百上千个小时的监控视频中寻找个位数分钟的有价值部分。所以，如何在海量的数字视频中准确地找到感兴趣的视频片段已成为行业的迫切需求与巨大挑战。</p>
+<p><strong>视频摘要是通过分析视频的结构与内容，从原视频中提取出有意义的信息，并重新组合有意义信息，浓缩成可以充分表现视频语义内容的概要。</strong></p>
+<p>视频摘要是用一段静态图像或动态视频序列的长视频内容的缩略总结，供用户进行浏览和分析。视频摘要技术可以按照用户需求，将几十小时视频浓缩为十几分钟甚至更少，大幅度缩短视频观看浏览的时间，再利用视频目标特征检索技术，对视频底层特征进行语义分析，辅助用户迅速定位感兴趣目标。视频摘要与检索技术可以辅助用户充分挖掘海量视频监控录像中的有意义信息，提高海量监控视频录像分析与响应效率。</p>
+<h2 id="视频摘要技术分类"><a href="#视频摘要技术分类" class="headerlink" title="视频摘要技术分类"></a>视频摘要技术分类</h2><p>视频摘要技术在近20年内已被国内外的学者广泛关注，并取得了一定的研究成果。</p>
+<p>按照摘要结果表现形式的不同，视频摘要可分为静态视频摘要与动态视频摘要。</p>
+<p><strong>目前，监控领域的视频摘要技术主要有两种形式：静态视频摘要中的基于关键帧的摘要和动态视频摘要中的基于对象的视频摘要。二者都可以大大缩短视频长度，方便对视频的观看、分析和检索。</strong></p>
+<blockquote>
+<p>基于关键帧的视频摘要的最小单位是“帧”，存储空间较小且方便传输，但不能完整表示每个目标的运动轨迹，不利于视频目标检索。基于对象的视频摘要的最小单位是“对象”，可以最大限度的减少时间冗余信息与空间冗余信息，且为视频检索等上层开发提供对象结构，能在监控安防中快速响应紧急事件，定位到事件相关“对象”，但存在处理复杂，摘要生成困难的问题。</p>
+</blockquote>
+<h3 id="静态视频摘要"><a href="#静态视频摘要" class="headerlink" title="静态视频摘要"></a>静态视频摘要</h3><p>静态的视频摘要是以一系列从原始视频流中抽取出的<strong>静态语义单元</strong>来表现视频的内容。静态语义单元是如关键帧、标题、 幻灯片等可以概括表示视频镜头内容的静态特征信息。</p>
+<blockquote>
+<p>目前静态视频摘要研究主要是基于关键帧选取方法开展的，关键帧又称故事板，是从原始视频中提取的反映镜头中主要信息内容的一帧或多帧图像。通过多个关键帧组合成视频摘要，允许用户通过少量的关键帧快速浏览原始视频的内容，并提供快速检索。经典的关键帧选取的算法主要利用颜色、运动矢量等视觉特征去区分帧间的差异性。但差异性的区分计算依赖阈值的选择，选择过程计算量较大，实时性困难。</p>
+</blockquote>
+<p>基于关键帧的视频摘要具有结果简单，观看方便的优点。但由于其以静态图像为结果的表达形式，很难准确地表达视频的内在语义，且对“对象”动态特性的描述不全面，所以仅仅适用于视频的精彩瞬间生成，无法适应需要进行“对象”特性分析的场合。</p>
+<h3 id="动态视频摘要"><a href="#动态视频摘要" class="headerlink" title="动态视频摘要"></a>动态视频摘要</h3><p>基于对象的视频摘要，是一种近些年来提出的主要用于监控视频领域的动态视频摘要技术，通过提取用户感兴趣对象，然后重组感兴趣对象得到视频摘要。</p>
+<blockquote>
+<p>对象的提取主要使用背景建模技术、运动目标检测与跟踪技术及视觉分析技术，对象的重组主要考虑用户关注度、压缩比、多视频融合等因素。</p>
+</blockquote>
+<p>这种方法能有效地保持视频内容随时间动态变化的特征，同时最大限度地减少时间-空间冗余，但存在对象提取困难及很难解决复杂场景下的视频摘要生成的问题。</p>
+<p>实际上，可将静态视频技术中的提取关键帧的技术融入到动态视频摘要中：即直接提取视频中的关键帧合成新的视频。此类方法虽然也可以缩短视频的时长，但是合成后视频给人一种快进看电影的感觉，而且实际使用较少。</p>
+<h2 id="视频摘要技术评估方法"><a href="#视频摘要技术评估方法" class="headerlink" title="视频摘要技术评估方法"></a>视频摘要技术评估方法</h2><p>视频摘要技术中最常用的评估方法是基于用户对视频内容的主观理解，让多个观众对视频中重要内容进行标注打分，综合所有人员的标注结果作为参考标准。然后，将视频摘要方法得到的视频摘要结果与参考标准进行比较，得到准确度来衡量视频摘要结果好坏。</p>
+<p>在已有视频摘要研究中，最常用的评估方法是计算Precision、Recall和F-measure值，在有些方法中也会用到mAP（mean Average Precision）。</p>
+<h1 id="部分视频摘要方法复现及评估"><a href="#部分视频摘要方法复现及评估" class="headerlink" title="部分视频摘要方法复现及评估"></a>部分视频摘要方法复现及评估</h1><h2 id="SeDMi"><a href="#SeDMi" class="headerlink" title="SeDMi"></a>SeDMi</h2><ul>
+<li>论文：Video Synopsis based on a Sequential Distortion Minimization Method</li>
+</ul>
+<blockquote>
+<p>4个引用。</p>
+</blockquote>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/1.png" title="Optional title"></p>
+<blockquote>
+<p>Fig. 1 illustrates a scheme of the proposed system architecture. The proposed<br>method can be divided into several steps. Initially, we estimate the CLD for each frame of the original video. Next, we performed shot detection (see Section 3.1). Based on the shot detection results and to the given parameter α we estimate the number of frames per shot that the video synopsis (see Section 3.1). Finally, the video distortion is sequentially minimized according to the proposed methods resulting to the video synopsis (see Section 3.2).</p>
+</blockquote>
+<ul>
+<li>代码：官方提供的代码为matlab版本。</li>
+</ul>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/2.png" title="Optional title"></p>
+<ul>
+<li>示例视频：foreman.avi。</li>
+</ul>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/3.png" title="Optional title"></p>
+<ul>
+<li><p>实验：<strong>最主要的参数为“关键帧抽取百分比”</strong>，论文中给出的结果里，这项参数设置为百分之十。修改为0.2、0.05以及0.02分别运行。</p>
+</li>
+<li><p>结果：在上述4组关键帧抽取百分比下运行，代码运行的时常都不超过10s。可在此处下载结果：<a href="/download/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/SeDMi.zip">SeDMi在foreman下的四组结果视频</a> 。</p>
+</li>
+<li><p>观感：<strong>非常像快进</strong>，而且foreman.avi本身就很短，看不太出效果来。</p>
+</li>
+<li><p>注意：后期版本的Matlab（2018a）或者是Mac环境下，使用VideoReader函数读取视频文件时，不支持.avi格式，需要进行格式转换（大概率是Mac环境不兼容，上面的实验都将avi转为mp4后才不会报错）。</p>
+</li>
+</ul>
+<h2 id="Web-based-video-synopsis-system-using-Apache-Spark"><a href="#Web-based-video-synopsis-system-using-Apache-Spark" class="headerlink" title="Web-based video synopsis system using Apache Spark"></a>Web-based video synopsis system using Apache Spark</h2><ul>
+<li>简介：基于Apache Spark的视频概要系统，分为前端页面和后台算法处理。</li>
+</ul>
+<blockquote>
+<p>The project proposes a system that can be divided into two parts: the frontend web pages and the backstage processing algorithm based on Apache Spark. In the web pages, users can upload as well as download video clip. This project designs and implements a synopsis algorithm in the backstage which uses background subtraction to grab all the frames containing moving targets in a video and then concatenate all the frames into a new shorter clip. The algorithm connects to Spark cluster. After users upload a video to be condensed on web page, the algorithm will process it and return success information to users after generating the new video. Then users can download the new video from the download page.</p>
+</blockquote>
+<ul>
+<li>代码：<a target="_blank" rel="noopener" href="https://github.com/question0914/VideoSynopsis">https://github.com/question0914/VideoSynopsis</a></li>
+</ul>
+<blockquote>
+<p>5个星标，用的人不是很多。</p>
+</blockquote>
+<ul>
+<li>运行：clone下来之后本地运行网页，给提交视频的按钮过不去：会提示无法找到h5代码中该处的form标签下的/video/upload，所以就无法验证运行结果。</li>
+</ul>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/4.png" title="Optional title"></p>
+<ul>
+<li>其他：有前端的话感觉比较容易实现和看结果，这一项比较希望能复现。后端代码用的是java。</li>
+</ul>
+<h2 id="DimensionFour"><a href="#DimensionFour" class="headerlink" title="DimensionFour"></a>DimensionFour</h2><blockquote>
+<p>这个模型没有打底的论文，不清楚为什么叫这个名字。</p>
+</blockquote>
+<ul>
+<li>简介：一个git上的开源工具，用到了Keras YOLOv3做目标识别，用到了ImageAI（猜测是用来做遮挡物后的人的运动预测），然后做动态物体的标注，可能会有合成的操作（后面会根据运行的结果提到）。</li>
+</ul>
+<blockquote>
+<p>YOLOv3：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/qqwweee/keras-yolo3">https://github.com/qqwweee/keras-yolo3</a><br><a target="_blank" rel="noopener" href="https://pjreddie.com/media/files/papers/YOLOv3.pdf">https://pjreddie.com/media/files/papers/YOLOv3.pdf</a></p>
+</blockquote>
+</blockquote>
+<ul>
+<li>代码：<a target="_blank" rel="noopener" href="https://github.com/kevinvincent/DimensionFour">https://github.com/kevinvincent/DimensionFour</a></li>
+</ul>
+<blockquote>
+<p>8个星标，用的人不是很多。</p>
+</blockquote>
+<ul>
+<li>示例视频：项目提供了dataset，共有三个视频，根据长度的不同命名为long、preferred以及short，都是街头监控探头拍下的画面，主要的对象为移动的人：</li>
+</ul>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/5.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/6.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/7.png" title="Optional title"></p>
+<ul>
+<li><p>实验：先要对视频进行预处理，然后对提取出来的视频帧做集合和标注。</p>
+</li>
+<li><p>结果：在本机的cpu版本的tf下运行，最长的视频在1h内处理完成，最短的视频处理时间不到10min。但是经过处理后的视频的大小会有非常明显的变大。视频格式由.mp4转为.avi。以下给出的是long的展示：</p>
+</li>
+</ul>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/8.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/9.png" title="Optional title"></p>
+<p><img src="/images/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/10.png" title="Optional title"></p>
+<ul>
+<li><p>观感：整体效果而言，对每个移动的人的标注做的很不错。视频有拼接的痕迹，不是很明显：移动到画面边缘的人会直接消失；在遮挡物背后的人的有些画面的处理会变得模糊。但是缩放比例不是特别出色，5min的long.mp4处理后也有4min，但各个视频的缩放比例确实不一样，推测是根据具体的场景来做的，不是按比例抽帧。</p>
+</li>
+<li><p>注意：tensorflow==1.7.0、keras==2.1.6、Opencv、h5py、ImageAI，以及下载需要yolo.h5（代码中会检测，没有这个模型文件的话会自动下载，需要科学上网，238m，早期版本的yolo文件不适用）。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="license-wrapper"><p> <span>Author:  </span><a href="http://example.com">John Doe</a></p><p> <span>Link:  </span><a href="http://example.com/2020/09/03/%E5%9F%BA%E7%A1%80%EF%BC%9A%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/">http://example.com/2020/09/03/%E5%9F%BA%E7%A1%80%EF%BC%9A%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/</a></p><p> <span>Copyright:  </span><span>All articles in this blog are licensed under <a rel="license noopener" target="_blank" href="https://creativecommons.org/licenses/by-nc-nd/3.0">CC BY-NC-SA 3.0</a> unless stating additionally.</span></p></div><div class="post-paginator"><a class="prevSlogan" href="/2020/09/09/hello-world/" title="Hello World"><span>< PreviousPost</span><br><span class="prevTitle">Hello World</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81%E6%A6%82%E5%BF%B5%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">视频摘要概念简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81%E6%8A%80%E6%9C%AF%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">视频摘要技术分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81"><span class="toc-number">1.2.1.</span> <span class="toc-text">静态视频摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81"><span class="toc-number">1.2.2.</span> <span class="toc-text">动态视频摘要</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81%E6%8A%80%E6%9C%AF%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">视频摘要技术评估方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%83%A8%E5%88%86%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81%E6%96%B9%E6%B3%95%E5%A4%8D%E7%8E%B0%E5%8F%8A%E8%AF%84%E4%BC%B0"><span class="toc-number">2.</span> <span class="toc-text">部分视频摘要方法复现及评估</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SeDMi"><span class="toc-number">2.1.</span> <span class="toc-text">SeDMi</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-based-video-synopsis-system-using-Apache-Spark"><span class="toc-number">2.2.</span> <span class="toc-text">Web-based video synopsis system using Apache Spark</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DimensionFour"><span class="toc-number">2.3.</span> <span class="toc-text">DimensionFour</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
