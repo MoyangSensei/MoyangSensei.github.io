@@ -273,7 +273,8 @@ PBA算法中的缓冲物理块数量(需小于工作物理块数):2</code></pre>
 </li>
 </ul>
 <h3 id="对比分析"><a href="#对比分析" class="headerlink" title="对比分析"></a>对比分析</h3><ul>
-<li><p>统计上述测试的缺页率：</p>
+<li>统计上述测试的缺页率：</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -326,8 +327,9 @@ PBA算法中的缓冲物理块数量(需小于工作物理块数):2</code></pre>
 <td align="center">0.625</td>
 </tr>
 </tbody></table>
-</li>
-<li><p>针对不同的算法，5次运行的缺页率均值如下：</p>
+<ul>
+<li>针对不同的算法，5次运行的缺页率均值如下：</li>
+</ul>
 <table>
 <thead>
 <tr>
@@ -338,10 +340,14 @@ PBA算法中的缓冲物理块数量(需小于工作物理块数):2</code></pre>
 <th align="center">PBA</th>
 </tr>
 </thead>
-</table>
-</li>
-</ul>
-<p>0.40625|0.54375|0.5375|0.712|0.54375</p>
+<tbody><tr>
+<td align="center">0.40625</td>
+<td align="center">0.54375</td>
+<td align="center">0.5375</td>
+<td align="center">0.712</td>
+<td align="center">0.54375</td>
+</tr>
+</tbody></table>
 <p>首先，<strong>OPT的缺页率是所有算法中最低的</strong>，这同样符合该算法的定义和其命名“最佳”。</p>
 <p><strong>LRU算法的性能接近于OPT</strong>。但是从实现角度来说，其实现比较困难，且开销大：需要额外维护物理块中页面的调用顺序。</p>
 <p>FIFO算法实现简单，<strong>但其机制决定了它的实际性能应该是最差的</strong>。PBA算法的缺页率和FIFO相同，这是由于模拟度不够且做了一些假设前提而导致的。<strong>它们的区别并不体现在缺页率上</strong>。</p>
