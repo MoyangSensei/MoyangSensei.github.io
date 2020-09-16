@@ -1,0 +1,190 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>博客网站的建设问题集合 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/favicon.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">博客网站的建设问题集合</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>09-11-2020 20:47:24</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="闲谈"> 闲谈</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="hexo博客建设"> hexo博客建设</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.3k</span> | Reading time: <span class="post-count">8</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>19年3月份开始了解并使用hexo环境下搭建的博客，当时的搭建过程是极其顺利的。所以在建设初期并没有想到要做这样的记录。</p>
+<p>直到4天前，也就是9月7日，我在对上一篇，关于视频摘要的博客进行更新时，试图上传一个比较大的文件到git上时出现了问题，导致了我的博客无法再进行更新。</p>
+<p>在我进行了一系列垂死挣扎的操作之后，选择了重装整个hexo环境以及按照原来的模样重新搭建博客。整个过程下来，我真的是心力憔悴，也遇到了许多新的问题。我突然觉得，有必要将这些问题做个记录。一是为了以后查自己找方便，二是能为别人做个参考，三是希望能从这些问题中，学习或者领悟到一些当程序员的必要的品质。毕竟对于程序员来说，最重要的部分就是查bug和调bug，其余的时间也说不定都是在写bug。</p>
+<p><strong>这里将记录本博客建设过程中遇到的一切有意义的问题。</strong>遇到问题就会记录或对相应的部分做更新，没有什么上下文关联。</p>
+<p><strong>时刻牢记：遇到bug，baidu、google以及Official documents才是正道，和大佬交流会有奇效。</strong></p>
+<hr>
+<h1 id="hexo博客的搭建和重新部署问题"><a href="#hexo博客的搭建和重新部署问题" class="headerlink" title="hexo博客的搭建和重新部署问题"></a>hexo博客的搭建和重新部署问题</h1><h2 id="从零开始搭建hexo博客"><a href="#从零开始搭建hexo博客" class="headerlink" title="从零开始搭建hexo博客"></a>从零开始搭建hexo博客</h2><p>这个话题在网上做一下搜索，写的人很多，不做赘述。</p>
+<p>唯一需要注意的就是，不同操作系统环境下可能会有一些小的差别，但是总的步骤基本都是一致的。无非就是本地环境安装以及github的仓库设置，最后再学一下在terminal上敲hexo命令就齐活了。</p>
+<p>我的本地环境是macOS，类UNIX的系统中下布置hexo环境还是十分友好的。<del>Win：？</del></p>
+<blockquote>
+<p>Mac 系统下搭建hexo个人博客：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/77db3862595c">https://www.jianshu.com/p/77db3862595c</a></p>
+</blockquote>
+<h2 id="重新部署hexo博客"><a href="#重新部署hexo博客" class="headerlink" title="重新部署hexo博客"></a>重新部署hexo博客</h2><p>这里的“重新部署”，包括以下的情况：</p>
+<ul>
+<li><p>博客本身是没有问题的，只是想换一个新的环境去部署。比如说更换了个人PC等情况。</p>
+</li>
+<li><p>博客的建设方面出现了问题，包括但不限于本地环境的更改、提交新版本时的出现的不可逆的问题（基本上都是可逆的，不可逆都是因为个人能力问题<del>问就是菜</del>）等。</p>
+</li>
+</ul>
+<p>对于第一种情况，略微做一下网络搜索，也有很多人写，而且基本和从零开始搭建一样，只是中间个别重复的步骤不用再执行一遍而已，比如git仓库的设置。</p>
+<p>第二种情况就比较有说法了（我就是那个发现了bug之后又发现自己特别菜然后重新布置了整个博客的人）：</p>
+<h3 id="Node-js和npm的版本"><a href="#Node-js和npm的版本" class="headerlink" title="Node.js和npm的版本"></a>Node.js和npm的版本</h3><blockquote>
+<p>Hexo是一款基于Node.js的静态博客框架，依赖少易于安装使用，可以方便的生成静态网页托管在GitHub和Coding上，是搭建博客的首选框架。</p>
+</blockquote>
+<p>hexo需要Node.js支持。布置hexo环境时需要首先安装Node.js。</p>
+<p>如果是初次安装的话，直接Node.js安装最新版本即可。通常来说，nmp会跟随着Node.js一起安装。</p>
+<p>但如果本地环境在hexo部署前已经有Node.js的环境，这时就要注意了：<strong>hexo会随着其依赖项的更新而更新。如果本地的Node.js版本太久远，一定要记得更新。</strong>截止到写作时，目前官方文档给出的建议是：Node.js 版本需不低于 10.13，建议使用 Node.js 12.0 及以上版本。</p>
+<p>还需要注意的是，<strong>Node.js做更新时，需要手动对nmp单独做更新</strong>。</p>
+<blockquote>
+<p>node版本更新：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0a247218b486">https://www.jianshu.com/p/0a247218b486</a></p>
+</blockquote>
+<h3 id="启动页面显示extends-includes-layout-pug等"><a href="#启动页面显示extends-includes-layout-pug等" class="headerlink" title="启动页面显示extends includes/layout.pug等"></a>启动页面显示extends includes/layout.pug等</h3><p>重新布置完成后，启动界面显示如下信息：</p>
+<pre><code>extends includes/layout.pug block content include includes/recent-posts.pug include includes/partial</code></pre>
+<p>这也明显是依赖项问题，执行如下命令即可。</p>
+<pre><code>npm install --save hexo-renderer-jade hexo-generator-feed hexo-generator-sitemap hexo-browsersync hexo-generator-archive</code></pre>
+<p>上述命令会有各种各样的Warning，比较显眼的一个是：<strong>jade做了rename</strong>，请安装rename后的包。我是按照它的提示做了新的安装，但是并不清楚不安装这个新的包会有什么问题。</p>
+<p>上述命令运行时，如果提示权限不足，命令中带上<code>sudo</code>；如果npm在安装包时提示<code>rollbackFailedOptional</code>，可以简单的理解为网络不好，改用淘宝的npm镜像即可：</p>
+<pre><code>npm config set disturl https://npm.taobao.org/dist</code></pre>
+<h3 id="用于提交git的ssh"><a href="#用于提交git的ssh" class="headerlink" title="用于提交git的ssh"></a>用于提交git的ssh</h3><p>如果之前使用过ssh的话，直接在本地文件中找到ssh的文件，复制内容到GitHub上即可。<strong>ssh可以重复使用，即使更换了新的仓库也无所谓。</strong> <del>不用ssh，不嫌麻烦的话每次更新输入账号密码也行</del></p>
+<hr>
+<h1 id="向博客中提交大文件"><a href="#向博客中提交大文件" class="headerlink" title="向博客中提交大文件"></a>向博客中提交大文件</h1><p>这次博客的奔溃就是因为这个原因。我在github上hexo项目的issue中有提问，叙述了这次经历。</p>
+<blockquote>
+<p>Error uploading large file #4523：<a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues/4523">https://github.com/hexojs/hexo/issues/4523</a></p>
+</blockquote>
+<p>有一位大佬给出了一个解答，并且得到了开发者的赞同，然后关闭了问题：</p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/1.png" title="Optional title"></p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/2.png" title="Optional title"></p>
+<p>hexo的命令中，<code>hexo d</code>的作用是<strong>将blog本地路径中生成的public提交到git的仓库中</strong>。一看这个解答，我也觉得很有道理：无非就是解决提交版本的问题嘛！</p>
+<p><strong>但是我犯了一个致命的错误：提交git的路径。</strong>实际上我在第一天还在迷糊的时候就注意到了这一点，并隐隐觉得这是问题的根本：我要是在blog的子目录下进行这个工作，不就把blog的里整个内容提交进去了吗？但实际上git仓库里只有public中的文件啊！</p>
+<p>于是，我找到了回答我问题大佬的主页，发现了他的blog地址，并在他的blog中寻找到了他的邮箱，然后发邮件进行询问。出现了以下的讨论：</p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/3.png" title="Optional title"></p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/4.png" title="Optional title"></p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/5.png" title="Optional title"></p>
+<p>是的，当我重新布置了整个环境之后大佬才给出了回复。属实无奈，我并没有办法实践这位大佬给出的方法<del>再作一遍死就行</del>，不过这应该就是终极的解决方法。非常感谢这位大佬。</p>
+<p>实际上macOS会自动的隐藏一些配置类文件（我的为数不多的实践和记忆告诉我，大概Win10也会），如果不手动去显示隐藏文件的话，不会看到上述邮件中的提到的<code>.depoy.git</code>目录。实际上在此之前我也查看过隐藏文件，只是并没有察觉到是这里的问题。</p>
+<p><code>cmd+shift+.</code>，以及<code>git</code>的一整套命令，这次牢记。</p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/6.png" title="Optional title"></p>
+<hr>
+<h1 id="theme中的问题"><a href="#theme中的问题" class="headerlink" title="theme中的问题"></a>theme中的问题</h1><p>theme中的问题主要体现在网页的显示上。对网页效果展示有强迫症或者力求美观，这些问题会凸显出来。</p>
+<h2 id="Cxo"><a href="#Cxo" class="headerlink" title="Cxo"></a>Cxo</h2><p>截止到本篇发布的时间，在用的theme是Cxo。在hexo.io的主题展示页面搜索Cxo就可找到。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo">https://github.com/Longlongyu/hexo-theme-Cxo</a></p>
+</blockquote>
+<p>选择这个主题的原因是因为比较简单，符合审美。</p>
+<p><del>因为头像是猫猫头，我永远喜欢猫猫头</del></p>
+<p>##这个主题的作者2018年还有稀疏的commit，2019和2020完全没进行过更新，也就是说跑路了！由于hexo的各种依赖项是一直在更新的，所以现在还想用这个主题的话，会出现很多的问题。还想要用的同好们，慎选！##</p>
+<p><del>独占猫猫头</del></p>
+<h3 id="不蒜子访问计数显示"><a href="#不蒜子访问计数显示" class="headerlink" title="不蒜子访问计数显示"></a>不蒜子访问计数显示</h3><p>这个属于老生常谈，大部分19年以后不更新的主题都会遇到这个问题。具体原因是因为18年10月份以后不蒜子的域名更改了，导致script引用不了，从而无法进行统计。</p>
+<p>不蒜子官网做了解释（注意下方小红字），以及新的写法：</p>
+<p><img src="/images/hexo%E5%8D%9A%E5%AE%A2%E5%BB%BA%E8%AE%BE/7.png" title="Optional title"></p>
+<p>具体做法：在下面的路径里按照官网提示修改就行。</p>
+<pre><code>layout/includes/partial/head.pug</code></pre>
+<h3 id="“翻页”箭头显示错误"><a href="#“翻页”箭头显示错误" class="headerlink" title="“翻页”箭头显示错误"></a>“翻页”箭头显示错误</h3><p>主页中换页处的下一页本该显示为“&gt;”，但是显示为“&amp;#62”。</p>
+<p>更新本地环境后出现的问题，猜测也是由依赖项的更新所导致的。</p>
+<p>已经有人提过issue且得到了可以解决问题的回复。实际上就是编码的问题。以及向前翻页的箭头的编码可以改成<code>&amp;lt</code>。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo/issues/42">https://github.com/Longlongyu/hexo-theme-Cxo/issues/42</a></p>
+</blockquote>
+<h3 id="当前查看进度条不适用"><a href="#当前查看进度条不适用" class="headerlink" title="当前查看进度条不适用"></a>当前查看进度条不适用</h3><p>单篇博客写的太长的话，还没有拉到底部，进度条显示就已经满了。</p>
+<p>19年就有这样的问题。</p>
+<p>未解决。</p>
+<h3 id="目录显示错误"><a href="#目录显示错误" class="headerlink" title="目录显示错误"></a>目录显示错误</h3><p>部分时候出现目录不随着显示的内容而变动，同时也有一些博客的目录是正常的。</p>
+<p>更新本地环境后出现的问题，无法猜到到底是什么原因导致的。</p>
+<p>未解决。</p>
+<hr>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/09/03/%E5%9F%BA%E7%A1%80%EF%BC%9A%E8%A7%86%E9%A2%91%E6%91%98%E8%A6%81/" title="基础：视频摘要"><span>NextPost ></span><br><span class="nextTitle">基础：视频摘要</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hexo%E5%8D%9A%E5%AE%A2%E7%9A%84%E6%90%AD%E5%BB%BA%E5%92%8C%E9%87%8D%E6%96%B0%E9%83%A8%E7%BD%B2%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">hexo博客的搭建和重新部署问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BAhexo%E5%8D%9A%E5%AE%A2"><span class="toc-number">2.1.</span> <span class="toc-text">从零开始搭建hexo博客</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E6%96%B0%E9%83%A8%E7%BD%B2hexo%E5%8D%9A%E5%AE%A2"><span class="toc-number">2.2.</span> <span class="toc-text">重新部署hexo博客</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Node-js%E5%92%8Cnpm%E7%9A%84%E7%89%88%E6%9C%AC"><span class="toc-number">2.2.1.</span> <span class="toc-text">Node.js和npm的版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%A1%B5%E9%9D%A2%E6%98%BE%E7%A4%BAextends-includes-layout-pug%E7%AD%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">启动页面显示extends includes&#x2F;layout.pug等</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E4%BA%8E%E6%8F%90%E4%BA%A4git%E7%9A%84ssh"><span class="toc-number">2.2.3.</span> <span class="toc-text">用于提交git的ssh</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%91%E5%8D%9A%E5%AE%A2%E4%B8%AD%E6%8F%90%E4%BA%A4%E5%A4%A7%E6%96%87%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">向博客中提交大文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#theme%E4%B8%AD%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">theme中的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cxo"><span class="toc-number">4.1.</span> <span class="toc-text">Cxo</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%92%9C%E5%AD%90%E8%AE%BF%E9%97%AE%E8%AE%A1%E6%95%B0%E6%98%BE%E7%A4%BA"><span class="toc-number">4.1.1.</span> <span class="toc-text">不蒜子访问计数显示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%80%9C%E7%BF%BB%E9%A1%B5%E2%80%9D%E7%AE%AD%E5%A4%B4%E6%98%BE%E7%A4%BA%E9%94%99%E8%AF%AF"><span class="toc-number">4.1.2.</span> <span class="toc-text">“翻页”箭头显示错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%93%E5%89%8D%E6%9F%A5%E7%9C%8B%E8%BF%9B%E5%BA%A6%E6%9D%A1%E4%B8%8D%E9%80%82%E7%94%A8"><span class="toc-number">4.1.3.</span> <span class="toc-text">当前查看进度条不适用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%98%BE%E7%A4%BA%E9%94%99%E8%AF%AF"><span class="toc-number">4.1.4.</span> <span class="toc-text">目录显示错误</span></a></li></ol></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
