@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文阅读：Image Super-Resolution as a Defense Against Adversarial Attacks · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文阅读：Image Super-Resolution as a Defense Against Adversarial Attacks</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>10-12-2020 14:40:56</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">4.3k</span> | Reading time: <span class="post-count">16</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<p>20年发在TIP上的一篇文章。</p>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>CNN在很多计算机视觉的任务都有好的表现，比如图像分类、目标检测、语义分割和视觉问答等。以及在现实生活中的场景也有好的应用，比如汽车的自动驾驶和疾病诊断模型。</p>
+<p>这么多的应用，就要求这些基于CNN的模型具有良好的鲁棒性。但是有一些研究表明，CNN很容易被扭曲的自然图像和一些精心制作的、人类不可察觉的附加扰动欺骗。这些被称为对抗性例子的扭曲图像，已经被进一步证明可以在不同的体系结构之间传输。比如，从Inception v3模型生成的对抗性示例能够欺骗CNN的其他架构。</p>
+<p>业界很早就注意到了这个问题，并且对这些对抗性的攻击做了防御方向的研究。这些研究可分为两类：</p>
+<ul>
+<li><p>模型特定：其目的是通过对抗训练或参数平滑调整特定模型的参数。这种方法通常需要计算量大的可微变换。此外，这些转换很容易受到进一步的攻击，因为对手可以利用可微模块来规避这些攻击。</p>
+</li>
+<li><p>模型不可知论：它们通过应用各种变换来减轻输入图像域中的对抗性扰动的影响。这类技术的例子包括JPEG压缩、基于中心凹的方法，这些方法裁剪图像背景、随机像素偏移和随机图像填充和重新调整大小。与可微模型特定方法相比，大多数模型不可知方法计算速度快，并且在输入域进行变换，使其更为有利。然而，这些方法大多在去除敌方噪声时丢失了关键的图像内容，导致对非攻击图像的分类性能较差。</p>
+</li>
+</ul>
+<blockquote>
+<p>We can broadly categorize these defenses along two directions: the first being model-specific mechanisms, which aim to regularize a specific model’s parameters through adversarial training or parameter smoothing [18], [20], [21], [28], [30]. Such methods often require differentiable transformations that are computationally demanding. Moreover these transformations are vulnerable to further attacks, as the adversaries can circumvent them by exploiting the differentiable modules. The second category of defenses are model-agnostic. They mitigate the effect of adversarial perturbations in the input image domain by applying various transformations. Examples of such techniques include JPEG compression [31], [32], foveation-based methods, which crop the image background [33], random pixel deflection [27] and random image padding &amp; re-sizing [19]. Compared with differentiable model-specific methods, most of the model-agnostic approaches are computationally faster and carry out transformations in input domain, making them more favorable. However, most of these approaches lose critical image content when removing adversarial noise, which results in poor classification performance on non-attacked images.</p>
+</blockquote>
+<p>基于上，这篇文章提出了一种基于模型不可知的防御机制，它可以抵抗最近提出的各种各样的对手攻击，并且不受信息损失的影响。</p>
+<p>提出的防御是基于SR的，它选择性地向图像中添加高频分量，并消除对手添加的噪声干扰。我们把流形样本重新映射到图1上。通过小波域滤波进一步抑制了附加噪声的影响，并通过对高分辨率图像的全局合并操作将其固有地最小化。提出的图像超分辨率和基于小波滤波的防御方法形成了一个联合不可微模块，该模块可以有效地恢复敌方扰动图像的原始类别标签。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DAAA/1.png" title="Optional title"></p>
+<h1 id="对抗性攻击"><a href="#对抗性攻击" class="headerlink" title="对抗性攻击"></a>对抗性攻击</h1><p>对输入样本故意添加一些人无法察觉的细微的干扰，导致模型以高置信度给出一个错误的输出，称为对抗样本。</p>
+<p>以深度学习为主流的人工智能应用越来越广泛之后，陆续又出现了对于人工智能应用的攻击，主要分为两种：一是白盒测试，即深度学习的模型架构和参数都已经的情况下，这种场景的攻击一般可以进行参数的修改来达到攻击的效果；二是黑盒测试，即上述情况未知的情况下进行攻击，这时候采用的攻击手段主要是对抗样本。</p>
+<p>对抗样本现在已经广泛应用于人脸识别、声纹识别等相关应用场景。</p>
+<blockquote>
+<p>2013：Intriguing properties of neural networks</p>
+</blockquote>
+<blockquote>
+</blockquote>
+<p>2014：Deep Neural Networks are Easily Fooled: High Confidence Predictions for Unrecognizable Images</p>
+<p>原文中提到了6种对抗性攻击方法。</p>
+<h2 id="FGSM"><a href="#FGSM" class="headerlink" title="FGSM"></a>FGSM</h2><blockquote>
+<p>Explaining and Harnessing Adversarial Examples<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1412.6572">https://arxiv.org/abs/1412.6572</a></p>
+</blockquote>
+<p>在图像攻击算法中，FGSM（fast gradient sign method）是非常经典的一个算法。</p>
+<p>在训练分类模型时，网络基于输入图像学习特征，然后经过softmax层得到分类概率，接着损失函数基于分类概率和真实标签计算损失值，回传损失值并计算梯度（也就是梯度反向传播），最后网络参数基于计算得到的梯度进行更新，网络参数的更新目的是使损失值越来越小，这样模型分类正确的概率也就越来越高。</p>
+<p><strong>图像攻击的目的是不修改分类网络的参数，而是通过修改输入图像的像素值使得修改后的图像能够扰乱分类网络的分类。</strong></p>
+<p><strong>常规的分类模型训练在更新参数时都是将参数减去计算得到的梯度，这样就能使得损失值越来越小，从而模型预测对的概率越来越大。</strong>既然无目标攻击是希望模型将输入图像错分类成正确类别以外的其他任何一个类别都算攻击成功，那么只需要损失值越来越大就可以达到这个目标，也就是模型预测的概率中对应于真实标签的概率越小越好，这和原来的参数更新目的正好相反。<strong>因此只需要在输入图像中加上计算得到的梯度方向，这样修改后的图像经过分类网络时的损失值就比修改前的图像经过分类网络时的损失值要大，换句话说，模型预测对的概率变小了。</strong></p>
+<p>简言之，FGSM算法的主要内容，一方面是基于输入图像计算梯度，另一方面更新输入图像时是加上梯度，而不是减去梯度，这和常见的分类模型更新参数正好背道而驰。</p>
+<p>根据一般的训练过程，可以将损失值回传到输入图像并计算梯度。接下来可以通过<code>sign</code>函数计算梯度的方向，sign函数是用来求数值符号的函数，比如对于大于0的输入，输出为1，对于小于0的输入，输出为-1，对于等于0的输入，输出为0。<strong>之所以采用梯度方向而不是采用梯度值是为了控制扰动的L∞距离</strong>，这是FGSM算法的评价指标。</p>
+<h2 id="I-FGSM"><a href="#I-FGSM" class="headerlink" title="I-FGSM"></a>I-FGSM</h2><blockquote>
+<p>Adversarial examples in the physical world<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1607.02533">https://arxiv.org/abs/1607.02533</a></p>
+</blockquote>
+<p>FGSM算法从梯度的角度做攻击，速度比较快，这是该算法比较创新的地方。但是FGSM算法只涉及单次梯度更新，有时候单次更新并不足以攻击成功，因此，在此基础上推出迭代式的FGSM，这就是I-FGSM（iterative FGSM）。</p>
+<h2 id="MI-FGSM"><a href="#MI-FGSM" class="headerlink" title="MI-FGSM"></a>MI-FGSM</h2><blockquote>
+<p>Boosting Adversarial Attacks with Momentum<br><a target="_blank" rel="noopener" href="http://arxiv.org/abs/1710.06081">http://arxiv.org/abs/1710.06081</a></p>
+</blockquote>
+<p>基于动量迭代梯度的方法。</p>
+<p>除了基于迭代梯度的方法用梯度来迭代扰动输入以使损失函数最大化以外，基于动量的方法还在迭代过程中沿损失函数的梯度方向累积速度矢量，为了稳定更新方向并避免出现不良的局部最大值。我们表明，由动量迭代方法生成的对抗样本在白盒和黑盒攻击中均具有较高的成功率。所提出的方法减轻了白盒攻击和可传递性之间的折衷，并且比单步方法和原始迭代方法具有更强的攻击算法。</p>
+<h2 id="DeepFool"><a href="#DeepFool" class="headerlink" title="DeepFool"></a>DeepFool</h2><blockquote>
+<p>DeepFool: a simple and accurate method to fool deep neural networks<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1511.04599">https://arxiv.org/abs/1511.04599</a></p>
+</blockquote>
+<p>基于迭代且线性近似的方案提出了一种计算对抗样本的方法DeepFool。大量的实验结果表明，这是一种非常精确且有效的对抗扰动计算方法，它可以提供一个有效的方式去评估分类器的鲁棒性并且可以通过恰当的微调改善分类器的表现。</p>
+<h2 id="C-amp-W"><a href="#C-amp-W" class="headerlink" title="C&amp;W"></a>C&amp;W</h2><blockquote>
+<p>Towards Evaluating the Robustness of Neural Networks<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1608.04644">https://arxiv.org/abs/1608.04644</a></p>
+</blockquote>
+<h2 id="DIFGSM-and-MDIFGSM"><a href="#DIFGSM-and-MDIFGSM" class="headerlink" title="DIFGSM and MDIFGSM"></a>DIFGSM and MDIFGSM</h2><blockquote>
+<p>Improving transferability of adversarial examples with<br>input diversity<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.06978">https://arxiv.org/abs/1803.06978</a></p>
+</blockquote>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>文章给出的防御方法属于第二类防御机制。</p>
+<p>整个方法可分为两个部分，它们共同构成一个不可微管道，很难绕过。首先应用小波去噪来抑制任何噪声模式。然后，核心部分是超分辨率操作，它在提高像素分辨率的同时同时消除对抗模式。</p>
+<p>实验表明，仅图像超分辨率就足以恢复分类器对正确类别的信念；然而，第二步提供了额外的鲁棒性，因为它是一个不可微的去噪操作。</p>
+<h2 id="Super-Resolution-as-a-Defense-Mechanism"><a href="#Super-Resolution-as-a-Defense-Mechanism" class="headerlink" title="Super Resolution as a Defense Mechanism"></a>Super Resolution as a Defense Mechanism</h2><h3 id="背景解释"><a href="#背景解释" class="headerlink" title="背景解释"></a>背景解释</h3><p>方法源于<code>manifold assumption</code>（流形假设），假设自然图像位于低维的manifolds上（这解释了为什么低维深层特征表示能够准确地捕捉真实数据集的结构），扰动图像位于自然图像的低维流形之外。</p>
+<p><strong>尽管在视觉上看起来完全相同，但敌对和干净的数据并不是孪生的。</strong></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DAAA/2.png" title="Optional title"></p>
+<p>上图显示了自然图像的低维流形。来自真实世界数据集（比如ImageNet）的数据点是从自然图像的分布中取样的，可以认为它们位于流形上。这类图像被称为<code>in-domain</code>。通过添加对抗性噪声来破坏这些域内图像，可以使图像脱离流形。一个学习从流形外的图像生成流形上的图像的模型可以在检测和防御敌方攻击方面发挥很大的作用。</p>
+<p>那么解决的思路就是使用图像超分辨率作为一个映射函数，将多种对抗性样本重新映射到自然图像流形上。以这种方式，通过增强图像的视觉质量来实现对抗干扰的鲁棒性。这种方法比其他截断关键信息以获得健壮性的防御机制具有显著的优势。</p>
+<h3 id="SR-Network"><a href="#SR-Network" class="headerlink" title="SR Network"></a>SR Network</h3><p>防御机制的一个必要特征是能够抑制对手添加的欺诈干扰。<strong>由于这些扰动通常是高频细节</strong>，使用一个超分辨率网络，它明确地使用剩余学习来关注这些细节。这些细节被添加到每个残差块的低分辨率输入中，最终生成高质量、超分辨率的图像。这项工作中考虑用到的是EDSR。</p>
+<h3 id="对光谱分布的影响"><a href="#对光谱分布的影响" class="headerlink" title="对光谱分布的影响"></a>对光谱分布的影响</h3><p>对抗性图像包含高频模式，超分辨率操作进一步向恢复图像注入高频模式。</p>
+<p>这有两个主要的好处：一是新增加的高频模式平滑了图像的频率响应（第5列）；二是超分辨率摧毁了试图愚弄模型的对抗模式。</p>
+<blockquote>
+<p>这里没看懂</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DAAA/3.png" title="Optional title"></p>
+<p>左下角示出了干净图像和恢复图像之间的确切区别，这说明了与原始图像相比，恢复图像相对更干净，但是具有更多的高频细节。对比原始噪声信号（图3中的左上角）和恢复图像中的剩余噪声（图3中的左下角），我们可以观察到SR网络丢弃了大部分的噪声扰动；但是仍然存在稀疏的噪声痕迹。此外，SR网络强化了图像中沿显著边界的高频变化（注意沿鸟类边界的响应）。</p>
+<h2 id="小波降噪"><a href="#小波降噪" class="headerlink" title="小波降噪"></a>小波降噪</h2><p><strong>在空间或频域中进行图像去噪会导致纹理细节的丢失，这不利于这篇文章想要做到在去噪图像上实现像图像一样的干净性能的目标。</strong></p>
+<p><code>wavelet shrinkage</code>（小波收缩）的主要原理是：真实世界信号的离散小波变换（DWT）本质上是稀疏的。<strong>与图像平滑去除图像中高频分量不同，真实世界图像的小波变换具有与重要图像特征对应的大系数，通过对较小系数应用阈值可以去除噪声。</strong></p>
+<blockquote>
+<p>这里也没看懂</p>
+</blockquote>
+<h3 id="阈值化"><a href="#阈值化" class="headerlink" title="阈值化"></a>阈值化</h3><p>阈值参数决定了如何有效地收缩小波系数和去除图像中的敌对噪声。</p>
+<p>在实际应用中，有两种阈值方法：硬阈值和软阈值。硬阈值：<strong>完全保留大于t的系数</strong>，将小噪声系数降为零，然后进行小波逆变换，得到保留关键信息并抑制噪声的图像。</p>
+<p>文章给出的模型选择了软阈值，因为它减少了在硬阈值中发生的突变。此外，硬阈值过度平滑图像，这会降低干净的非对抗性图像的分类精度。</p>
+<p>在实验中，做了<code>visureshrink</code>和<code>bayeshrink</code>软阈值，发现后者的性能更好，提供了视觉上更好的去噪效果。</p>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DAAA/4.png" title="Optional title"></p>
+<p>算法1给出了端到端防御方案的算法描述。</p>
+<p>首先用软小波去噪来平滑对抗性噪声的影响。其次，采用超分辨率作为映射函数来提高图像的视觉质量。超分辨率图像将敌方示例映射到高分辨率空间中的自然图像流形，而在低分辨率空间中，自然图像流形位于流形之外。然后，恢复的图像通过与生成对抗性示例的相同的预先训练的模型。</p>
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><p>做了很多的对比实验，这里给出在ILSVRC验证集的5000幅图像上与最新防御机制的性能的比较。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DAAA/5.png" title="Optional title"></p>
+<p>上标给出了5000个ILSVRC验证集图像上各种防御机制的<code>destruction rates</code>。破坏率定义为成功防御图像的比率，100%的破坏率意味着在应用防御机制后，所有图像都被正确分类。</p>
+<p>“无防御”显示了模型对生成的对抗性图像的性能。“无防御”下的值较低表示攻击很强。结果表明，与单步攻击相比，迭代攻击具有更好的欺骗模型的能力。然而，迭代攻击是不可转移的，更容易防御。类似地，与非目标攻击相比，有针对性的攻击更容易防御，因为它们往往过度符合攻击模型。</p>
+<p>对于迭代攻击（C&amp;W和DeepFool），Random resize+Padding和PD都获得了相似的性能，成功地恢复了大约90%的图像。在比较中，提出的基于超分辨率的防御可以恢复大约96%的图像。对于单步攻击类别，随机调整大小+填充无法防御。为了克服这一局限性，采用了对抗性增强的集成模型进行防御。</p>
+<ul>
+<li><p>与基于JPEG压缩的防御方法相比，该方法对FGSM（ε=10）的性能提高了31.1%。</p>
+</li>
+<li><p>在单步攻击类别（FGSM-10），该方法比随机调整+填充和PD分别高出26.7%和21.0%。</p>
+</li>
+<li><p>最近提出的强攻击（MDI2FGSM），所有的防御技术（JPEG压缩、随机大小调整+填充、绗缝+TVM和PD）都严重失败，仅恢复图像的1.3%、5.8%、1.7%和21.9%。相比之下，所提出的基于图像超分辨率的防御方法可以成功地恢复31.3%的图像。</p>
+</li>
+</ul>
+<h1 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h1><p>来自原文的叙述：</p>
+<ul>
+<li><p>Through extensive empirical evaluations, we show image super-resolution to be an effective defense strategy against a wide range of recently proposed state-of-the-art attacks in the literature [15], [16], [34]–[37]. Using Class Activation Map visualizations, we demonstrate that super-resolution can successfully divert the attention of the classifier from random noisy patches to more distinctive regions of the attacked images (see Fig. 8 and 9).</p>
+</li>
+<li><p>Super-resolving an adversarial image projects it back to the natural image manifold learned by deep image classification networks.</p>
+</li>
+<li><p>Unlike existing image transformation based techniques, which introduce artifacts in the process of overcoming adversarial noise, the proposed scheme retains critical image content, and thus minimally impacts the classifier’s performance on clean, non-attacked images.</p>
+</li>
+<li><p>The proposed defense mechanism tackles adversarial attacks with no knowledge of the target model’s architecture or parameters. This can easily complement other existing model-specific defense methods.</p>
+</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>code：<a target="_blank" rel="noopener" href="https://github.com/aamir-mustafa/super-resolution-adversarial-defense">https://github.com/aamir-mustafa/super-resolution-adversarial-defense</a></p>
+<p>文章：<a target="_blank" rel="noopener" href="http://arxiv.org/abs/1901.01677v1">http://arxiv.org/abs/1901.01677v1</a></p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><ul>
+<li><p>这篇文章做的是对抗样本的防御算法，整体思路是用小波+SR。并不是SISR的发展研究。</p>
+</li>
+<li><p>文章提到了算法的优点，其中有一点：“our purification approach is equally applicable to other computer vision tasks beyond classification”，这么看来泛用性还是很强。</p>
+</li>
+<li><p>说实话写的比较难，看不太懂很多细节的部分，尤其是小波那部分为什么要用，提到了“真实采样”的特点，确实没看懂。包括实验做的也很烦。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/09/18/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AWavelet-SRNet/" title="论文研读：Wavelet-SRNet"><span>NextPost ></span><br><span class="nextTitle">论文研读：Wavelet-SRNet</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E6%8A%97%E6%80%A7%E6%94%BB%E5%87%BB"><span class="toc-number">2.</span> <span class="toc-text">对抗性攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#FGSM"><span class="toc-number">2.1.</span> <span class="toc-text">FGSM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#I-FGSM"><span class="toc-number">2.2.</span> <span class="toc-text">I-FGSM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MI-FGSM"><span class="toc-number">2.3.</span> <span class="toc-text">MI-FGSM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DeepFool"><span class="toc-number">2.4.</span> <span class="toc-text">DeepFool</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#C-amp-W"><span class="toc-number">2.5.</span> <span class="toc-text">C&amp;W</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DIFGSM-and-MDIFGSM"><span class="toc-number">2.6.</span> <span class="toc-text">DIFGSM and MDIFGSM</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Super-Resolution-as-a-Defense-Mechanism"><span class="toc-number">3.1.</span> <span class="toc-text">Super Resolution as a Defense Mechanism</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E8%A7%A3%E9%87%8A"><span class="toc-number">3.1.1.</span> <span class="toc-text">背景解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SR-Network"><span class="toc-number">3.1.2.</span> <span class="toc-text">SR Network</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%85%89%E8%B0%B1%E5%88%86%E5%B8%83%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">3.1.3.</span> <span class="toc-text">对光谱分布的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E6%B3%A2%E9%99%8D%E5%99%AA"><span class="toc-number">3.2.</span> <span class="toc-text">小波降噪</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%88%E5%80%BC%E5%8C%96"><span class="toc-number">3.2.1.</span> <span class="toc-text">阈值化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">3.3.</span> <span class="toc-text">算法流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">5.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">7.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
