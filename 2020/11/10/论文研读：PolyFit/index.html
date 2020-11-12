@@ -1,0 +1,318 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：PolyFit · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：PolyFit</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>11-10-2020 15:00:05</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="基础知识"> 基础知识</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="计算机图形学"> 计算机图形学</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">5.6k</span> | Reading time: <span class="post-count">20</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<blockquote>
+<p>感谢WCX、DHF等在本文写作中给出的建议。</p>
+</blockquote>
+<hr>
+<blockquote>
+<p> PolyFit: Perception-Aligned Vectorization of Raster Clip-Art via Intermediate Polygonal Fitting<br>通过中间多边形拟合实现光栅剪贴画的感知对齐矢量化</p>
+</blockquote>
+<p>来自SIGGRAPH 2020的一篇文章，做的是<strong>光栅图像矢量化</strong>。</p>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><blockquote>
+<p>clip-art images是什么？为什么可以做矢量化？为什么要做矢量化？本篇的核心是什么？</p>
+</blockquote>
+<p>Clip-art images，中文译为剪贴画，通常用于数字媒体中。</p>
+<p>光栅剪贴画图像由明显的彩色区域组成，这些区域由清晰的边界隔开，通常允许清晰的心理向量解释。</p>
+<blockquote>
+<p>Raster clip-art images, which consist of distinctly colored regions separated by sharp boundaries typically allow for a clear mental vector interpretation. </p>
+</blockquote>
+<p><strong>目前，由于各种原因，大量的剪贴画图像仍然以光栅格式创建和存储。但实际上，剪贴画图像可以以矢量形式紧凑无损地表示。</strong>图形矢量化后，在对图形进行调整大小等方面的操作时就会极大的提高效率和提升用户体验。这也是光栅图像矢量化算法开发的最直接驱动，即现代媒体的商业用途。</p>
+<blockquote>
+<p>Clip-art images can be compactly and losslessly represented in vector form; yet, for a variety of reasons, large numbers of clip-art images are still created and stored in raster format…… Vectorizing these images would enable resolution-free reuse of artwork created for legacy displays and facilitate a range of operations such as resizing or editing, which are easier to perform on vector rather than raster data. Vectorizing this data in a man- ner consistent with viewer expectations poses unique challenges, motivating the development of algorithms specifically designed for clip-art vectorization</p>
+</blockquote>
+<p>虽然先前的方法成功地将光栅剪贴画分割成符合观众期望的区域，但在满足观察者期望的同时，<strong>将这些区域之间的光栅边界矢量化仍然是一项挑战：现有的算法仍然经常无法产生与人类偏好一致的向量边界（图1b-c，2b-d）</strong>。我们提出了一种在光栅剪贴画图像中实现区域边界矢量化的新方法，该方法明显优于这些早期方法，产生的结果更符合观众的期望（图1e、2e）。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/1.png" title="Optional title"></p>
+<blockquote>
+<p>Notably, while prior methods [Kopf and Lischinski 2011] successfully segment raster clip-art into regions consistent with viewer expectations, vectorizing the raster boundaries between these regions while meeting observer expectations remains challenging; existing algorithms still often fail to produce vector boundaries consistent with human preferences (Figures 1b-c, 2b-d). We present a new approach for vectorization of region boundaries in raster clip-art images that significantly outperforms these earlier approaches, producing results much better aligned with viewer expectations (Figures 1e, 2e).</p>
+</blockquote>
+<p>基于上述情况，这篇文章提出了PolyFit，可以产生与人类偏好相一致的矢量化图像。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="带有人类主观偏向的矢量化过程的评价标准"><a href="#带有人类主观偏向的矢量化过程的评价标准" class="headerlink" title="带有人类主观偏向的矢量化过程的评价标准"></a>带有人类主观偏向的矢量化过程的评价标准</h2><blockquote>
+<p>Sec. 3</p>
+</blockquote>
+<p>本文的思路更偏向人的主观意愿去做矢量化（本来就是做给人看的，主观评价很重要）,所以文章先叙述了带有人类主观偏向的矢量化过程的评价标准：2018H；Koffka 1955；Wagemans 等人，2012，确定的可能影响人类心理矢量化过程的主要标准有：准确性、简单性、规则性和连续性。</p>
+<blockquote>
+<p>accuracy, simplicity, regularity, and continuity</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/2.png" title="Optional title"></p>
+<ul>
+<li><p>准确性：预示着人类所设想的矢量化在几何上接近输入栅格边界。</p>
+</li>
+<li><p>简单性：主张输出由<strong>最少数量的几何基元</strong>组成，主张优先考虑直线而不是曲线，主张优先选择曲率变化较小的曲线。</p>
+</li>
+<li><p>规则性：观察者希望更观察到的精确或近似的规律性，如栅格输入中存在的平行性、<strong>对称性</strong>。</p>
+</li>
+<li><p>连续性：观察者倾向于将栅格区域边界“臆想”为<strong>片状连续曲线</strong>。</p>
+</li>
+</ul>
+<h2 id="方法概述"><a href="#方法概述" class="headerlink" title="方法概述"></a>方法概述</h2><blockquote>
+<p>Sec. 3</p>
+</blockquote>
+<p>该方法的输入是光栅剪贴画图像，这些图像都具有一个特征：<strong>由许多具有清晰可辨的区域间边界的独特颜色区域组成。</strong></p>
+<p>整个方法可分为两部分：首先使用[Kopf 和 Lischinski 2011]的框架将光栅图像分割成单色区域。然后将所得区域之间的栅格或片状轴对齐的边界转换为符合观众感知的片状平滑曲线。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/3.png" title="Optional title"></p>
+<p>给定输入图像(a)，我们的第一个多边形拟合阶段(b-c)生成一个在给定精度阈值(b)内连接输入顶点的所有可能边缘的图，并计算该图上相对于感知激励成本函数的最短周期，以获得与观察者期望完全一致的多边形拟合(c)。我们的样条拟合（spline fitting）步骤(d-e)使用学习的分类器将最适合的基元组合拟合到每个多边形角(简单曲线、曲线-直线、直线-直线)(d)，并使用获得的基元集计算一个最适合的样条(e)。我们通过对多边形及其对应的样条(f)进行正则化，以获得最终的向量输出(g)，从而获得更规则的结果。</p>
+<p><strong>上图的d-e、f是本文的核心内容，即边界的转化工作。</strong></p>
+<h2 id="中间多边形近似"><a href="#中间多边形近似" class="headerlink" title="中间多边形近似"></a>中间多边形近似</h2><h3 id="问题定义"><a href="#问题定义" class="headerlink" title="问题定义"></a>问题定义</h3><p>文章将中间多边形近似的问题表述为：寻找一个环（cycle），该环是最小化定义在有向图G=(V,E)中的成对和三对边上（pairs and triplets of edges）的能量函数（energy function）。</p>
+<blockquote>
+<p>We formulate the extraction of an intermediate polygonal approximation as the problem of finding a cycle that minimizes an energy function defined on pairs and triplets of edges in a directed graph G = (V,E),wheretheverticesV representcandidatecornersandthe edges E represent candidate polygon segments (see Fig. 5b).</p>
+</blockquote>
+<p>为了方便高效的计算，原文通过只包括“有合理可能成为最终多边形一部分的顶点和边”来保持被操作图的小尺寸。然后，通过图的构造，以平衡准确性、简单性和连续性为标准计算在这个图上的最优周期。</p>
+<p>最终，寻找在成对和三倍边上的能量函数的最优周期问题简化为一个经典的最短周期问题。</p>
+<blockquote>
+<p>and continuity (Sec. 4.2, Fig. 5c) via a graph construction that reduces the problem of finding the optimal cycle of an energy function defined on pairs and triplets of edges to a classical shortest-cycle problem.</p>
+</blockquote>
+<h3 id="图形结构"><a href="#图形结构" class="headerlink" title="图形结构"></a>图形结构</h3><p>使用想塑角到边缘的曼哈顿距离来定义大致的形状：丢弃所有违反曼哈顿距离标准的边缘，并要求所有错误分类的像素都位于直线的一侧，丢弃不满足这一属性的边缘。</p>
+<p>简言之，这部分工作的目的是：<strong>给定大致范围</strong></p>
+<h3 id="多边形近似"><a href="#多边形近似" class="headerlink" title="多边形近似"></a>多边形近似</h3><p>在评估多边形的最优性时，根据第3节中确定的三个感知标准（准确性、简单性和连续性）来评估。</p>
+<h4 id="准确性"><a href="#准确性" class="headerlink" title="准确性"></a>准确性</h4><p>使用之前计算出的错分像素集Pij来衡量每个边缘相对于栅格边界的准确性。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/4.png" title="Optional title"></p>
+<h4 id="连续性"><a href="#连续性" class="headerlink" title="连续性"></a>连续性</h4><p>用多边形角上的角Aijk=eijejk作为连续性的离散代表。Aijk是角处的内外角中较小的角。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/5.png" title="Optional title"></p>
+<h3 id="简单性"><a href="#简单性" class="headerlink" title="简单性"></a>简单性</h3><p>将简单性表达为对最小曲率变化和较小多边形边缘数的偏好。</p>
+<p>以连续角度之间的相似性来衡量曲率变化。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/6.png" title="Optional title"></p>
+<p>为了最大限度地减少拐点的出现（与幅度无关），为每个拐点边缘增加一个绝对拐点惩罚，即binfl=0.1，并使用两个角度中较小的一个（较尖锐的一个）来评估拐点的幅度。这个幅度的饱和极限设置为linfl=90°。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/7.png" title="Optional title"></p>
+<p>简单性也主张减少多边形边的数量。为此，我们给所有图边缘分配一个小的惩罚ε=1e-3，并进一步惩罚冗余的像素长边缘。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/8.png" title="Optional title"></p>
+<h3 id="综合多边形成本"><a href="#综合多边形成本" class="headerlink" title="综合多边形成本"></a>综合多边形成本</h3><p>综合多边形成本C(P)是上述项在所有边和连续边的对和三倍体上的总和。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/9.png" title="Optional title"></p>
+<h2 id="样条拟合"><a href="#样条拟合" class="headerlink" title="样条拟合"></a>样条拟合</h2><blockquote>
+<p>Sec. 5</p>
+</blockquote>
+<p>算法的第二步是将封闭地、片状光滑地样条拟合到多边形上。</p>
+<p>计算这种拟合需要求解几组变量,分别是：</p>
+<ul>
+<li><p>定义样条地基元序列（由其类型定义）；</p>
+</li>
+<li><p>基元与其拟合地栅格边界段之间地映射（特别是基元断点和栅格边界位置之间地对应关系）；</p>
+</li>
+<li><p>基元地形状参数（控制点的位置）。</p>
+</li>
+</ul>
+<h3 id="样条基元"><a href="#样条基元" class="headerlink" title="样条基元"></a>样条基元</h3><p>根据以下设定：</p>
+<ul>
+<li><p>多边形和样条都要准确地近似于输入的栅格，中间多边形边缘的切线要与最终样条的<strong>切线</strong>密切相关；</p>
+</li>
+<li><p>希望样条将通过接近多边形边缘中点，并且在这些中点附近的样条切线与边缘切线相似</p>
+</li>
+<li><p>希望角样条部分至少和它们匹配的多边形角一样连续（即最多有一个C0不连续），并期望它们尊重多边形角所施加的基元数的上界（即两个）。</p>
+</li>
+</ul>
+<p>确定了三种角跨基元配置，它们反映了简单性和连续性之间所有不同的平衡选择。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/10.png" title="Optional title"></p>
+<p>总体目标是产生一个最佳平衡平滑性、简单性和输入栅格的准确性的养条。为了找到这样的养条，在分类过程中，使用优先考虑连续性来考虑配置类型。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/11.png" title="Optional title"></p>
+<h3 id="训练和验证"><a href="#训练和验证" class="headerlink" title="训练和验证"></a>训练和验证</h3><p>对拥有100棵树的森林进行了训练，在23张不同分辨率的输入图像上手工标注多边形角，显示出各种各样的几何构型。50%用于训练，50%用于测试，在测试数据集上达到了99.3%的准确率。</p>
+<p>二元决策使用的是置信度，阈值是0.75。</p>
+<h2 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h2><blockquote>
+<p>Sec. 6</p>
+</blockquote>
+<p>因为前面提到过，人类观察者能够识别输入数据中的规律性，并期望在拟合或矢量化过程中保留这些规律性，所以，<strong>这部分工作的目的是在最终输出中保留输入的正则性，关注的是对称性、平行性、连续性和轴对齐。</strong></p>
+<ul>
+<li><p>正交和轴对齐的边：通过不允许对两个入射多边形角使用（单一）曲线基元配置（从而迫使方法沿这些边缘使用曲线线或线型配置），使长度至少为各自边界框边范围50%的轴对齐边缘更加突出。</p>
+</li>
+<li><p>平行边缘：检测并强制执行存在于栅格输入中的突出的轴对齐平行边缘：如果边缘之间的距离不超过它们的重叠长度，才认为这些边缘是突出的。</p>
+</li>
+<li><p>对称性：如果两个栅格对称性发生冲突，会优先考虑非规则化多边形中先验存在的对称性，并优先考虑较长的对称边界路径。</p>
+</li>
+<li><p>（曲线）延续：在光栅层面(轴对齐)和多边形层面(任意方向)都检测并强制执行连续。</p>
+</li>
+</ul>
+<h2 id="多色输入"><a href="#多色输入" class="headerlink" title="多色输入"></a>多色输入</h2><blockquote>
+<p>Sec. 7</p>
+</blockquote>
+<p>上面叙述的都是一个由两个颜色均匀的区域组成的图像的情况。但现实生活中，图像通常包含多个彩色区域。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/12.png" title="Optional title"></p>
+<p>对于这种输入，处理方法是：将两个相邻的区域都将其交界处分类为平滑配置，只有当分别对区域进行矢量化会产生一个以交界处为顶点的平滑配置类型的多边形，如果不是这种情况，最多只允许两个相邻区域中的一个区域被分类为光滑配置。</p>
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><blockquote>
+<p>Sec. 8</p>
+</blockquote>
+<h2 id="与以往结果的对比"><a href="#与以往结果的对比" class="headerlink" title="与以往结果的对比"></a>与以往结果的对比</h2><p>文章将其结果与2018H等最近两个排名最高的方法在81个输入(Potrace[Selinger 2003]以及2018H)上产生的结果进行了比较。测试数据集包括37个单一区域边界的输入，28个低分辨率多色输入，以及16个中高分辨率的多色输入。对所有方法都使用默认参数。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/13.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/14.png" title="Optional title"></p>
+<p>该部分实验主要着眼在区域分辨率为100以下的输入。对于较高的分辨率，拟合精度对于最终结果起决定性作用，所有方法产生的结果都相当相似。<strong>但在较低的分辨率下（16×及以下），原文方法有着明显的优势，并且在94%的情况下优于2018H的结果。</strong></p>
+<h2 id="与手动矢量化的对比"><a href="#与手动矢量化的对比" class="headerlink" title="与手动矢量化的对比"></a>与手动矢量化的对比</h2><p>文章将其结果与艺术家进行的手动矢量化结果进行了对比。因为手动矢量化多色输入非常耗时（一个区域需要 30多分钟才能准确拟合)，所以这部分只针对2018H提供的15张矢量化二元图像进行了试验。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/15.png" title="Optional title"></p>
+<p>在55%的结果中，参与者认为本文方法得出的结果比艺术家给出的结果更好。</p>
+<p>当艺术家的结果被认为是更好的输入时（如图17c），猜测是由于识别–因为艺术家的输出反映了作者对所􏰑绘形状的知识。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文给出了PolyFit这种新的剪贴画矢量化方法，并给出了与现有的替代方法相比的结果。</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><ul>
+<li><p>能产生更符合观察者意愿的结果（文章的核心立意的努力方向）。</p>
+</li>
+<li><p>在低分辨率数据上表现得特别好（结果提到了16×、32×和64×）。</p>
+</li>
+</ul>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><blockquote>
+<p>Sec. 8</p>
+</blockquote>
+<p>对于分辨率为32×和64×的单个区域，该方法分别需要0.5秒和1.2秒（中位数）来完成矢量化。大部分的运行时间是分布在初始花键拟合和后续的角反馈循环之间的时间大致相等。多边形􏰐取阶段平均占总运行时间的 10%到20%，并且随着输入中存在更多的正则性而增加，这就需要对多边形进行更多的正则化工作。</p>
+<p>上述时间是在八代英特尔酷睿 i7、3.7GHz主频CPU下进行的实验结果。远快于2018H的时间（后者平均需要30到50倍的时间）。</p>
+<h2 id="局限"><a href="#局限" class="headerlink" title="局限"></a>局限</h2><blockquote>
+<p>Sec. 8</p>
+</blockquote>
+<p>该方法目前的实现只对单个边界进行规范化。在许多情况下，它默认实现了边界间的平行性。对这种平行性的明确检测和执行将是我们方法的一个重要的实际扩展。</p>
+<blockquote>
+<p>Our current implementation only regularizes individual boundaries. It achieves inter-boundary parallelism by default for many cases. Explicit detection and enforcement of such parallelism would be an important practical extension of our method. In the future, one can similarly extend our regularization step to address regularities between regions, e.g., using continuation detection, complementing our core method.</p>
+</blockquote>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>本文的研究建立在样本点的逼近、笔触美化、自然图像矢量化、艺术家生成的图像矢量化这几个领域和解决剪贴画矢量化的一些商业软件包的基础上。其中本文主要引用了Hoshyari等在2018年发表的Perception-Driven Semi-Structured Boundary Vectorization，本文工作是在该文的基础上做的改进。此外，本文使用的中间多边形拟合方法受到Potrace[Selinger 2003]启发，在其基础上约束多边形以准确地保存输入细节，有更准确的最终拟合。</p>
+<h2 id="Perception-Driven-Semi-Structured-Boundary-Vectorization"><a href="#Perception-Driven-Semi-Structured-Boundary-Vectorization" class="headerlink" title="Perception-Driven Semi-Structured Boundary Vectorization"></a>Perception-Driven Semi-Structured Boundary Vectorization</h2><blockquote>
+<p>ACM Transaction on Graphics 37, 4 (2018)<br>https: //doi.org/10.1145/3197517.3201312</p>
+</blockquote>
+<p>这篇文章针对艺术家生成的光栅输入的可操作的矢量化算法。给出了一种算法，能够通过将学习到的分类器预测与关于角认知的见解相结合，从有限的训练数据中获得感知上一致的角分类。方法步骤如下：</p>
+<ul>
+<li><p>模型学习：使用随机森林从带有人工标注的角的训练栅格图像集合中学习推理局部的几何环境，并使用一个训练好的分类器计算局部角概率。</p>
+</li>
+<li><p>模型整合：将数据驱动的模型预测与后续的基于感知的角处理步骤相结合，逐渐修剪模型输出的角集，直到使用得到的角计算的边界矢量化符合标准。</p>
+</li>
+<li><p>模型优化：框架定位角的同时，并在它们之间拟合简单的G1连续样条曲线。角集最终确定后，继续进一步简化输出。</p>
+</li>
+</ul>
+<p>框架包括三个主要步骤：(a)潜在角检测、(b)迭代角去除、(c)全局正则化。颜色区分不同的曲线类型。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/16.png" title="Optional title"></p>
+<h2 id="Potrace-a-polygon-based-tracing-algorithm"><a href="#Potrace-a-polygon-based-tracing-algorithm" class="headerlink" title="Potrace: a polygon-based tracing algorithm"></a>Potrace: a polygon-based tracing algorithm</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="http://potrace.sourceforge.net/">http://potrace.sourceforge.net</a></p>
+</blockquote>
+<p>将位图转换为矢量轮廓图，这种逆向过程称为跟踪。</p>
+<p>这篇文章描述了一个简单，有效的跟踪算法：Potrace。该算法输出是由Bezier曲线构成的光滑轮廓，它使用多边形作为图像的中间表示。</p>
+<ul>
+<li><p>路径分解：位图被分解成许多路径，这些路径形成了黑白区域之间的边界。</p>
+</li>
+<li><p>最优多边形生成：用最优多边形逼近每条路径。</p>
+</li>
+<li><p>光滑轮廓：将每个多边形转化为光滑的轮廓。</p>
+</li>
+<li><p>曲线优化（可选）：通过在可能的地方连接连续的Bezier曲线片段来优化生成的曲线。</p>
+</li>
+<li><p>输出：以所需的格式生成输出。</p>
+</li>
+</ul>
+<p>一个完整的示例：(a)原始位图；(b)路径分解和最优多边形；(c)顶点调整、角点分析和平滑；(d)曲线优化；(e)最终输出。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/PolyFit/17.png" title="Optional title"></p>
+<hr>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="光栅图像与矢量图像"><a href="#光栅图像与矢量图像" class="headerlink" title="光栅图像与矢量图像"></a>光栅图像与矢量图像</h2><p>所有的电子艺术图像可被分为两种核心类型：光栅图像和矢量图像。</p>
+<p><strong>简言之，光栅图像由像素点组成，矢量是由连接的线组成的图像。</strong></p>
+<h3 id="光栅图像"><a href="#光栅图像" class="headerlink" title="光栅图像"></a>光栅图像</h3><h4 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h4><p>光栅图也称为<strong>位图</strong>、点阵图、像素图。</p>
+<p>简言之，最小单位由像素构成的图，就被称为光栅图像。在光栅图像中，只包含像素点的信息，每个像素点有自己的颜色。</p>
+<p>光栅图形最为人知晓的特征，就是<strong>它在放大时会失真</strong>。</p>
+<p>这种格式的图适合存储图形不规则，而且颜色丰富没有规律的图，比如照相，扫描等。</p>
+<h4 id="分辨率"><a href="#分辨率" class="headerlink" title="分辨率"></a>分辨率</h4><p>光栅图像或扫描图像的分辨率以DPI（Dots Per Inch，每英寸点数）表示。</p>
+<p>DPI原来是印刷上的记量单位，意思是每英寸上，所能印刷的网点数（Dot Per Inch）。但随着数字输入，输出设备快速发展，大多数的人也将数字影像的解析度用DPI表示。</p>
+<p>但较为严谨的情形下，印刷时计算的网点（Dot）和电脑显示器的显示像素（Pixel）并非相同，所以较专业的人士，会用PPI(Pixel Per Inch)表示数字影像的解析度，以区分二者。</p>
+<h4 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h4><p>为了准确地记录光栅图像文件，图形软件必须跟踪大量信息，包括像素点集中每个像素的确切位置和颜色。这就导致光栅图像的文件很大。高DPI和更大的颜色深度也会产生更大的文件大小。典型的“2X3” 150 dpi黑白光栅图像徽标的文件大约为70K。保存为300 dpi 24位（百万种颜色）光栅图像文件时，大小可能会超过100倍。</p>
+<p>常见的光栅图像格式包括BMP（Windows位图），PCX（画笔），TIFF（标签交错格式），JPEG（联合图像专家组），GIF（图形交换格式），PNG（便携式网络图形），PSD（Adobe PhotoShop）和CPT（Corel PhotoPAINT）。</p>
+<h3 id="矢量图像"><a href="#矢量图像" class="headerlink" title="矢量图像"></a>矢量图像</h3><h4 id="特征-1"><a href="#特征-1" class="headerlink" title="特征"></a>特征</h4><p>矢量图像是生成对象的连接线和曲线的集合。在矢量插图程序中创建矢量图像时，会插入节点或绘图点，并且线条和曲线将注释连接在一起。这与“连接点”的原理相同。</p>
+<h4 id="分辨率-1"><a href="#分辨率-1" class="headerlink" title="分辨率"></a>分辨率</h4><p><strong>矢量图像的分辨率由数学定义（不是像素），所以它们可以按比例放大或缩小而不会失真。</strong>当插图（绘图）程序向上或向下调整矢量图像的大小时，它只是将对象的数学描述乘以缩放因子。<strong>这也是矢量图形在剪贴画中特别受欢迎的一个重要原因。</strong></p>
+<h4 id="文件-1"><a href="#文件-1" class="headerlink" title="文件"></a>文件</h4><p>矢量图像不需要跟踪图像中的每个像素，只需要数学描述。因此，矢量文件的文件大小非常小。矢量文件的主要内容就是数学的描述。<strong>所以，矢量文件非常适合通过网络传输。</strong></p>
+<p>常见的矢量格式包括EPS（Encapsulated PostScript），WMF（Windows图元文件），AI（Adobe Illustrator），CDR（CorelDraw），DXF（AutoCAD），SVG（可缩放矢量图形）和PLT（Hewlett Packard图形语言图文件）。</p>
+<h2 id="曼哈顿距离"><a href="#曼哈顿距离" class="headerlink" title="曼哈顿距离"></a>曼哈顿距离</h2><p>曼哈顿距离为：在平面直角坐标系中，两点在坐标轴方向上的距离之和，即d(i,j)=|xi-xj|+|yi-yj|。</p>
+<p>对于一个具有正南正北、正东正西方向规则布局的城镇街道，从一点到达另一点的距离正是在南北方向上旅行的距离加上在东西方向上旅行的距离，因此，曼哈顿距离又称为出租车距离。</p>
+<p>曼哈顿距离不是距离不变量，当坐标轴变动时，点间的距离就会不同。</p>
+<p>曼哈顿距离示意图在早期的计算机图形学中，屏幕是由像素构成，是整数，点的坐标也一般是整数，原因是浮点运算很昂贵，很慢而且有误差，如果直接使用欧氏距离(欧几里德距离：在二维和三维空间中的欧氏距离的就是两点之间的距离），则必须要进行浮点运算，如果使用曼哈顿距离，则只要计算加减法即可，这就大大提高了运算速度，而且不管累计运算多少次，都不会有误差。</p>
+<h2 id="多边形拟合"><a href="#多边形拟合" class="headerlink" title="多边形拟合"></a>多边形拟合</h2><p>这是一个专门的研究方向。不管是已有的进行多边形拟合的轮子还是使用多边形拟合做的图形学研究，都有这个概念。</p>
+<blockquote>
+<p>opencv里有多边形拟合的函数approxPolyDP，natlab里有名为polyfit的函数等。</p>
+</blockquote>
+<p>所介绍的这篇论文使用了这个概念去做矢量化。</p>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/10/12/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AImage-Super-Resolution-as-a-Defense-Against-Adversarial-Attacks/" title="论文研读：Image Super-Resolution as a Defense Against Adversarial Attacks"><span>NextPost ></span><br><span class="nextTitle">论文研读：Image Super-Resolution as a Defense Against Adversarial Attacks</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E4%BA%BA%E7%B1%BB%E4%B8%BB%E8%A7%82%E5%81%8F%E5%90%91%E7%9A%84%E7%9F%A2%E9%87%8F%E5%8C%96%E8%BF%87%E7%A8%8B%E7%9A%84%E8%AF%84%E4%BB%B7%E6%A0%87%E5%87%86"><span class="toc-number">2.1.</span> <span class="toc-text">带有人类主观偏向的矢量化过程的评价标准</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E6%A6%82%E8%BF%B0"><span class="toc-number">2.2.</span> <span class="toc-text">方法概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E5%A4%9A%E8%BE%B9%E5%BD%A2%E8%BF%91%E4%BC%BC"><span class="toc-number">2.3.</span> <span class="toc-text">中间多边形近似</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AE%9A%E4%B9%89"><span class="toc-number">2.3.1.</span> <span class="toc-text">问题定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%BE%E5%BD%A2%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.2.</span> <span class="toc-text">图形结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E8%BE%B9%E5%BD%A2%E8%BF%91%E4%BC%BC"><span class="toc-number">2.3.3.</span> <span class="toc-text">多边形近似</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%86%E7%A1%AE%E6%80%A7"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">准确性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E7%BB%AD%E6%80%A7"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">连续性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%80%A7"><span class="toc-number">2.3.4.</span> <span class="toc-text">简单性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E5%A4%9A%E8%BE%B9%E5%BD%A2%E6%88%90%E6%9C%AC"><span class="toc-number">2.3.5.</span> <span class="toc-text">综合多边形成本</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B7%E6%9D%A1%E6%8B%9F%E5%90%88"><span class="toc-number">2.4.</span> <span class="toc-text">样条拟合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B7%E6%9D%A1%E5%9F%BA%E5%85%83"><span class="toc-number">2.4.1.</span> <span class="toc-text">样条基元</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83%E5%92%8C%E9%AA%8C%E8%AF%81"><span class="toc-number">2.4.2.</span> <span class="toc-text">训练和验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%84%E8%8C%83%E5%8C%96"><span class="toc-number">2.5.</span> <span class="toc-text">规范化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%89%B2%E8%BE%93%E5%85%A5"><span class="toc-number">2.6.</span> <span class="toc-text">多色输入</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">3.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E4%BB%A5%E5%BE%80%E7%BB%93%E6%9E%9C%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">3.1.</span> <span class="toc-text">与以往结果的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E6%89%8B%E5%8A%A8%E7%9F%A2%E9%87%8F%E5%8C%96%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">3.2.</span> <span class="toc-text">与手动矢量化的对比</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">4.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD"><span class="toc-number">4.2.</span> <span class="toc-text">性能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%80%E9%99%90"><span class="toc-number">4.3.</span> <span class="toc-text">局限</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">相关工作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Perception-Driven-Semi-Structured-Boundary-Vectorization"><span class="toc-number">5.1.</span> <span class="toc-text">Perception-Driven Semi-Structured Boundary Vectorization</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Potrace-a-polygon-based-tracing-algorithm"><span class="toc-number">5.2.</span> <span class="toc-text">Potrace: a polygon-based tracing algorithm</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%89%E6%A0%85%E5%9B%BE%E5%83%8F%E4%B8%8E%E7%9F%A2%E9%87%8F%E5%9B%BE%E5%83%8F"><span class="toc-number">6.1.</span> <span class="toc-text">光栅图像与矢量图像</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E6%A0%85%E5%9B%BE%E5%83%8F"><span class="toc-number">6.1.1.</span> <span class="toc-text">光栅图像</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E5%BE%81"><span class="toc-number">6.1.1.1.</span> <span class="toc-text">特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E8%BE%A8%E7%8E%87"><span class="toc-number">6.1.1.2.</span> <span class="toc-text">分辨率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6"><span class="toc-number">6.1.1.3.</span> <span class="toc-text">文件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A2%E9%87%8F%E5%9B%BE%E5%83%8F"><span class="toc-number">6.1.2.</span> <span class="toc-text">矢量图像</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E5%BE%81-1"><span class="toc-number">6.1.2.1.</span> <span class="toc-text">特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E8%BE%A8%E7%8E%87-1"><span class="toc-number">6.1.2.2.</span> <span class="toc-text">分辨率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-1"><span class="toc-number">6.1.2.3.</span> <span class="toc-text">文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BC%E5%93%88%E9%A1%BF%E8%B7%9D%E7%A6%BB"><span class="toc-number">6.2.</span> <span class="toc-text">曼哈顿距离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E8%BE%B9%E5%BD%A2%E6%8B%9F%E5%90%88"><span class="toc-number">6.3.</span> <span class="toc-text">多边形拟合</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
