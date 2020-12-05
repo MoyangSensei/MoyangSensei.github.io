@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：SISR-DRN · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：SISR-DRN</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>12-04-2020 20:41:23</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.9k</span> | Reading time: <span class="post-count">10</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Closed-loop Matters: Dual Regression Networks for Single Image Super-Resolution<br>2020 cvpr</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>文章提出，目前超分辨率算法存在两个明显的问题：</p>
+<ul>
+<li>从LR图像到HR图像通常是一个ill-posed的反问题，<strong>存在无数可能的HR图像通过降采样得到同一张LR图像</strong>。解空间过大，从而很难去找到一个合适的解。</li>
+</ul>
+<blockquote>
+<p>First, learning the mapping from LR to HR images is typ- ically an ill-posed problem since there exist infinitely many HR images that can be downscaled to obtain the same LR image [36]. Thus, the space of the possible functions that map LR to HR images becomes extremely large. As a result, the learning performance can be limited since learning a good solution in such a large space is very hard.</p>
+</blockquote>
+<ul>
+<li>真实场景应用中，<strong>成对的LR-HR图像往往无法获得，因此对应图像降采样方式也往往未知</strong>。因此对于更普遍的情形，现有的SR模型经常会引起适应性问题，从而导致性能不佳。</li>
+</ul>
+<blockquote>
+<p>Second, it is hard to obtain a promising SR model when the paired data are unavailable [43, 54]. Note that most SR methods rely on the paired training data, i.e., HR images with their Bicubic-degraded LR counterparts. However, the paired data may be unavailable and the unpaired data often dominate the real-world applications.</p>
+</blockquote>
+<p>论文针对这两个主要的问题进行改进，提出了对偶回归策略，通过引入对LR图像额外的约束，从而减小解空间的大小。</p>
+<p>也就是说，模型除了学习LR到HR图像的映射外，还学习了额外的对偶回归映射，用于估计下采样内核并重建LR图像，从而形成一个闭环以提供额外的监督。特别地是，由于对偶回归策略并不依赖HR图像，因此可以直接从LR图像中进行学习。因此，可以很好地使得SR模型适应真实世界图像。</p>
+<blockquote>
+<p>作者的意思就是针对LR到HR解空间大的问题，作者通过设计一个反向的一个网络，实现HR到LR的映射，以此来制约和平衡主网络（也就是LR到HR映射的网络）的训练，怎么平衡的可以通过后面作者给的损失函数看出来。而为了解决HR和LR成对训练的依赖问题，作者通过在训练集中加入不成对的LR图像，那肯定有人要问了，那LR图像没有对应的HR图像那怎么训练呢？这个问题也是能通过后面作者给的损失函数来解决。</p>
+</blockquote>
+<h1 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h1><p>网络的整体结构如下，<strong>分为P和D两部分。</strong>：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/1.png" title="Optional title"></p>
+<p>模型中黑色箭头所指部分，为DRN模型的Primary网络，而红色箭头所指部分，则对应Dual Regression 网络。Primary网络实现了从LR到HR映射，并且生成多尺度的SR图像：x1 SR，x2 SR。Dual Regression网络则是HR到LR映射，生成多尺度的LR图像：x2 LR，x1 LR。</p>
+<blockquote>
+<p>D网络中优化的损失函数不止一个，通过上图可以发现对于最后结果为4x的图像，反向进行下采样可以下采样成2x和1x的。而作者在P网络的设计中一开始Input图像（LR通过插值上采样后的）在输入时也经历了两个阶段就是下采样成2x和1x的，所以这就和D网络对应了起来。P网络的2x和D网络的2x图像形成一对，并进行损失函数优化。1x图像也是如此。如果最后的结果是8x的图像，就多一个4x的P网络和D网络的成对优化。</p>
+</blockquote>
+<h2 id="成对数据"><a href="#成对数据" class="headerlink" title="成对数据"></a>成对数据</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/2.png" title="Optional title"></p>
+<p>针对配对的训练数据，将SR问题公式化为涉及两个回归任务的对偶回归模型。损失函数如下图所示，包含两部分，一个是P网络的损失，一个是D网络的损失：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/3.png" title="Optional title"></p>
+<p>其中，lamda为对偶回归Loss的权重参数,推荐设置为0.1。每个loss均可以用L1或L2loss，本文中使用的是L1 loss。</p>
+<h2 id="不成对数据"><a href="#不成对数据" class="headerlink" title="不成对数据"></a>不成对数据</h2><p>对于没有成对数据集的情况下，DRN采用了半监督学习，引入部分的成对数据集用于训练，DRN损失函数为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/4.png" title="Optional title"></p>
+<p>首先，为了保证SR的质量，这里需要添加一部分成对的合成数据（简单双三次三采样退化）。训练时选取m个无标签数据和n个合成数据。</p>
+<p>其次，1sp表示数据为合成数据时取1，无标签数据时取0。通过这个参数来控制训练LR没有对应HR图像的情况下的训练损失函数，通过后面加上lamda权重的D网络损失函数，来平衡P网络的训练。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="有监督部分"><a href="#有监督部分" class="headerlink" title="有监督部分"></a>有监督部分</h2><p>有监督部分和目前大部分模型一样，使用的是常见的Data pair数据集DIV2K和Flick2K作为训练集，测试集为常见的SET5, SET14, BSDS100,URBAN100 和MANGA109。模型设置上，作者设置了两个不同参数量的模型，DRN-S（小模型）和DRN-L（大模型）。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/5.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/6.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/7.png" title="Optional title"></p>
+<h2 id="半监督部分"><a href="#半监督部分" class="headerlink" title="半监督部分"></a>半监督部分</h2><p>半监督部分，data pair部分使用了DIV2K的训练集，而对于data unpiar部分，则划分成两个实验：</p>
+<h3 id="Comparison-on-Unpaired-Synthetic-Data"><a href="#Comparison-on-Unpaired-Synthetic-Data" class="headerlink" title="Comparison on Unpaired Synthetic Data"></a>Comparison on Unpaired Synthetic Data</h3><p>data unpair则是在ImageNet中随机选取了3K张图像，并对图片使用Nearest和BD两种不同的方式采样出LR图像，将LR用于半监督训练。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/8.png" title="Optional title"></p>
+<h3 id="Comparison-on-Unpaired-Real-world-Data"><a href="#Comparison-on-Unpaired-Real-world-Data" class="headerlink" title="Comparison on Unpaired Real-world Data"></a>Comparison on Unpaired Real-world Data</h3><p>data unpair则是来自于未知退化核的YouTube视频的3K张原始帧。由于没有GT，只能通过感性的方式进行不同方法的下恢复效果的观测。</p>
+<h2 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h2><h3 id="对偶回归学习是否有效？lamba设置为多少合适？"><a href="#对偶回归学习是否有效？lamba设置为多少合适？" class="headerlink" title="对偶回归学习是否有效？lamba设置为多少合适？"></a>对偶回归学习是否有效？lamba设置为多少合适？</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/9.png" title="Optional title"></p>
+<h3 id="半监督学习中，data-pair数据和unpair数据比例如何划分？"><a href="#半监督学习中，data-pair数据和unpair数据比例如何划分？" class="headerlink" title="半监督学习中，data pair数据和unpair数据比例如何划分？"></a>半监督学习中，data pair数据和unpair数据比例如何划分？</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/10.png" title="Optional title"></p>
+<h1 id="贡献"><a href="#贡献" class="headerlink" title="贡献"></a>贡献</h1><p>来自原文叙述的主要贡献：</p>
+<ul>
+<li><p>We develop a dual regression scheme by introducing an additional constraint such that the mappings can form a closed-loop and LR images can be reconstructed to enhance the performance of SR models. Moreover, we also theoretically analyze the generalization ability of the proposed scheme, which further confirms its superiority to existing methods.</p>
+</li>
+<li><p>We study a <code>more general super-resolution case</code> where there is no corresponding HR data w.r.t. the real-world LR data. With the proposed dual regression scheme, deep models can be <code>easily adapted to real-world data</code>, e.g., raw video frames from YouTube.</p>
+</li>
+<li><p>Extensive experiments on both the SR tasks with paired training data and unpaired real-world data demonstrate the effectiveness of the <code>proposed dual regression scheme</code> in image super-resolution.</p>
+</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>文章：<br><a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_CVPR_2020/papers/Guo_Closed-Loop_Matters_Dual_Regression_Networks_for_Single_Image_Super-Resolution_CVPR_2020_paper.pdf">https://openaccess.thecvf.com/content_CVPR_2020/papers/Guo_Closed-Loop_Matters_Dual_Regression_Networks_for_Single_Image_Super-Resolution_CVPR_2020_paper.pdf</a></p>
+<p>code：<a target="_blank" rel="noopener" href="https://github.com/guoyongcs/DRN">https://github.com/guoyongcs/DRN</a></p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><ul>
+<li><p>思路非常的新颖且实用。最大的亮点，在于利用对偶任务的特点，将真实LR的半监督引入，为目前SISR普遍存在的泛化性问题提供了一种新的解决思路。即当前更多的工作是如何去盲估计出一个未知的退化核，这种盲估计通常是非常难的。而这种半监督的学习，则需要将真实的LR接纳到模型中来进行学习，因此这种半监督的方式，在真实场景下可能更多需要Online learning。</p>
+</li>
+<li><p>推测这种学习范式对其他的low level vision tasks应该都是同样适用的。</p>
+</li>
+</ul>
+<hr>
+<h1 id="对偶学习"><a href="#对偶学习" class="headerlink" title="对偶学习"></a>对偶学习</h1><blockquote>
+<p>Dual Learning for Machine Translation<br>NIPS 2016</p>
+</blockquote>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.msra.cn/zh-cn/news/features/dual-learning-20161207">https://www.msra.cn/zh-cn/news/features/dual-learning-20161207</a></p>
+</blockquote>
+<h2 id="立意-1"><a href="#立意-1" class="headerlink" title="立意"></a>立意</h2><p>深度学习之所以能够取得巨大的成功，一个非常重要的因素就是大数据，特别是大规模的带标签的数据。但在很多任务中，没办法收集到大规模的标注数据。为了使深度学习能够取得更广泛的成功，需要降低其对大规模标注数据的依赖性。</p>
+<p><strong>为了解决这个问题，我们提出了一种新的学习范式，把它称作对偶学习。</strong> </p>
+<h2 id="做法"><a href="#做法" class="headerlink" title="做法"></a>做法</h2><p>很多人工智能的应用涉及两个互为对偶的任务，例如机器翻译中从中文到英文翻译和从英文到中文的翻译互为对偶、语音处理中语音识别和语音合成互为对偶、图像理解中基于图像生成文本和基于文本生成图像互为对偶、问答系统中回答问题和生成问题互为对偶，以及在搜索引擎中给检索词查找相关的网页和给网页生成关键词互为对偶。这些互为对偶的人工智能任务可以形成一个闭环，使从没有标注的数据中进行学习成为可能。</p>
+<p>对偶学习的最关键一点在于，给定一个原始任务模型，其对偶任务的模型可以给其提供反馈；同样的，给定一个对偶任务的模型，其原始任务的模型也可以给该对偶任务的模型提供反馈；从而这两个互为对偶的任务可以相互提供反馈，相互学习、相互提高。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DRN/11.png" title="Optional title"></p>
+<p>考虑一个对偶翻译游戏，里面有两个玩家小明和爱丽丝。小明只能讲中文，爱丽丝只会讲英文，他们两个人一起希望能够提高英文到中文的翻译模型f和中文到英文的翻译模型g。给定一个英文的句子x，爱丽丝首先通过f把这个句子翻译成中文句子y1，然后把这个中文的句子发给小明。因为没有标注，所以小明不知道正确的翻译是什么，但是小明可以知道，这个中文的句子是不是语法正确、符不符合中文的语言模型，这些信息都能帮助小明大概判断翻译模型f是不是做的好。然后小明再把这个中文的句子y1通过翻译模型g翻译成一个新的英文句子x1，并发给爱丽丝。通过比较x和x1是不是相似，爱丽丝就能够知道翻译模型f和g是不是做得好，尽管x只是一个没有标注的句子。因此，通过这样一个对偶游戏的过程，我们能够从没有标注的数据上获得反馈，从而知道如何提高机器学习模型。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>认为对偶学习是一个全新的学习范式。</p>
+<ul>
+<li><p>监督学习（supervised learning）只能从标注的数据进行学习，只涉及一个学习任务；而对偶学习涉及至少两个学习任务，可以从未标注的数据进行学习。</p>
+</li>
+<li><p>半监督学习（semi-supervised learning）尽管可以对未标注的样本生成伪标签，但无法知道这些伪标签的好坏，而对偶学习通过对偶游戏生成的反馈（例如对偶翻译中x和x1的相似性）能知道中间过程产生的伪标签（y1）的好坏，因而可以更有效地利用未标注的数据。我们甚至可以说，对偶学习在某种程度上是把未标注的数据当作带标签的数据来使用。</p>
+</li>
+<li><p>对偶学习和多任务学习（multi-task learning）也不相同。尽管多任务学习也是同时学习多个任务共的模型，但这些任务必须共享相同的输入空间，而对偶学习对输入空间没有要求，只要这些任务能形成一个闭环系统即可。</p>
+</li>
+<li><p>对偶学习和迁移学习（transfer learning）也很不一样。迁移学习用一个或多个相关的任务来辅助主要任务的学习，而在对偶学习中，多个任务是相互帮助、相互提高，并没有主次之分。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/12/04/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASISR%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%B9%BF%E7%9A%84%E4%B8%80%E7%A7%8D%E6%96%B0%E6%80%9D%E8%B7%AF/" title="论文研读：SISR数据增广的一种新思路"><span>NextPost ></span><br><span class="nextTitle">论文研读：SISR数据增广的一种新思路</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84"><span class="toc-number">2.</span> <span class="toc-text">网络结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%AF%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">2.1.</span> <span class="toc-text">成对数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8D%E6%88%90%E5%AF%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">2.2.</span> <span class="toc-text">不成对数据</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E7%9B%91%E7%9D%A3%E9%83%A8%E5%88%86"><span class="toc-number">3.1.</span> <span class="toc-text">有监督部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8A%E7%9B%91%E7%9D%A3%E9%83%A8%E5%88%86"><span class="toc-number">3.2.</span> <span class="toc-text">半监督部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Comparison-on-Unpaired-Synthetic-Data"><span class="toc-number">3.2.1.</span> <span class="toc-text">Comparison on Unpaired Synthetic Data</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Comparison-on-Unpaired-Real-world-Data"><span class="toc-number">3.2.2.</span> <span class="toc-text">Comparison on Unpaired Real-world Data</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">3.3.</span> <span class="toc-text">消融实验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E5%81%B6%E5%9B%9E%E5%BD%92%E5%AD%A6%E4%B9%A0%E6%98%AF%E5%90%A6%E6%9C%89%E6%95%88%EF%BC%9Flamba%E8%AE%BE%E7%BD%AE%E4%B8%BA%E5%A4%9A%E5%B0%91%E5%90%88%E9%80%82%EF%BC%9F"><span class="toc-number">3.3.1.</span> <span class="toc-text">对偶回归学习是否有效？lamba设置为多少合适？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E4%B8%AD%EF%BC%8Cdata-pair%E6%95%B0%E6%8D%AE%E5%92%8Cunpair%E6%95%B0%E6%8D%AE%E6%AF%94%E4%BE%8B%E5%A6%82%E4%BD%95%E5%88%92%E5%88%86%EF%BC%9F"><span class="toc-number">3.3.2.</span> <span class="toc-text">半监督学习中，data pair数据和unpair数据比例如何划分？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B4%A1%E7%8C%AE"><span class="toc-number">4.</span> <span class="toc-text">贡献</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">6.</span> <span class="toc-text">感想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E5%81%B6%E5%AD%A6%E4%B9%A0"><span class="toc-number">7.</span> <span class="toc-text">对偶学习</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F-1"><span class="toc-number">7.1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%9A%E6%B3%95"><span class="toc-number">7.2.</span> <span class="toc-text">做法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.3.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
