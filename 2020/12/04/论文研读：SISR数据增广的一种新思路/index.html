@@ -114,7 +114,7 @@
 <p>为了更好地理解低水平视觉中的DA方法，对最初为高级视觉任务开发的各种DA方法的效果进行了全面分析（第2节）。首先根据方法的应用领域将现有的增强技术分为两类：像素域和特征域。当直接应用于SISR时，发现有些方法会损害图像恢复结果，甚至阻碍训练，特别是当一种方法在很大程度上导致相邻像素之间的空间信息丢失或混淆时。</p>
 <p>在分析的基础上，提出了CutBlur。<strong>具体做法是：剪切模糊剪切并粘贴LR图像补丁到其对应的真实HR图像补丁，</strong>反之也一样。CurBlur的关键在于让模型不仅知道如何超分，同时也知道哪里需要超分。通过这样的方法，模型能够自适应地去决定图像多大程度上去应用超分而不是盲目地对所有像素进行超分。</p>
 <p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DA-NewStrategy/1.png" title="Optional title"></p>
-<h1 id="CurBlur"><a href="#CurBlur" class="headerlink" title="CurBlur"></a>CurBlur</h1><h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>假设给定LR图像xlr(w<em>h</em>c)和xhr(sw<em>sh</em>c)图像块 [公式] ，其中 [公式] 是放大倍数。由于 CurBlur需要匹配LR图像和HR图像的分辨率，所以会LR图像进行s倍的双三次插值。CurBlur然后就会生成成对的训练样本lr-&gt;hr和hr-&gt;lr ：</p>
+<h1 id="CurBlur"><a href="#CurBlur" class="headerlink" title="CurBlur"></a>CurBlur</h1><h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>假设给定LR图像xlr(w<em>h</em>c)和xhr(sw<em>sh</em>c)图像块，其中s是放大倍数。由于 CurBlur需要匹配LR图像和HR图像的分辨率，所以会LR图像进行s倍的双三次插值。CurBlur然后就会生成成对的训练样本lr-&gt;hr和hr-&gt;lr ：</p>
 <p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-DA-NewStrategy/2.png" title="Optional title"></p>
 <p>其中，M为二值Mask，用于决定哪里需要被替换掉。</p>
 <p>源码如下：</p>
