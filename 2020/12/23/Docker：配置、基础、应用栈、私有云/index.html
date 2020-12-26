@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Docker：配置、基础、应用栈、私有云 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">Docker：配置、基础、应用栈、私有云</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>12-23-2020 11:52:20</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="云计算与分布式系统"> 云计算与分布式系统</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="Docker"> Docker</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.5k</span> | Reading time: <span class="post-count">9</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h1><ul>
+<li><p>Docker的安装：在Ubuntu、CentOS或者Windows上的安装Docker。</p>
+</li>
+<li><p>容器操作：启动容器、守护态运行、终止容器。</p>
+</li>
+<li><p>搭建一个Docker应用栈：获取镜像、应用栈容器节点互联、应用栈容器节点启动、应用栈容器节点配置。</p>
+</li>
+<li><p>实现私有云：启动Docker、获取镜像、实现sshd，在Base镜像基础上生成一个新镜像、分配容器、搭建自己的私有仓库。</p>
+</li>
+</ul>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Docker是PaaS提供商dotCloud开源的一个基于LXC（Linux Containers，基于Linux的容器机制）的高级容器引擎，源代码托管在Github上，基于go语言并遵从Apache2.0协议开源的虚拟化技术。</p>
+<p>可以把Docker近似地理解成是一个“轻量级的虚拟机”：<strong>只消耗较少的资源就能实现对进程的隔离保护</strong>。使用Docker可以把应用程序和它相关的各种依赖（如底层库、组件等）“打包”在一起，这就是Docker镜像（Docker image）。Docker镜像可以让应用程序不再顾虑环境的差异，在任意的系统中以容器的形式运行（当然必须要基于Docker环境），极大地增强了应用部署的灵活性和适应性。</p>
+<p>在Docker的网站上提到了Docker的典型场景：</p>
+<ul>
+<li><p>Automating the packaging and deployment of applications（使应用的打包与部署自动化）</p>
+</li>
+<li><p>Creation of lightweight, private PAAS environments（创建轻量、私密的PAAS环境）</p>
+</li>
+<li><p>Automated testing and continuous integration/deployment（实现自动化测试和持续的集成/部署）</p>
+</li>
+<li><p>Deploying and scaling web apps, databases and backend services（部署与扩展webapp、数据库和后台服务）</p>
+</li>
+</ul>
+<h1 id="Docker配置"><a href="#Docker配置" class="headerlink" title="Docker配置"></a>Docker配置</h1><p>在Mac OS上配置Docker。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>和安装Mac普通应用一样，下载.dmg安装包，运行安装包，把应用拖到到应用程序目录即可。</p>
+<p>官方下载地址：<a target="_blank" rel="noopener" href="https://download.docker.com/mac/stable/Docker.dmg">https://download.docker.com/mac/stable/Docker.dmg</a></p>
+<p>可以使用国内地址（阿里云）进行下载：<a target="_blank" rel="noopener" href="http://mirrors.aliyun.com/docker-toolbox/mac/docker-for-mac/stable/Docker.dmg">http://mirrors.aliyun.com/docker-toolbox/mac/docker-for-mac/stable/Docker.dmg</a></p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/1.png" title="Optional title"></p>
+<p>初次打开会提示输入Mac的密码，输入后点击安装帮助程序即可。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/2.png" title="Optional title"></p>
+<p>安装完之后，打开Docker桌面程序，可以看到如下用户界面。</p>
+<p>教程。帮助建立一个Docker镜像和容器，最后一步是发布到自己的个人账号上。需要sign in。可以跳过。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/3.png" title="Optional title"></p>
+<p>用户界面，左边栏分为Containers和Images，也是Docker的两个最重要的概念。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/4.png" title="Optional title"></p>
+<p>可以在用户界面操作Docker，也可以直接使用terminal进行操作（实际上Docker可以直接在其用户界面使用terminal）。</p>
+<h2 id="配置镜像加速"><a href="#配置镜像加速" class="headerlink" title="配置镜像加速"></a>配置镜像加速</h2><p>如果需要使用别人发布的镜像时，Docker默认从DockerHub拉取镜像。<strong>这个操作有时会遇到网络方面的困难</strong>，此时可以配置镜像加速器。</p>
+<p>Docker官方在中国区提供了镜像地址，而且国内很多云服务商都提供了国内加速器服务，例如网易、阿里云等。</p>
+<p>这里选择阿里云的镜像加速。登入阿里云网站：<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/">https://cr.console.aliyun.com</a> ，左边栏-&gt;容器镜像服务-&gt;镜像中心-&gt;镜像加速器，默认会生成属于个人的一个加速器地址（需要注册阿里云账号）。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/5.png" title="Optional title"></p>
+<p>得到上述加速器之后，打开Docker桌面程序-&gt;Preferences-&gt;Docker Engine，使用json格式进行配置。</p>
+<p>原来的配置：</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/6.png" title="Optional title"></p>
+<p>修改为：</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/7.png" title="Optional title"></p>
+<h2 id="配置结果"><a href="#配置结果" class="headerlink" title="配置结果"></a>配置结果</h2><p>在terminal中，使用<code>docker info</code>可以查看Docker是否安装成功以及配置的结果。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/8.png" title="Optional title"></p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/9.png" title="Optional title"></p>
+<h1 id="容器：基础操作"><a href="#容器：基础操作" class="headerlink" title="容器：基础操作"></a>容器：基础操作</h1><p><strong>创建一个Apache容器并进行一些基础操作</strong>。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/10.png" title="Optional title"></p>
+<p><code>docker image ls</code>：用于列出所有镜像的属性。</p>
+<p><code>docker run -p 80:80 httpd</code>：创建一个Apache容器。其中，<code>-p</code>用来指定端口映射关系：第一个为本地端口，第二个为容器端口；<code>httpd</code>是Apache超文本传输协议（HTTP）服务器的主程序，被设计为一个独立运行的后台进程，它会建立一个处理请求的子进程或线程的池。主要的命令是<code>docker run</code>，该命令会运行本地的镜像，如果该镜像不存在的话，会先从镜像仓库拉取该镜像。因此，这条命令的输出包含了两部分结果：第一部分是<code>docker pull</code>，用来从镜像仓库中拉取或者更新指定镜像，第二部分是运行该容器并输出log内容。</p>
+<p>使用浏览器及<code>本地ip</code>访问80端口，会出现如下页面，说明Apache服务成功运行：</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/11.png" title="Optional title"></p>
+<p>对运行的容器做如下操作：</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/12.png" title="Optional title"></p>
+<p><code>docker ps -a</code>：列出所有的容器（不管是运行中的还是未运行的），可以看到刚刚建立的容器的一些状态。其中，<code>CONTAINER ID</code>给出了容器的ID，可以用这个ID指定该容器进行一些操作。<code>STATUS</code>中<code>Up</code>表示该容器正在运行。</p>
+<p><code>docker logs 540cb924672b</code>：指定容器查看其log内容。可以看到这里的输出内容和上一图中的内容是一致的，也证明了服务成功运行。</p>
+<p><code>docker stop 540cb924672b</code>：停止该容器。停止之后再使用ps命令查看状态，可以发现该容器的状态变成了<code>Exited (0)</code>。</p>
+<p><code>docker run -d -p 80:80 httpd</code>：与上面一条run命令相比，加入了<code>-d</code>参数，<strong>表示容器运行于前台还是后台（即守护态）</strong>，默认为false。接着再使用ps命令查看状态，可以发现从该镜像新建了一个容器（不同的ID）。</p>
+<p>在Docker桌面程序中也可以看到刚刚建立的两个容器。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/13.png" title="Optional title"></p>
+<h1 id="应用栈"><a href="#应用栈" class="headerlink" title="应用栈"></a>应用栈</h1><p>Mac上做Docker应用栈，配置容器的时候会遇到一个极其让人难受的问题：</p>
+<p><a target="_blank" rel="noopener" href="https://forums.docker.com/t/var-lib-docker-does-not-exist-on-host/18314">https://forums.docker.com/t/var-lib-docker-does-not-exist-on-host/18314</a></p>
+<p>本来是想用网上那个大家已经做烂了的例子去做一下的：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012066426/article/details/52597991">https://blog.csdn.net/u012066426/article/details/52597991</a></p>
+<blockquote>
+<p>参考《Docker容器和容器云》 2.3.2章节应用栈搭建过程</p>
+</blockquote>
+<p><strong>这个问题本质上还是机器架构导致的软件环境的问题。应用栈搭建本身是比较简单的工作。</strong></p>
+<p>因为这个问题，决定放弃了，因为真的很浪费时间，4天了没有找到什么解决方案。</p>
+<h1 id="私有云"><a href="#私有云" class="headerlink" title="私有云"></a>私有云</h1><p>hub.docker.com（官方的Docker hub）上可以保存镜像，是一个用于管理公共镜像的地方，我们可以在上面找到我们想要的镜像，也可以把我们自己的镜像推送上去，但是网速相对较慢。修改了镜像地址可以加快网速，但是某些情况下，开发需要更加定制化和私人化的要求时，再或者个人的服务器无法访问互联网时，在内部环境中搭建一个私有的公共仓库是个更好的方案，这就是Docker私有云（私库）的意义。</p>
+<p>过程如下：</p>
+<h2 id="私有云工具：registry"><a href="#私有云工具：registry" class="headerlink" title="私有云工具：registry"></a>私有云工具：registry</h2><p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/14.png" title="Optional title"></p>
+<p><code>docker pull docker.io/registry</code>：利用官方提供的工具<strong>registry</strong>来配置私库。需要注意的是，这个工具是个本身就是个镜像，直接下载并使用该镜像启动容器就可以完成私库的搭建。</p>
+<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/15.png" title="Optional title"></p>
+<p><code>docker run -d -p 5000:5000 --name registry_jfy --restart always -v /Users/qiwu/docker/registry:/var/lib/registry registry</code>：建立私库。其中，<code>-d</code>设置该私库为后台守护态运行；<code>-p</code>给出端口及其映射；<code>--name</code>设置该私库的名称为<code>registry_jfy</code>；<code>--restart</code>表示该容器总随着docker服务的开启而启动；<code>-v</code>把registry的镜像路径映射到本地。</p>
+<p>使用<code>ps</code>命令查看容器，可看到刚刚新建立的私库的情况。使用 <a target="_blank" rel="noopener" href="http://127.0.0.1:5000/v2/_catalog">http://127.0.0.1:5000/v2/_catalog</a> 测试刚刚搭建的私库的内容。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/16.png" title="Optional title"></p>
+<blockquote>
+<p>这里应该是空的repositores，busybox是之前用来做尝试而上传上去的镜像，此处无视之。</p>
+</blockquote>
+<p><code>docker tag ubuntu:latest 127.0.0.1:5000/ubuntu</code>：希望将本地已有的ubuntu镜像（本来是用来做应用栈的）作为私库的测试文件。标记本地镜像并指向目标仓库。<strong>这一步是必须的，如果直接将未tag的镜像上传，会提示此镜像不存在。</strong></p>
+<p>tag操作之后，使用<code>ps</code>命令查看容器，发现多了一个刚刚标记过的镜像，大小和原本的ubuntu是一样的。</p>
+<p>还是使用 <a target="_blank" rel="noopener" href="http://127.0.0.1:5000/v2/_catalog">http://127.0.0.1:5000/v2/_catalog</a> 查看私库的内容，可以发现增添了刚才push的ubuntu。</p>
+<p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/17.png" title="Optional title"></p>
+<p><code>docker push 127.0.0.1:5000/ubuntu</code>：为了测试私库的镜像，先将本地已有的两个ubuntu镜像删除。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><img src="/images/%E4%BA%91%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/docker/18.png" title="Optional title"></p>
+<p><code>docker pull 127.0.0.1:5000/ubuntu</code>：从本地仓库拉取到docker容器。</p>
+<p>使用<code>ps</code>命令查看pull前后的镜像，发现多了名为<code>127.0.0.1:5000/ubuntu</code>的ubuntu镜像，说明成功的从本地仓库pull到了刚刚push上去的ubuntu。</p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p><strong>实验本身比较简单</strong>。Docker的使用是比较友好的，尤其是在Mac上，还有桌面程序，即使对敲terminal命令不怎么熟悉的人，也有内置的一些教程帮助初步的使用。但实际上大部分的操作还是需要熟悉terminal命令。</p>
+<p><strong>但是也有不怎么友好的地方，就是在搭应用栈的时候，因为操作系统导致的问题，上面已经说过，不再赘述，这里给差评。</strong></p>
+<p>做完了这个实验之后，突然感觉虚拟化的东西真的已经不是一个纸面上的概念了，大家都在用这类应用做东西。尤其是在查找应用栈和私有云的资料的时候，会有很多的商业化广告，内容都是帮助公司等搭建Docker等的私有云。也非常惊诧居然有Docker这种轻量级的东西来做虚拟化，我个人的理解就是将“阉割”做到了标准化和规范化，以减少成本。这个概念以后也许不会再用到，但这种思路对于个人的学习是非常有帮助的。</p>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2020/12/04/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ASISR-DRN/" title="论文研读：SISR-DRN"><span>NextPost ></span><br><span class="nextTitle">论文研读：SISR-DRN</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">Docker配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">3.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F"><span class="toc-number">3.2.</span> <span class="toc-text">配置镜像加速</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BB%93%E6%9E%9C"><span class="toc-number">3.3.</span> <span class="toc-text">配置结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%EF%BC%9A%E5%9F%BA%E7%A1%80%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">容器：基础操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%A0%88"><span class="toc-number">5.</span> <span class="toc-text">应用栈</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A7%81%E6%9C%89%E4%BA%91"><span class="toc-number">6.</span> <span class="toc-text">私有云</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%81%E6%9C%89%E4%BA%91%E5%B7%A5%E5%85%B7%EF%BC%9Aregistry"><span class="toc-number">6.1.</span> <span class="toc-text">私有云工具：registry</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA"><span class="toc-number">6.2.</span> <span class="toc-text">搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">6.3.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">7.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

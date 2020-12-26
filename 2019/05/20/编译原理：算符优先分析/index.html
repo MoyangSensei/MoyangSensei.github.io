@@ -206,7 +206,109 @@ F→(E)∣i</code></pre>
 
 <p>之前讨论过算符优先文法的检查，这里可以给出一种方法：<strong>如果一个文法G按上述算法构造出的优先矩阵是没有重定义项的，文法G是算符优先文法。</strong></p>
 <p>对于本次所给的文法，执行上面的构造算法，可得如下结果：</p>
-<p>|井|(|)|*|+|-|/|i<br>-|-|-|-|-|-|-|-|-<br>井|A|&lt;||&lt;|&lt;|&lt;|&lt;|&lt;<br>(||&lt;|=|&lt;|&lt;|&lt;|&lt;|&lt;<br>)|&gt;||&gt;|&gt;|&gt;|&gt;|&gt;|<br>*|&gt;|&lt;|&gt;|&gt;|&gt;|&gt;|&gt;|&lt;<br>+|&gt;|&lt;|&gt;|&lt;|&gt;|&gt;|&lt;|&lt;<br>-|&gt;|&lt;|&gt;|&lt;|&gt;|&gt;|&lt;|&lt;<br>/|&gt;|&lt;|&gt;|&gt;|&gt;|&gt;|&gt;|&lt;<br>i|&gt;||&gt;|&gt;|&gt;|&gt;|&gt;|</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">#</th>
+<th align="center">(</th>
+<th align="center">)</th>
+<th align="center">*</th>
+<th align="center">+</th>
+<th align="center">-</th>
+<th align="center">/</th>
+<th align="center">i</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">#</td>
+<td align="center">A</td>
+<td align="center">&lt;</td>
+<td align="center"></td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">(</td>
+<td align="center"></td>
+<td align="center">&lt;</td>
+<td align="center">=</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">)</td>
+<td align="center">&gt;</td>
+<td align="center"></td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">*</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">+</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">-</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">/</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&lt;</td>
+</tr>
+<tr>
+<td align="center">i</td>
+<td align="center">&gt;</td>
+<td align="center"></td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center">&gt;</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
 <h2 id="根据算符优先关系矩阵进行分析"><a href="#根据算符优先关系矩阵进行分析" class="headerlink" title="根据算符优先关系矩阵进行分析"></a>根据算符优先关系矩阵进行分析</h2><p>构造好算符优先关系矩阵之后，便可进行分析。</p>
 <p>流程如下：</p>
 <p><img src="/images/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/4/2.png" alt="图2" title="Optional title"></p>
