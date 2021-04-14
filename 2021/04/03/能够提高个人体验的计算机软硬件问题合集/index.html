@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>能够提高个人体验的计算机软硬件问题合集 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">能够提高个人体验的计算机软硬件问题合集</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>04-03-2021 19:20:56</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="闲谈"> 闲谈</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="操作系统"> 操作系统</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">842</span> | Reading time: <span class="post-count">2</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>经验内容，欢迎转载。</p>
+</blockquote>
+<hr>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>一个新坑。这个坑实际上好久之前就想开了（没错，就是在根目录上给777权限的那次）。</p>
+<p>自诩是一个电脑维修铺子的老板，软硬件什么的也是天天都在摸索和学习。科班只教了如何搞软件，现在大家也都在一股脑的搞软件。但是碰到了硬件问题，好像大家都没那么感兴趣？只是作为一个喜欢搞机和经常胡乱搞机的人，常常会碰到这类问题。从硬件购买安装到操作系统层面的软件配置问题，每一次遇到了，每一次去解决，都是新的尝试和学习。恰好这段时间从zkyzdhs那边搞到了一台主机，有条件搞机了，因此借这个机会开新坑。</p>
+<p>这里将记录在搞机过程中遇到的一切非专业但有意义的问题。随时更新，标题间几乎无关联。</p>
+<p>实际上，遇到问题之后，基本的解决方法就是百度，然后选择靠谱的方法自己进行测试。唯一不同的是，我将会在这里更加详细的记录细节，尤其是硬件的型号或者时间或者是具体的软硬件版本这类的内容，毕竟自己也是一个怕出错的人，我要是查百度，对于具体的细节查不到，是会非常恼火的。</p>
+<hr>
+<h1 id="windosw-10基础上安装Ubuntu-18-04"><a href="#windosw-10基础上安装Ubuntu-18-04" class="headerlink" title="windosw 10基础上安装Ubuntu 18.04"></a>windosw 10基础上安装Ubuntu 18.04</h1><blockquote>
+<p>2021.4.3更新。</p>
+</blockquote>
+<blockquote>
+<p>新搞来的主机，原本是带着Ubuntu 18的。结果我在装win 10双系统的时候，没看清硬盘名字，直接用win 10给覆盖上了。Ubuntu肯定是得有，所以得重新装一下，此为问题背景。以及学校的校园网，有线连接不支持Ubuntu，机箱内也无无线网卡，需要解决这个问题。</p>
+</blockquote>
+<p>直接上图：</p>
+<h2 id="win10上的操作"><a href="#win10上的操作" class="headerlink" title="win10上的操作"></a>win10上的操作</h2><p>主要就是使用Rufus做系统盘。下载好iso，u盘准备好，按照提示做。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/1.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/2.png" title="Optional title"></p>
+<p>出现这个是因为用的那个u盘之前被我分了两个盘，在做系统盘的时候是要合并成一个的。无脑点确定就完事了。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/3.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/4.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/5.png" title="Optional title"></p>
+<p>以及看一下这个机箱的硬盘情况。就是手抖把win 10装到那个固态上了。另一块机械4个T，我也不知道当初他们买的时候想的是什么。主板上弄俩固态不香么？</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/6.png" title="Optional title"></p>
+<h2 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h2><p>因为要手动分区，所以操作比较多。</p>
+<p>但是实际上手动分区之后，从bios启动ubuntu，直接选硬盘启动不了。装是装成功了的，重启了之后找不到启动位置这我也没办法。手动分区的过程在下面，是没有问题的。</p>
+<p>以及如果直接选从整个硬盘安装的的话，是没有下面这么多步骤的，直接就进那个设置用户名和密码的页面的。</p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/7.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/8.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/9.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/10.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/11.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/12.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/13.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/14.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/15.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/16.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/17.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/18.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/19.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/20.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/21.png" title="Optional title"></p>
+<p>这部分过程是手机拍的，糊了点儿，凑合看。</p>
+<p>这部分的参考：</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/fanxueya1322/article/details/90205143">https://blog.csdn.net/fanxueya1322/article/details/90205143</a><br><a target="_blank" rel="noopener" href="https://rufus.ie/zh/">https://rufus.ie/zh/</a></p>
+</blockquote>
+<p><strong>以及不联网装的ubuntu连make和gcc都没有，血泪教训。</strong>后面还得解决这个问题，不过装系统肯定不叫事儿，随便装就行了。</p>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/04/12/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AZoom-to-learn-learn-to-zoom/" title="论文研读：Zoom to learn, learn to zoom"><span>< PreviousPost</span><br><span class="prevTitle">论文研读：Zoom to learn, learn to zoom</span></a><a class="nextSlogan" href="/2021/04/03/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ADegradation-Model-Learning-for-Real-World-Single-Image-Super-resolution/" title="论文研读：Degradation Model Learning for Real-World Single Image Super-resolution"><span>NextPost ></span><br><span class="nextTitle">论文研读：Degradation Model Learning for Real-World Single Image Super-resolution</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#windosw-10%E5%9F%BA%E7%A1%80%E4%B8%8A%E5%AE%89%E8%A3%85Ubuntu-18-04"><span class="toc-number">2.</span> <span class="toc-text">windosw 10基础上安装Ubuntu 18.04</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#win10%E4%B8%8A%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text">win10上的操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">安装过程</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

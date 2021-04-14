@@ -1,0 +1,248 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：Degradation Model Learning for Real-World Single Image Super-resolution · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：Degradation Model Learning for Real-World Single Image Super-resolution</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>04-03-2021 19:19:38</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">4.3k</span> | Reading time: <span class="post-count">16</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>2020,ACCV</p>
+</blockquote>
+<blockquote>
+<p>真实世界单幅图像超分辨率退化模型学习</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>在做超分问题的时候，数据集是非常重要的一部分。</p>
+<p><strong>目前绝大多数图像或视频超分辨率重建工作，都假定了LR是由对应HR经过某种固定的已知退化所得（超分问题的一般流程，《基础：图像超分辨率》有提）。然而事实证明，当测试数据的退化设置与训练阶段存在差异时，超分辨率重建的性能会显著下降。</strong></p>
+<blockquote>
+<p>举例解释：现在一组HR图像，首先通过双三次差值（绝大部分文章所用到的数据集都是这个选择）将这组图像下采样，得到对应的LR图像。但实际上真实的HR到LR的退化过程是非常复杂的，是一个非线性问题。文章的意思是这种普遍存在的常规做法会明显的影响SR模型的性能。</p>
+</blockquote>
+<p>为了解决上述问题，本文从真实数据集中学习一个真实的退化模型，并使用所学习的退化模型来合成真实的HR-LR图像对。</p>
+<blockquote>
+<p>本文的重点在从HR图像到LR图像的这个过程。</p>
+</blockquote>
+<blockquote>
+<p>It is well-known that the single image super-resolution (SISR) models trained on those synthetic datasets, where a low-resolution (LR) image is generated by applying a simple degradation operator (e.g., bicubic downsampling) to its high-resolution (HR) counterpart, have limited generalization capability on real-world LR images, whose degradation process is much more complex. Several real-world SISR datasets have been constructed to reduce this gap; however, their scale is relatively small due to laborious and costly data collection process. To remedy this issue, we propose to learn a realistic degradation model from the existing real-world datasets, and use the learned degradation model to synthesize realistic HR-LR image pairs.</p>
+</blockquote>
+<h1 id="超分数据集构建"><a href="#超分数据集构建" class="headerlink" title="超分数据集构建"></a>超分数据集构建</h1><p><strong>上述问题又来源于超分问题的数据集构建问题，简言之就是LR到底是怎么来的。</strong></p>
+<p>文中所提到的，超分数据集的构建和合成问题的大致方法有如下几种：</p>
+<ul>
+<li>通过设置模糊核，直接由HR图像生成LR图像。这是最常见的方法。会产生的问题是模糊核的可解释性差。</li>
+</ul>
+<blockquote>
+<p>Most of the existing CNN based SISR models are trained on synthetic HR-LR image pairs, which are generated by applying a simple degradation model (e.g., bicubic downsampling) to the HR images [14, 15, 18, 19, 21, 23, 24]. However, the authentic HR to LR image degradation process is much more complicated than these simple uniform downsample operators. As a result, the SISR networks trained on such synthetic datasets have low generalization capability to real-world LR images, largely limiting their value in practical applications.</p>
+</blockquote>
+<ul>
+<li>进行真实的pair的数据对的构建，通常是通过相机捕捉相同场景，变量则设置为相机本身的某些参数。这种方法产生的问题是：构建数据集的成本太高，以至于该类数据集的容量都不会太大。以及在进行拍照的时候，物理条件的限制因素太多，包括但不限于天气、光照、场景多样性等。</li>
+</ul>
+<blockquote>
+<p>Very recently, researchers have started to construct real-world datasets by using digital cam- eras to capture images of the same scene under different focal lengths [25–27]……However, constructing such datasets of real-world HR-LR pairs is laborious and costly, and the existing datasets of this kind [25–27] are all limited in number of image pairs, diversity of scenes and illuminating conditions.</p>
+</blockquote>
+<ul>
+<li>从unpair的HR和LR中学习图像的退化过程，并且将学习到的退化过程用到SR的流程之中。一般选取GAN来完成这件事情。会出现的问题是，这种方法的训练过程是非常困难的，最终的结果可能不会收敛，以及使用网络来完成退化过程，忽略了图片的一些先验信息，导致了可解释性差。</li>
+</ul>
+<blockquote>
+<p>While constructing real-world datasets of HR-LR image pairs, researchers have also proposed to learn the image degradation process from unpaired HR and LR images, and use the learned degradation model to generate HR-LR image pairs for SISR model learning [28–31]. All these methods employ the Generative Adversarial Network (GAN) [32] to learn the degradation process by differentiating the distribution between generated LR and real LR images. Unfortunately, training such a GAN with unpaired data is very difficult and may not converge to the desired result. Moreover, using a network to model the degradation from HR to LR images makes it hard to interpret the degradation process, ignoring some prior knowledge on the image formation.</p>
+</blockquote>
+<h1 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h1><h2 id="模型叙述"><a href="#模型叙述" class="headerlink" title="模型叙述"></a>模型叙述</h2><p>目前被广泛认可的从HR到LR的泛用退化模型可进行如下表示。其中，“*”是卷积算子，k是退化核，↓d是下采样算子，v是加性随机噪声，L和H分别代表低分和高分图像。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/1.png" title="Optional title"></p>
+<p>上面提到，大多数现有工作对HR使用的是双三次下采样以采集LR图像，即这些工作都假设退化核k在整个图像上是均匀的，即空间不变的。</p>
+<p>而在现实世界的SISR问题中，退化核要复杂得多，与场景的深度和局部内容相关。<strong>因此，退化核是典型的非均匀和空间变异的。</strong>对于图像上的每个像素点(i,j)，应该有相应的模糊核和噪声。</p>
+<p>经过上述改动后，从HR到LR的空间变化的图像退化可以表示如下。其中，H(i,j)表示以(i,j)为中心的局部图像窗口，其大小与核k(i,j)相同，“⊙”是内积算子。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/2.png" title="Optional title"></p>
+<p><strong>从上式可以看出，对真实世界的图像退化过程建模的关键是如何预测像素级退化核k(i,j)。</strong></p>
+<p>一个直观的想法是直接通过真实HR-LR对作为监督去学习退化核参数。但这种做法的问题是需要求解的参数量太大，且解空间非常大，在有限的数据量条件下易出现过拟合的问题。</p>
+<p>文章提出，由于光学系统成像的原理限制，退化过程普遍可以用一个钟形函数（bell-shaped smooth functions）进行描述。所以可以进一步缩小解空间范围，即可以<strong>通过一系列基础退化核的线性组合实现对任意退化核的描述</strong>。综上所述，pixel-wise的退化核可以进行如下表示，其中Φm表示第m个基础退化核，C表示系数矩阵。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/3.png" title="Optional title"></p>
+<p>上式将原本复杂的退化过程的解空间约束在一个较小的子控件中，使得在数据量不大的条件下更容易被学习。</p>
+<h2 id="Degradation-Model-Learning"><a href="#Degradation-Model-Learning" class="headerlink" title="Degradation Model Learning"></a>Degradation Model Learning</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/4.png" title="Optional title"></p>
+<p>退化模型学习（DML）方法如上所示。</p>
+<p>整个网络以H作为输入，学习具有参数Θ的CNN F来预测权重，即C＝F(H|Θ)，其中C是权重向量C(i,j)的集合。</p>
+<p>还学习了基核φm，从而可以根据式（3）预测核k(i,j)。将预测的退化核应用于HR图像H以输出预测的LR图像，用ˆL表示。</p>
+<p>上图中的F为基于编解码结构的权值预测网络。以HR图像作为输入，并在每个位置输出一个权重向量。为了获得大的接收野，使用最大池层进行特征下采样，并使用双线性上采样层来提高特征分辨率和保证像素级的输出。采用3×3滤波器的卷积层，用ReLU作为激活函数。为了输出每像素的权值，在最后一个卷积层之后使用sigmoid函数进行归一化。通过SGD或ADAM优化器可以很容易地对整个网络进行优化。</p>
+<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p>假设有N对HR-LR训练图像，则目标函数为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/5.png" title="Optional title"></p>
+<h2 id="SISR-Model-Learning"><a href="#SISR-Model-Learning" class="headerlink" title="SISR Model Learning"></a>SISR Model Learning</h2><p>为了进一步缩小合成与真实的差距LR图像，根据式（1）中描述的LR图像形成过程向合成的LR图像ˆL添加随机噪声。</p>
+<p>设置为加性高斯白噪声（AWGN），并根据经验将噪声级设置为σ=5。</p>
+<blockquote>
+<p>To address this issue and further diminish the gap between synthetic and real<br>LR images, we add random noise to the synthesized LR image ˆILn according to the LR image formulation process described in Eq. (1). Without additional in- formation on the imaging system (e.g., sensors, lens), we simply assume additive white Gaussian noise (AWGN) and empirically set the noise level as σ = 5.</p>
+</blockquote>
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><p>两部分实验。</p>
+<h2 id="实验设置和数据集"><a href="#实验设置和数据集" class="headerlink" title="实验设置和数据集"></a>实验设置和数据集</h2><h3 id="数据集"><a href="#数据集" class="headerlink" title="数据集"></a>数据集</h3><p>验证DML在退化过程学习和SISR模型训练中的性能，一共用到了三个数据集。</p>
+<ul>
+<li><p><strong>RealSR（v2、pair）</strong>：包含由两台相机采集的559个场景的对齐HR-LR图像对，具有3个缩放因子：×2、×3和×4。RealSR的划分：训练集/测试集=459/100。<strong>这个数据集的主要用来训练DML退化模型，并使用测试部分来定量评估DML的性能及其在实际SISR中的应用。</strong></p>
+</li>
+<li><p><strong>Flickr2K+互联网图片（unpair）</strong>：<strong>DML学习完成后，这部分数据主要用来监测这个退化学习模型，即通过HR生成HR-LR对。</strong>该HR数据集总共包含3150张图片，其中Flickr2k含有2650张不同场景的高质量图像，分辨率大多为1500×2000。互联网图像是从[39]下载了500张4K分辨率的原始图像。然后将PhotoShop CameraRaw工具应用于这些原始图像，获得4K分辨率的未压缩高质量RGB图像。</p>
+</li>
+<li><p><strong>SR-RGB</strong>：该数据集由真实世界的LR图像和通过DSLR光学变焦获得的未对齐HR图像组成。由于HR和LR图像没有对齐，因此无法计算PSNR、SSIM、LPIPS度量，但HR图像可以用作视觉比较的参考。<strong>这个数据集验证DML对现实世界SISR的有效性。</strong></p>
+</li>
+</ul>
+<blockquote>
+<p>SR-RGB来自《Zoom to learn, learn to zoom》，下篇会提到</p>
+</blockquote>
+<h3 id="实验细节"><a href="#实验细节" class="headerlink" title="实验细节"></a>实验细节</h3><p>Y通道训练、DA=左右 or 上下翻转、Adam、learning rate=1e−4、epoch=100K or 300K、batch size=16 or 2、进行测试的网络=VDSR + RCAN。</p>
+<blockquote>
+<p>对于所有缩放比例×2、×3和×4，我们将要学习的基核的大小设置为15×15。对基核进行随机初始化，然后归一化为求和1，以便进一步更新。使用Xavier初始值设定项初始化权重预测网络。在DML和SISR网络的训练中，我们将RGB图像转换成YCbCr颜色空间，在Y通道上进行训练或测试。将图像裁剪成192×192块，用于所有模型的训练。左右翻转和上下翻转用于数据扩充。使用带有默认参数设置（β1=0.9，β2=0.999）的Adam优化器作为优化器。我们使用1e−4的固定学习率分别为100K和300K次迭代来训练DML和SISR模型。在DML训练中，批大小设置为16。对于SISR模型，我们采用了两种具有代表性的网络结构：VDSR和RCAN。我们用100个卷积层来实现RCAN。批大小分别设置为16和2，用于训练VDSR和RCAN模型。</p>
+</blockquote>
+<blockquote>
+<p>RCAN来自《Image Super-Resolution Using Very Deep Residual Channel Attention Networks》，残差通道注意力网络</p>
+</blockquote>
+<h2 id="DML"><a href="#DML" class="headerlink" title="DML"></a>DML</h2><h3 id="DML中基核数的选择"><a href="#DML中基核数的选择" class="headerlink" title="DML中基核数的选择"></a>DML中基核数的选择</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/6.png" title="Optional title"></p>
+<p>研究DML中基核的合适数目。</p>
+<p>利用RealSR数据集的训练部分，学习了N=4、8、16基核及其相关的权值预测网络。然后将学习到的模型应用于RealSR数据集测试部分的HR图像，生成LR图像。PSNR、SSIM结果在表1中列出。</p>
+<p><strong>从N=4到N=8，可以获得更好的LR生成性能，N=16基核的性能略差于N=8。</strong></p>
+<blockquote>
+<p>N=8，表一中第三行，红色的数据。</p>
+</blockquote>
+<h3 id="有8个基核的DML在不同缩放倍数下的效果"><a href="#有8个基核的DML在不同缩放倍数下的效果" class="headerlink" title="有8个基核的DML在不同缩放倍数下的效果"></a>有8个基核的DML在不同缩放倍数下的效果</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/7.png" title="Optional title"></p>
+<p>随着缩放因子从2增加到4，核变得更加分散和复杂，这符合我们对图像退化过程的共同认识。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/8.png" title="Optional title"></p>
+<p>用DML方法对基核的预测组合权重进行×2的可视化。最左边的图像是输入的HR图像，右侧8图像可视化对应于每个基核的预测权重。<strong>亮度越高，权重越高。</strong>通过实例分析，我们的权重预测网络可以根据场景内容和局部结构自适应地分配不同的权重。</p>
+<blockquote>
+<p>The brighter intensity denotes larger weight.</p>
+</blockquote>
+<h3 id="与其他两种LR图像生成模型的对比"><a href="#与其他两种LR图像生成模型的对比" class="headerlink" title="与其他两种LR图像生成模型的对比"></a>与其他两种LR图像生成模型的对比</h3><p>一种是学习CNN，直接将HR图像映射到LR图像，表示为DirectNet。另一种是学习内核预测网络[42]，以预测退化内核，表示为DirectKPN。</p>
+<p>加上DML，这三种方法，都在RealSR的训练集上进行训练，并在RealSR测试集上进行测试。</p>
+<p>比较这三种方法在LR图像生成中的性能。<strong>DML在所有三个缩放倍数上都始终优于其他两个，以及DirectKPN的性能略优于DirectNet。这表明，通过考虑图像退化过程，通过学习预测像素核可以获得比直接预测LR图像像素更好的LR生成性能。</strong></p>
+<h3 id="三种LR图像生成模型在SISR任务下的效果"><a href="#三种LR图像生成模型在SISR任务下的效果" class="headerlink" title="三种LR图像生成模型在SISR任务下的效果"></a>三种LR图像生成模型在SISR任务下的效果</h3><p>将上述三种LR图像生成模型应用于采集的HR图像数据集，使用Flickr2K+互联网图片的那个数据集，生成了三组，每组3150对HR-LR图像。在这些HR-LR对中添加了小AWGN（additive white Gaussian noise），并训练了三个VDSR模型。最后，将这三种VDSR模型应用于RealSR数据集测试部分的LR图像，得到超分辨率的HR图像。</p>
+<blockquote>
+<p>这部分的实验过程：<br>（1）LR生成模型+HR图像 = 3组LR-HR图像对<br>（2）LR-HR图像对添加AWGN<br>（3）根据3组LR-HR图像对训练3个VDSR<br>（4）用VDSR测试RealSR的459张测试图片的LR并计算指标</p>
+</blockquote>
+<p>结果表明，在DML方法生成的HR-LR图片对上训练的VDSR网络的性能，比DirectNet或DirectKPN生成的对上训练的VDSR网络好（PSNR约为0.15dB）。验证了DML在提高SISR性能方面优于DirectNet和DirectKPN。</p>
+<h2 id="DML对SISR任务的影响"><a href="#DML对SISR任务的影响" class="headerlink" title="DML对SISR任务的影响"></a>DML对SISR任务的影响</h2><h3 id="测试集"><a href="#测试集" class="headerlink" title="测试集"></a>测试集</h3><p><strong>首先做了5个不同的训练数据集</strong>：only RealSR、only Syn DSGAN、only Syn DML、RealSR+DSGAN、RealSR+Syn DML。</p>
+<blockquote>
+<p>RealSR：就是上面提到的RealSR以及划分。<br>Syn DSGAN：一种基于GAN的HR-LR对合成方法，称为DSGAN，来自《Frequency separation for real-world super- resolution》，2019。<br>Syn DML：DML在Flickr2K+互联网图片上的合成，共3150对。</p>
+</blockquote>
+<h3 id="以RealSR为测试集做定量比较"><a href="#以RealSR为测试集做定量比较" class="headerlink" title="以RealSR为测试集做定量比较"></a>以RealSR为测试集做定量比较</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/9.png" title="Optional title"></p>
+<p><strong>这部分实验是：用VDSR（20层）和RCAN（100层）对5个不同的数据集做了10个模型，计算并对比指标。</strong></p>
+<p>结论：</p>
+<ul>
+<li>LPIPS（Syn-DML上的VDSR/RCAN，任意情况下） &lt; LPIPS（RealSR），<strong>使用这个指标证明DML的效果。</strong></li>
+</ul>
+<blockquote>
+<p>LPIPS是一个感知指数，衡量图像的感知质量（越低越好）。</p>
+</blockquote>
+<ul>
+<li><p>PSNR/SSIM（Syn-DML上的VDSR/RCAN，任意情况下） = PSNR/SSIM（RealSR），因为后者的训练集合和测试集合都是本身，<strong>换句话DML在测试集劣势的情况下得到的结果却没有劣势</strong>。</p>
+</li>
+<li><p>Syn-DML &gt; Syn-DSGAN，证明DML比DSGAN优越。</p>
+</li>
+<li><p>RealSR+合成 &gt; only</p>
+</li>
+</ul>
+<h3 id="以RealSR为测试集做定性比较"><a href="#以RealSR为测试集做定性比较" class="headerlink" title="以RealSR为测试集做定性比较"></a>以RealSR为测试集做定性比较</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/10.png" title="Optional title"></p>
+<p>在Syn-DML和RealSR+Syn-DML上训练的模型比仅使用RealSR数据集训练的模型能有效地恢复更多的图像细节和更令人愉快的感知质量。<strong>特别是RealSR+Syn-DML上训练的模型达到了最佳的视觉质量。</strong></p>
+<h3 id="以SR-RGB为测试集做定性比较"><a href="#以SR-RGB为测试集做定性比较" class="headerlink" title="以SR-RGB为测试集做定性比较"></a>以SR-RGB为测试集做定性比较</h3><p>测试数据集用了两个，一个是RealSR，另一个是SR-RGB。</p>
+<p>SR-RGB由许多LR图像及其未对齐的HR对应图像组成，<strong>做不了指标评价，只能做定性的视觉评价，但原文中提到这部分实际上更看重</strong>。使用该数据集的原因：由于SR-RGB数据集是独立于RealSR数据集，通过使用不同的摄像机和镜头构建的，结果可以更公平地证明SISR模型对真实场景的泛化能力。</p>
+<blockquote>
+<p>Another is the SR-RGB dataset , which consists of many LR images and their unaligned HR counterparts. Qualitative visual comparisons can be made on it for the different SISR models. Wed like to stress that the testing on the second dataset is more important (though qualitative) because it is independent of the RealSR dataset, part of whose samples are used to train the DML and VDSR/RCAN models. The testing results on the SR-RGB dataset can more faithfully reflect the generalization capability of competing SISR models than those on the RealSR dataset.</p>
+</blockquote>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-Degradation/11.png" title="Optional title"></p>
+<p>在RealSR数据集上训练的模型只能适度地恢复一些细节。在Syn Dsgan上训练的模型会产生严重的伪影。在Syn-DML上训练的SISR模型可以得到更为精细的细节，从而获得令人满意的结果。特别是，<strong>在RealSR+Syn-DML上训练的模型提供了最佳的超分辨率HR图像感知质量。</strong></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>DML能够有效地提高SISR模型在实际应用中的泛化性能。</p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>思路挺新，感觉方法论做烂了之后，大家都开始从超分的最基础流程开始下手写东西了，也许会成为以后的小热点。</p>
+<p>这篇的实验做的是又细又好，看着很舒服。尤其是针对训练集和测试集的设置方面，确实比较亮眼。</p>
+<p>但是第一部分实验的细节又没有说的很清楚，就是Table 1的那部分，导致了对不上哪部分是哪部分的数据。</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>code：没提，应该是没公开。</p>
+</li>
+<li><p>文章：<a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content/ACCV2020/papers/Xiao_Degradation_Model_Learning_for_Real-World_Single_Image_Super-resolution_ACCV_2020_paper.pdf">https://openaccess.thecvf.com/content/ACCV2020/papers/Xiao_Degradation_Model_Learning_for_Real-World_Single_Image_Super-resolution_ACCV_2020_paper.pdf</a></p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/04/03/%E8%83%BD%E5%A4%9F%E6%8F%90%E9%AB%98%E4%B8%AA%E4%BA%BA%E4%BD%93%E9%AA%8C%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/" title="能够提高个人体验的计算机软硬件问题合集"><span>< PreviousPost</span><br><span class="prevTitle">能够提高个人体验的计算机软硬件问题合集</span></a><a class="nextSlogan" href="/2021/01/30/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AEvaluation-and-development-of-deep-neural-networks-for-image-super-resolution-in-optical-microscopy/" title="论文研读：Evaluation and development of deep neural networks for image super-resolution in optical microscopy"><span>NextPost ></span><br><span class="nextTitle">论文研读：Evaluation and development of deep neural networks for image super-resolution in optical microscopy</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B6%85%E5%88%86%E6%95%B0%E6%8D%AE%E9%9B%86%E6%9E%84%E5%BB%BA"><span class="toc-number">2.</span> <span class="toc-text">超分数据集构建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E5%8F%99%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">模型叙述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Degradation-Model-Learning"><span class="toc-number">3.2.</span> <span class="toc-text">Degradation Model Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">目标函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SISR-Model-Learning"><span class="toc-number">3.4.</span> <span class="toc-text">SISR Model Learning</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE%E5%92%8C%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">4.1.</span> <span class="toc-text">实验设置和数据集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="toc-number">4.1.1.</span> <span class="toc-text">数据集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%86%E8%8A%82"><span class="toc-number">4.1.2.</span> <span class="toc-text">实验细节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DML"><span class="toc-number">4.2.</span> <span class="toc-text">DML</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DML%E4%B8%AD%E5%9F%BA%E6%A0%B8%E6%95%B0%E7%9A%84%E9%80%89%E6%8B%A9"><span class="toc-number">4.2.1.</span> <span class="toc-text">DML中基核数的选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%898%E4%B8%AA%E5%9F%BA%E6%A0%B8%E7%9A%84DML%E5%9C%A8%E4%B8%8D%E5%90%8C%E7%BC%A9%E6%94%BE%E5%80%8D%E6%95%B0%E4%B8%8B%E7%9A%84%E6%95%88%E6%9E%9C"><span class="toc-number">4.2.2.</span> <span class="toc-text">有8个基核的DML在不同缩放倍数下的效果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E%E5%85%B6%E4%BB%96%E4%B8%A4%E7%A7%8DLR%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">4.2.3.</span> <span class="toc-text">与其他两种LR图像生成模型的对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E7%A7%8DLR%E5%9B%BE%E5%83%8F%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B%E5%9C%A8SISR%E4%BB%BB%E5%8A%A1%E4%B8%8B%E7%9A%84%E6%95%88%E6%9E%9C"><span class="toc-number">4.2.4.</span> <span class="toc-text">三种LR图像生成模型在SISR任务下的效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DML%E5%AF%B9SISR%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">4.3.</span> <span class="toc-text">DML对SISR任务的影响</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E9%9B%86"><span class="toc-number">4.3.1.</span> <span class="toc-text">测试集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5RealSR%E4%B8%BA%E6%B5%8B%E8%AF%95%E9%9B%86%E5%81%9A%E5%AE%9A%E9%87%8F%E6%AF%94%E8%BE%83"><span class="toc-number">4.3.2.</span> <span class="toc-text">以RealSR为测试集做定量比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5RealSR%E4%B8%BA%E6%B5%8B%E8%AF%95%E9%9B%86%E5%81%9A%E5%AE%9A%E6%80%A7%E6%AF%94%E8%BE%83"><span class="toc-number">4.3.3.</span> <span class="toc-text">以RealSR为测试集做定性比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A5SR-RGB%E4%B8%BA%E6%B5%8B%E8%AF%95%E9%9B%86%E5%81%9A%E5%AE%9A%E6%80%A7%E6%AF%94%E8%BE%83"><span class="toc-number">4.3.4.</span> <span class="toc-text">以SR-RGB为测试集做定性比较</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">6.</span> <span class="toc-text">感想</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">7.</span> <span class="toc-text">其他</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

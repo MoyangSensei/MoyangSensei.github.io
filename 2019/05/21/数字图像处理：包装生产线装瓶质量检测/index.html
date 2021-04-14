@@ -109,12 +109,12 @@
 <li><p>编译环境：<br>Jupyter Notebook（此前被称为 IPython notebook）是一个交互式笔记本，支持运行 40 多种编程语言。<br>Jupyter Notebook 的本质是一个 Web 应用程序，便于创建和共享文学化程序文档，支持实时代码，数学方程，可视化和markdown。用途包括：数据清理和转换，数值模拟，统计建模，机器学习等等。</p>
 </li>
 </ul>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/11.png" alt="搭载在Anaconda上的Jupyter Notebook" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1.png" alt="搭载在Anaconda上的Jupyter Notebook" title="Optional title"></p>
 <hr>
 <h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>本问题的核心需求是检测图片中未满足要求的部分并标出。</p>
 <p>首先，<strong>什么部分是“未满足要求”的部分？</strong>根据题意我们可以定义：每一个没有装满的容器会被视为未满足要求的部分。</p>
 <p>接下来的问题是，<strong>“没有装满”的容器指的是什么样的容器？</strong>或者换一个问法：什么样的容器是合格的？对于我们来说，我们可以很轻松的判断出来，没有装满的容器是所给图片中间的那一个，而其余四个容器仅有瓶口部分是没有装满的，这样的容器我们把它视作合格。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/22.png" alt="没有装满（不合格）的容器" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/2.png" alt="没有装满（不合格）的容器" title="Optional title"></p>
 <p>根据上面的标注，我们可以找到一个最明显的标志：未合格容器的空白部分明显比合格部分的空白面积大。分析到此，此题的核心需求就变成了：<strong>求出每一个容器未装满部分在图片中的面积，并将高于正常值的容器指出。</strong></p>
 <h2 id="假设"><a href="#假设" class="headerlink" title="假设"></a>假设</h2><p>根据问题分析和题目标注，需要先针对所给情景作出如下断言和假设：</p>
 <ul>
@@ -127,25 +127,25 @@
 <p>对于本情景而言，所给图像为灰度图像，若想从这一角度来探索问题的解决方法，最容易想到的思想就是<strong>二值化</strong>。</p>
 <p>在数字图像处理中，二值图像占有非常重要的地位，<strong>图像的二值化使图像中数据量大为减少，从而能凸显出目标的轮廓</strong>。本体背景和所检测部位已经分别是黑白两色，非常适合这个思路。</p>
 <p>读取图像<br>首先介绍本程序主要用到的py包： scikit-image（aka skimage）是图像处理和计算机视觉算法的集合。<strong>主要的软件包skimage提供了一些用于在图像数据类型之间转换的实用程序</strong>。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/33.png" alt="导入文件包，读取图像，输出结果" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/3.png" alt="导入文件包，读取图像，输出结果" title="Optional title"></p>
 <p>读取图像，输出图像结果，可以看到，<strong>imread函数会将图像按照行列存储为二维数组，且是归一化的灰度图</strong>。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/44.png" alt="输出读取结果及图像大小" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/4.png" alt="输出读取结果及图像大小" title="Optional title"></p>
 <p>输出图像及其大小，验证是否读取正确。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/55.png" alt="图像文件信息" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/5.png" alt="图像文件信息" title="Optional title"></p>
 <p>输出的大小为（556，1004），再查看图片文件，发现可以匹配，同时说明该数据结构是按照像素的行列进行读取和存储的。</p>
 <h2 id="二值化"><a href="#二值化" class="headerlink" title="二值化"></a>二值化</h2><p>对图像进行二值化：以归一化值域中心0.5为界线，像素值低于0.5的区域变为黑色，否则变为白色。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/66.png" alt="图像二值化" title="Optional title"></p>
-<h2 id="图像无用部分处理"><a href="#图像无用部分处理" class="headerlink" title="图像无用部分处理"></a>图像无用部分处理</h2><p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/77.png" alt="二值化后的图像" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/6.png" alt="图像二值化" title="Optional title"></p>
+<h2 id="图像无用部分处理"><a href="#图像无用部分处理" class="headerlink" title="图像无用部分处理"></a>图像无用部分处理</h2><p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/7.png" alt="二值化后的图像" title="Optional title"></p>
 <p>二值化后的图片如上所示，可以看出，<strong>即使对图片进行了二值化，我们想要关注的部分的轮廓也并不是非常清晰的：蓝色标记才是我们想要关注的部分，但是还有很多其他的没有被处理为背景的部分（红色标记）也出现在图中</strong>，这些部分很可能是容器侧壁的反光造成的。尤其是对于中间未合格的容器来说，它的空余部分下面还有一部分侧壁的空白与之相连，<strong>这样就造成了所要检测的区域和无关区域一同构成了连通域</strong>。</p>
 <p>很容易明晰的一点是：我们说某一个容器所装的液体量不合格，<strong>意思是只要该容器有很小的该装液体的部分被检测到没有装液体</strong>，至于该不合格产品到底少装了多少，我们并不关心。所以我们只要看容器从瓶口部分及其往下面衍生的一部分即可，至于瓶体的下半身完全可以不用检测。</p>
 <p>基于此，我们对该图像的无用区域进行切割和处理：按照4:6的比例分割图像，并把下60%部分舍去，直接作为背景。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/88.png" alt="二值化图像无用部分处理" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/8.png" alt="二值化图像无用部分处理" title="Optional title"></p>
 <h2 id="连通域"><a href="#连通域" class="headerlink" title="连通域"></a>连通域</h2><p>根据上述处理结果，我们就可以很明显的看出合格品和不合格品差别了。接下来，我们需要对图片中的每一块白色部分的面积做统计，这些白色部分在数字图像处理中被统称为“连通域”。</p>
 <p>首先使用skimage.measure的字函数label获取连通域信息。这个函数的作用是：输入二值化后的数字图像矩阵，返回的内容为连通域的个数和带有连通域标记的矩阵。对于每一个连通域，都为他们赋予一个整数值。</p>
 <p>输出的数量为16，则我们可以知道，该图像中共有17个连通域，出去编号为0的黑色背景，共有16个白色的区域，它们的编号为1-16。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/99.png" alt="输出连通域信息：无排序" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/9.png" alt="输出连通域信息：无排序" title="Optional title"></p>
 <p>将各连通域面积进行排序输出：</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1010.png" alt="输出连通域信息：排序后" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/10.png" alt="输出连通域信息：排序后" title="Optional title"></p>
 <p>数据如下：</p>
 <pre><code>[1.0000e+00 3.0000e+00 1.0000e+01 1.3000e+01 2.0000e+01 2.1000e+01
  2.5000e+01 3.2000e+01 6.6000e+01 7.1000e+01 1.2900e+02 6.8410e+03
@@ -154,15 +154,15 @@
 <p><strong>剩下的两个数1.3383e+04、1.3391e+04非常接近，我们便可由此断言：合格容器的空白部分上限就在这两个值附近。在这里，我们定义了判断是否合格的阈值。</strong></p>
 <h2 id="过滤无关连通域"><a href="#过滤无关连通域" class="headerlink" title="过滤无关连通域"></a>过滤无关连通域</h2><p>上面分析了有用的值，剩下的值很明显就是无用的，因为我们在图中仅有上述5个区域需要进行判断，那么其余的连通域就是无关的连通域。我们需要将这些连通域处理为背景。</p>
 <p>在进行上述处理前，需要先得到排序过后的面积和原面积数组的映射关系：</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1111.png" alt="排序映射" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/11.png" alt="排序映射" title="Optional title"></p>
 <p>接下来，过滤无关连通域：</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1212.png" alt="过滤无关连通域" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/12.png" alt="过滤无关连通域" title="Optional title"></p>
 <h2 id="判断并得到结果"><a href="#判断并得到结果" class="headerlink" title="判断并得到结果"></a>判断并得到结果</h2><p>先来查看过滤后的结果，为不同标记的连通域赋予不同的颜色，背景依旧为黑色：</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1313.png" alt="过滤无关连通域之后的结果" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/13.png" alt="过滤无关连通域之后的结果" title="Optional title"></p>
 <p>可以看到，需要被判断的5个连通域都被我们用不同的标记给出了。接下来，只需要用我们在上面给出的阈值对每个连通域进行判断即可。</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1414.png" alt="对连通域的面积进行判断" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/14.png" alt="对连通域的面积进行判断" title="Optional title"></p>
 <p>查看判断后的最终结果：</p>
-<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1515.png" title="Optional title"><br><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/1616.png" alt="最终结果" title="Optional title"></p>
+<p><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/15.png" title="Optional title"><br><img src="/images/%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/16.png" alt="最终结果" title="Optional title"></p>
 <p>可以看到，<strong>正确的部分被彩色填充，错误的部分依旧是白色的</strong>。</p>
 <p>将这个结果和我们在一开始时对于图片的判断进行对比，发现结果完全正确，我们的程序可以达到预期的结果。</p>
 <hr>

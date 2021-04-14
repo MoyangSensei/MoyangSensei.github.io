@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：Zoom to learn, learn to zoom · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：Zoom to learn, learn to zoom</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>04-12-2021 10:29:43</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.7k</span> | Reading time: <span class="post-count">9</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>变焦学习，学习变焦</p>
+</blockquote>
+<blockquote>
+<p>CVPR 2019</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>变焦功能是当今手机和相机的必备功能。</p>
+<p>光学变焦是图像变焦的最佳选择，可以保持较高的图像质量。但变焦镜头价格昂贵且其物理组件比较笨重。数码变焦方法是一种降低成本的选择，但数码变焦只是简单地向上采样相机传感器输入的裁剪区域，产生模糊的输出。</p>
+<p>文章提出，常规的SISR方法有以下两个限制：</p>
+<ul>
+<li><p>现有的大多数方法使用的是合成方法来逼近真实变焦，即其中输入图像是高分辨率图像的下采样版本。这种方法间接降低了输入中的噪声水平，但实际上，由于在曝光时间内进入光圈的光子更少，遥远物体的区域往往包含更多的噪声。</p>
+</li>
+<li><p>其次，现有的大多数方法都是从8位RGB图像开始的，该图像由相机图像信号处理器（ISP）处理，ISP将高位原始传感器数据中的高频信号用于其他目标（例如降噪）。</p>
+</li>
+</ul>
+<blockquote>
+<p>第二点的解读：本文训练的数据均是Raw Data，这是专业单反拍摄的格式，而RGB图片是Raw Data经过图像处理器（Image SIgnal Processer, ISP）制作的，在某种程度上来说，RGB图片也是有损的。</p>
+</blockquote>
+<p>基于上述限制，文章做了以下内容：</p>
+<ul>
+<li><p>使用真实的高位传感器数据进行计算变焦的实用性，而不是处理8位RGB图像或合成传感器模型。</p>
+</li>
+<li><p>新的数据集SR-RAW，它是第一个具有光学ground truth的超分辨率原始数据集。SR-RAW是用变焦镜头拍摄的。对于焦距较短的图像，长焦距图像作为光学ground truth。</p>
+</li>
+<li><p>提出了一种新的上下文双边损失（CoBi）处理稍微失调的图像对。</p>
+</li>
+</ul>
+<h1 id="SR-RAW"><a href="#SR-RAW" class="headerlink" title="SR-RAW"></a>SR-RAW</h1><h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><p>使用24-240毫米变焦镜头来收集不同光学变焦水平的原始图像对。</p>
+<p>采集过程中，在每个场景的7个光学变焦设置下采集了7幅图像。来自7幅图像序列的每一对图像形成一个数据对。总共500个室内外场景，ISO从100到400。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/1.png" title="Optional title"></p>
+<p><strong>在训练模型中，以短焦距原始传感器图像作为输入，以长焦距RGB图像作为超分辨率的基础。</strong></p>
+<blockquote>
+<p>例如，使用70mm焦距拍摄的RGB图像作为使用35mm焦距拍摄的原始传感器数据的2X缩放地面真相。</p>
+</blockquote>
+<p>相机有特殊设置，来自原文：</p>
+<ul>
+<li><p>景深（DOF）随着焦距的变化而变化，调整孔径大小使每个焦距的DOF相同是不现实的。选择一个小的光圈尺寸（至少f/20）来最小化DOF差异（在图2的B2中仍然可以看到），使用一个三脚架来捕捉长时间曝光的室内场景。</p>
+</li>
+<li><p>其次，使用相同的曝光时间的所有图像在一个序列，使噪音水平不受焦距变化的影响。但是仍然观察到由于快门和物理光瞳是机械的并且涉及到动作变化而引起的明显的光照变化。这种颜色的变化是避免使用像素对像素的损失进行训练的另一个动机。</p>
+</li>
+<li><p>第三，虽然透视不随焦距的变化而变化，但当镜头放大或缩小时，在投影中心存在微小的变化（镜头的长度），在不同深度的物体之间产生明显的透视变化（图2 B1）。使用的Sony FE 24-240mm镜头，需要与被摄对象至少56.4米的距离，才能在相距5米的物体之间产生小于1像素的透视位移。因此，避免捕获非常接近的对象，但允许在数据集中进行这样的透视图转换。</p>
+</li>
+</ul>
+<h2 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h2><p>对于任意一对训练图像，用RGB-L表示低分，用RAW-L表示高分，也就是相机的传感器的数据，GT。</p>
+<p>高分GT，使用RGB-H和RAW-H。首先匹配RAW-H和RGB-H之间的视图(FOV)。然后计算RGB-L和RGB-H之间的对齐（手动缩放相机以调整焦距所引起的相机轻微移动）。</p>
+<p>使用一个欧几里德运动模型，通过增强相关系数最小化来实现图像的旋转和平移。</p>
+<p>训练时，将匹配FOV的RAW-L作为输入，它的GT是RGB-H，与RAW-L对齐并具有相同的FOV。如果光学变焦与目标变焦比不完全匹配，则对图像应用比例偏移。</p>
+<blockquote>
+<p>例如，如果使用（35mm，150mm）训练一个4X变焦模型，那么目标图像的偏移量为1.07。</p>
+</blockquote>
+<h2 id="非对齐分析"><a href="#非对齐分析" class="headerlink" title="非对齐分析"></a>非对齐分析</h2><p>预处理步骤很难消除偏差。由于捕捉的数据焦距不同，视角的变化会导致视角的不对齐。此外，当对不同分辨率的图像进行对齐时，高分辨率图像中的锐边不能与低分辨率图像中的模糊边精确对齐(图2 B3)。</p>
+<blockquote>
+<p>SR-RAW中描述的失调通常会导致800万像素图像对中的40-80像素偏移。</p>
+</blockquote>
+<blockquote>
+<p>该数据集中的HR和LR是不是对齐的，这也是后面给出的算法所解决的问题之一，非常重要。</p>
+</blockquote>
+<h1 id="Contextual-Bilateral-Loss"><a href="#Contextual-Bilateral-Loss" class="headerlink" title="Contextual Bilateral Loss"></a>Contextual Bilateral Loss</h1><h2 id="Contextual-Loss"><a href="#Contextual-Loss" class="headerlink" title="Contextual Loss"></a>Contextual Loss</h2><p>CoBi Loss来自Contextual Loss。Contextual Loss的原文中的叙述为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/2.png" title="Optional title"></p>
+<blockquote>
+<p>Contextual Loss来自《The Contextual Loss for Image Transformation with Non-Aligned Data》，ECCV 2018。<br><a target="_blank" rel="noopener" href="https://openaccess.thecvf.com/content_ECCV_2018/papers/Roey_Mechrez_The_Contextual_Loss_ECCV_2018_paper.pdf">https://openaccess.thecvf.com/content_ECCV_2018/papers/Roey_Mechrez_The_Contextual_Loss_ECCV_2018_paper.pdf</a><br><a target="_blank" rel="noopener" href="https://www.github.com/roimehrez/contextualLoss">https://www.github.com/roimehrez/contextualLoss</a></p>
+</blockquote>
+<blockquote>
+<p>Contextual Loss的原文中是跟Perceptual Loss进行对比的。<br>Perceptual Loss来自《Perceptual Losses for Real-Time Style Transfer and Super-Resolution》，ECCV 2016。<br>SRGAN的Loss就是从这篇文章来的。</p>
+</blockquote>
+<p>本篇的Contextual Loss的公式：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/3.png" title="Optional title"></p>
+<h2 id="CoBi-Loss"><a href="#CoBi-Loss" class="headerlink" title="CoBi Loss"></a>CoBi Loss</h2><p>作者用这个Contextual Loss去训练模型发现会出现很多artifacts。作者认为这是由于CX损失函数中不准确的特征匹配造成的。<br>受到保边滤波器的启发，作者将空间区域也加入到损失函数中：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/4.png" title="Optional title"></p>
+<p>又借鉴了Perceptual Loss，引入VGG loss。本文最终的Loss为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/5.png" title="Optional title"></p>
+<h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><h2 id="实验步骤"><a href="#实验步骤" class="headerlink" title="实验步骤"></a>实验步骤</h2><p>使用来自SR-RAW的图像来训练一个4X模型和一个8X模型。<strong>采用了一个16层的ResNet架构，然后是log_2( N + 1) 上卷积层，其中N是缩放因子。</strong></p>
+<blockquote>
+<p>文章所使用的模型没有图和其他说明，只有这一句文字叙述。</p>
+</blockquote>
+<p>将SR-RAW中的500个序列按8:1:1的比例分割为训练、验证和测试集。</p>
+<p>对于4X变焦模型，每个序列有3对数据对用于训练。对于8X变焦模型，每个序列有1对数据。</p>
+<p>每对包含一个全分辨率（800万像素）Bayer mosaic图像及其相应的全分辨率光学放大RGB图像。随机从一个全分辨率的Bayer mosaic中裁剪64个patch作为训练的输入。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://petapixel.com/2017/03/03/x-trans-vs-bayer-sensors-fantastic-claims-test/">https://petapixel.com/2017/03/03/x-trans-vs-bayer-sensors-fantastic-claims-test/</a></p>
+</blockquote>
+<p>选择了几种具有代表性的超分辨方法进行比较：SRGAN、SRResnet、LapSRN、Johnson等人提出的Perceptual Loss的模型以及ESRGAN。</p>
+<p>使用公共的预训练模型。首先采用原文献中的标准设置尝试在SR-RAW上微调模型，对比模型的下采样方式是双三次。但与未经微调的预训练模型相比，平均性能差异不大(SSIM &lt; 0.04, PSNR &lt; 0.05, lpip &lt; 0.025)，所以原文直接采用了没有微调的原模型。对于没有预先训练模型的方法，在SR-RAW上从零开始训练它们的模型。</p>
+<h2 id="定量分析"><a href="#定量分析" class="headerlink" title="定量分析"></a>定量分析</h2><h3 id="不同模型使用SR-RAW进行训练"><a href="#不同模型使用SR-RAW进行训练" class="headerlink" title="不同模型使用SR-RAW进行训练"></a>不同模型使用SR-RAW进行训练</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/6.png" title="Optional title"></p>
+<p>结果很明显，现有的超分模型在这个数据集上的表现比较差。</p>
+<h3 id="不同训练策略"><a href="#不同训练策略" class="headerlink" title="不同训练策略"></a>不同训练策略</h3><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/7.png" title="Optional title"></p>
+<p>依旧证明了本文提出的模型和数据是比较契合的。</p>
+<blockquote>
+<p>Ours-png：为了进行比较，使用经过8位处理的RGB图像来训练模型的副本(our-png)，以评估拥有真实原始传感器数据的好处。与5.1节中描述的合成设置不同，没有使用向下采样的RGB图像作为输入，而是使用较短焦距拍摄的RGB图像作为输入。用较长焦距拍摄的RGB图像作为地面真实值。</p>
+</blockquote>
+<blockquote>
+<p>Ours-syn-raw：测试合成的原始数据是否可以代替训练的感知真实数据。采用Gharbi等人描述的标准传感器合成模型[9]代替真实的传感器数据进行训练，从8位RGB图像中生成合成的Bayer马赛克。简而言之，我们根据白平衡、gammacorrected sRGB图像的Bayer镶嵌模式，每个像素保留一个颜色通道，并引入随机方差高斯噪声。在这些合成传感器数据上训练我们的模型的一个副本，并在经过白平衡和伽玛校正的真实传感器数据上进行测试。</p>
+</blockquote>
+<h2 id="定性分析"><a href="#定性分析" class="headerlink" title="定性分析"></a>定性分析</h2><p>视觉效果：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/8.png" title="Optional title"></p>
+<p>可以看到，给出的图示在色块交界区域的效果确实不错。</p>
+<p>以及在Amazon Mechanical Turk上进行感知实验来评估生成图像的感知质量。有50人参加了这个测试：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-ZoomToLearn/9.png" title="Optional title"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><ul>
+<li><p>使用RAW进行超分，相比经过ISP处理的JPG，RAW有丰富的信息。</p>
+</li>
+<li><p>提出CoBi Loss解决不对齐的问题。</p>
+</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>文章：<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8954193&amp;tag=1">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8954193&amp;tag=1</a></p>
+</li>
+<li><p>补充材料：<a target="_blank" rel="noopener" href="https://ceciliavision.github.io/files/Zoom_Learn_Supplementary_Material_CVPR2019.pdf">https://ceciliavision.github.io/files/Zoom_Learn_Supplementary_Material_CVPR2019.pdf</a></p>
+</li>
+</ul>
+<blockquote>
+<p>补充材料还挺长，11页pdf。</p>
+</blockquote>
+<ul>
+<li>code：<a target="_blank" rel="noopener" href="https://github.com/ceciliavision/zoom-learn-zoom">https://github.com/ceciliavision/zoom-learn-zoom</a></li>
+</ul>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>看上一篇的时候，看到第三部分的那个数据集，顺手去看了一下那个reference，然后顺手找到了这篇文章。看完之后觉得还是很有意义的。</p>
+<p>说句实话这个方法初看下来也算那种大神级别的了。感觉以后用不对齐做超分好像也不是难事情？也许还是我们思路不够开阔。还是要敢想啊。</p>
+<p>但是再一细看，局限性感觉也是很大。</p>
+<p>首先一点就是第一部分针对不同模型的对比实验，感觉不是很公平。毕竟是从Loss方面做的改变，直接就比PSNR和SSIM，感觉有点流氓，意义不大。</p>
+<p>第二个就是文章中也没特别解释他们用的网络模型和原因，读着有点难受。</p>
+<p>第三个就是感觉不对齐这个问题还是太广了，这个好像只是水平偏移，如果偏移的更多样的话，不知道会有怎么样的解决思路。感觉这一点能用到光学显微镜成像的那里。</p>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/04/14/%E6%83%B3%E5%88%86%E4%BA%AB%E7%BB%99%E5%88%AB%E4%BA%BA%E7%9C%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BD%B1%E5%83%8F/" title="想分享给别人看的一些影像"><span>< PreviousPost</span><br><span class="prevTitle">想分享给别人看的一些影像</span></a><a class="nextSlogan" href="/2021/04/03/%E8%83%BD%E5%A4%9F%E6%8F%90%E9%AB%98%E4%B8%AA%E4%BA%BA%E4%BD%93%E9%AA%8C%E7%9A%84%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%BD%AF%E7%A1%AC%E4%BB%B6%E9%97%AE%E9%A2%98%E5%90%88%E9%9B%86/" title="能够提高个人体验的计算机软硬件问题合集"><span>NextPost ></span><br><span class="nextTitle">能够提高个人体验的计算机软硬件问题合集</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SR-RAW"><span class="toc-number">2.</span> <span class="toc-text">SR-RAW</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="toc-number">2.1.</span> <span class="toc-text">数据采集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">2.2.</span> <span class="toc-text">数据预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E9%BD%90%E5%88%86%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">非对齐分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Contextual-Bilateral-Loss"><span class="toc-number">3.</span> <span class="toc-text">Contextual Bilateral Loss</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Contextual-Loss"><span class="toc-number">3.1.</span> <span class="toc-text">Contextual Loss</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CoBi-Loss"><span class="toc-number">3.2.</span> <span class="toc-text">CoBi Loss</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">实验结果</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%AD%A5%E9%AA%A4"><span class="toc-number">4.1.</span> <span class="toc-text">实验步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E9%87%8F%E5%88%86%E6%9E%90"><span class="toc-number">4.2.</span> <span class="toc-text">定量分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9E%8B%E4%BD%BF%E7%94%A8SR-RAW%E8%BF%9B%E8%A1%8C%E8%AE%AD%E7%BB%83"><span class="toc-number">4.2.1.</span> <span class="toc-text">不同模型使用SR-RAW进行训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E8%AE%AD%E7%BB%83%E7%AD%96%E7%95%A5"><span class="toc-number">4.2.2.</span> <span class="toc-text">不同训练策略</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%80%A7%E5%88%86%E6%9E%90"><span class="toc-number">4.3.</span> <span class="toc-text">定性分析</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E8%AE%BA"><span class="toc-number">5.</span> <span class="toc-text">结论</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">7.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
