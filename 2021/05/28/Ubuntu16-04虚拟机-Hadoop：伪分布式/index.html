@@ -1,0 +1,181 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Ubuntu16.04虚拟机+Hadoop：伪分布式 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">Ubuntu16.04虚拟机+Hadoop：伪分布式</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>05-28-2021 14:17:20</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="Hadoop"> Hadoop</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.2k</span> | Reading time: <span class="post-count">4</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Hadoop是一个由Apache基金会所开发的分布式系统基础架构。用户可以在不了解分布式底层细节的情况下，开发分布式程序。充分利用集群的威力进行高速运算和存储。</p>
+<p>Hadoop实现了一个分布式文件系统（Distributed File System），其中一个组件是HDFS（Hadoop Distributed File System）。HDFS有高容错性的特点，并且设计用来部署在低廉的（low-cost）硬件上；而且它提供高吞吐量（high throughput）来访问应用程序的数据，适合那些有着超大数据集（large data set）的应用程序。HDFS放宽了（relax）POSIX的要求，可以以流的形式访问（streaming access）文件系统中的数据。</p>
+<p>Hadoop的框架最核心的设计就是：HDFS和MapReduce。HDFS为海量的数据提供了存储，而MapReduce则为海量的数据提供了计算。</p>
+<p>Hadoop一共有三种部署方式，分别是<strong>本地部署、伪分布部署、集群部署</strong>。Hadoop默认模式为非分布式模式（本地模式），无需进行其他配置即可运行。非分布式即单Java进程，方便进行调试。而Hadoop伪分布模式的工作原理和集群模式的工作原理一样。</p>
+<h1 id="Hadoop伪分布式"><a href="#Hadoop伪分布式" class="headerlink" title="Hadoop伪分布式"></a>Hadoop伪分布式</h1><p><strong>使用64位的Ubuntu 16.04虚拟机以及Hadoop 2.7.2 (stable)版本进行Hadoop伪分布式配置和测试。</strong></p>
+<h2 id="创建hadoop用户"><a href="#创建hadoop用户" class="headerlink" title="创建hadoop用户"></a>创建hadoop用户</h2><p>需要使用名为hadoop的用户来进行接下来的步骤。</p>
+<p>在原用户的terminal中进行如下操作：</p>
+<p><img src="/images/Hadoop/1.png" title="Optional title"></p>
+<h2 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h2><p>切换到新用户hadoop，准备工作就是做一下apt-get的更新以及需要用到的文本编辑器的安装。</p>
+<p>集群、单节点模式都需要用到SSH登陆，需要安装SSH server：</p>
+<p><img src="/images/Hadoop/2.png" title="Optional title"></p>
+<p><img src="/images/Hadoop/3.png" title="Optional title"></p>
+<p>SSH server安装完成后，使用ssh localhost即可登录本机。但这样登陆需要每次输入密码。再将SSH配置成无密码登陆：</p>
+<p><img src="/images/Hadoop/4.png" title="Optional title"></p>
+<p>进行上图命令之前，需要先登陆一次本地SSH，exit后再操作。</p>
+<h2 id="Java环境"><a href="#Java环境" class="headerlink" title="Java环境"></a>Java环境</h2><p>Hadoop需要Java环境。使用如下命令安装JDK：</p>
+<p><img src="/images/Hadoop/5.png" title="Optional title"></p>
+<p><img src="/images/Hadoop/6.png" title="Optional title"></p>
+<p>JDK安装结束以后，需要配置JAVA_HOME环境变量：</p>
+<p><img src="/images/Hadoop/7.png" title="Optional title"></p>
+<p>更新环境变量之后，检验Java环境：</p>
+<p><img src="/images/Hadoop/8.png" title="Optional title"></p>
+<p>上图中信息证明JDK已成功安装。</p>
+<h2 id="Hadoop安装及非分布式实例测试"><a href="#Hadoop安装及非分布式实例测试" class="headerlink" title="Hadoop安装及非分布式实例测试"></a>Hadoop安装及非分布式实例测试</h2><p>在官网中选择需要的版本进行Hadoop下载，为压缩文件格式：</p>
+<p><img src="/images/Hadoop/9.png" title="Optional title"></p>
+<p><img src="/images/Hadoop/10.png" title="Optional title"></p>
+<p>Hadoop解压后即可使用。检查Hadoop环境：</p>
+<p><img src="/images/Hadoop/11.png" title="Optional title"></p>
+<p>上图中成功输出了Hadoop版本信息，说明Hadoop安装成功。</p>
+<p>Hadoop附带了丰富的例子，见命令<code>./bin/hadoop jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar</code>。</p>
+<p>选择运行<code>grep</code>例子来测试Hadoop非分布式，步骤如下：</p>
+<ul>
+<li><p>给出input目录；</p>
+</li>
+<li><p>复制hadoop配置文件至input目录，用作grep例子的输入；</p>
+</li>
+<li><p>将input中的所有文件作为输入，筛选当中符合正则表达式 dfs[a-z.]+ 的单词并统计出现的次数，最后输出结果到output文件夹中；</p>
+</li>
+</ul>
+<p><img src="/images/Hadoop/12.png" title="Optional title"></p>
+<ul>
+<li>执行成功后，查看结果：</li>
+</ul>
+<p><img src="/images/Hadoop/13.png" title="Optional title"></p>
+<p>可见，执行成功后，输出的结果是符合正则的单词dfsadmin，该词出现了1次。</p>
+<h2 id="伪分布式配置及实例测试"><a href="#伪分布式配置及实例测试" class="headerlink" title="伪分布式配置及实例测试"></a>伪分布式配置及实例测试</h2><p>Hadoop的配置文件是xml格式，每个配置以声明property的name和value的方式来实现，位于<code>/usr/local/hadoop/etc/hadoop/</code>中。</p>
+<p>伪分布式需要修改2个配置文件<code>core-site.xml</code>和<code>hdfs-site.xml</code>：</p>
+<p><img src="/images/Hadoop/14.png" title="Optional title"></p>
+<p><img src="/images/Hadoop/15.png" title="Optional title"></p>
+<p>修改完配置文件之后，进行NameNode格式化：</p>
+<p><img src="/images/Hadoop/16.png" title="Optional title"></p>
+<p><img src="/images/Hadoop/17.png" title="Optional title"></p>
+<p><code>successfully formatted</code>、<code>Exitting with status 0</code>证明NameNode格式化操作成功。</p>
+<p>然后开启NameNode和DataNode守护进程。可以使用<code>jps</code>命令和Web界面<code>http://localhost:50070</code>检查是否成功：</p>
+<p><img src="/images/Hadoop/18.png" title="Optional title"></p>
+<p>按照如下步骤进行Hadoop伪分布式实例测试：</p>
+<ul>
+<li><p>单机模式的grep例子读取的是本地数据，伪分布式读取的则是HDFS上的数据，使用HDFS需要在HDFS中创建用户目录；</p>
+</li>
+<li><p>给出input目录；</p>
+</li>
+<li><p>将./etc/hadoop中的xml文件作为输入文件复制到分布式文件系统中，即将/usr/local/hadoop/etc/hadoop复制到分布式文件系统中的/user/hadoop/input中；</p>
+</li>
+<li><p>同样将input中的所有文件作为输入，筛选当中符合正则表达式dfs[a-z.]+的单词并统计出现的次数，最后输出结果到output文件夹中（伪分布式运行 MapReduce 作业的方式跟单机模式相同，区别在于伪分布式读取的是HDFS中的文件）；</p>
+</li>
+</ul>
+<p><img src="/images/Hadoop/19.png" title="Optional title"></p>
+<ul>
+<li>查看位于HDFS中的输出结果：</li>
+</ul>
+<p><img src="/images/Hadoop/20.png" title="Optional title"></p>
+<p>输出结果有4条内容。因为修改了配置文件，所以这里的运行结果与本地模式下的运行结果不同。</p>
+<hr>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><blockquote>
+<p>Hadoop安装教程_单机/伪分布式配置_Hadoop2.6.0(2.7.1)/Ubuntu14.04(16.04)<br><a target="_blank" rel="noopener" href="http://dblab.xmu.edu.cn/blog/install-hadoop/">http://dblab.xmu.edu.cn/blog/install-hadoop/</a></p>
+</blockquote>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/05/28/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AAdderNet:AdderSR/" title="论文研读：AdderNet/AdderSR"><span>< PreviousPost</span><br><span class="prevTitle">论文研读：AdderNet/AdderSR</span></a><a class="nextSlogan" href="/2021/04/14/%E7%A4%BE%E4%BC%9A%E5%AA%92%E4%BD%93%E8%AE%A1%E7%AE%97%EF%BC%9A%E7%9F%A5%E4%B9%8E%E9%97%AE%E7%AD%94%E4%BF%A1%E6%81%AF%E6%8C%96%E6%8E%98/" title="社会媒体计算：知乎问答信息挖掘"><span>NextPost ></span><br><span class="nextTitle">社会媒体计算：知乎问答信息挖掘</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hadoop%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">Hadoop伪分布式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAhadoop%E7%94%A8%E6%88%B7"><span class="toc-number">2.1.</span> <span class="toc-text">创建hadoop用户</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSH"><span class="toc-number">2.2.</span> <span class="toc-text">SSH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java%E7%8E%AF%E5%A2%83"><span class="toc-number">2.3.</span> <span class="toc-text">Java环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hadoop%E5%AE%89%E8%A3%85%E5%8F%8A%E9%9D%9E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%9E%E4%BE%8B%E6%B5%8B%E8%AF%95"><span class="toc-number">2.4.</span> <span class="toc-text">Hadoop安装及非分布式实例测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%AA%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E5%8F%8A%E5%AE%9E%E4%BE%8B%E6%B5%8B%E8%AF%95"><span class="toc-number">2.5.</span> <span class="toc-text">伪分布式配置及实例测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
