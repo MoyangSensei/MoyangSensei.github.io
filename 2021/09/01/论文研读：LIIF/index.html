@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：LIIF · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：LIIF</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>09-01-2021 19:20:43</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.1k</span> | Reading time: <span class="post-count">8</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Learning Continuous Image Representation with Local Implicit Image Function</p>
+</blockquote>
+<blockquote>
+<p>cvpr 2021</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>现实世界的图像是连续的，但计算机和采样设备得到的图像是非连续的。将现实世界的图像存储到计算机中，所使用的方法是基于像素（pixel）的2D矩阵。</p>
+<p>文章受到了<strong>隐式神经表征（implicit neural representation）</strong>的启发，希望将图像表示为连续形式，提出了局部隐式图像函数（LIIF），用于以连续方式表示自然图像和复杂图像。</p>
+<blockquote>
+<p>Inspired by the recent progress in 3D reconstruc- tion with implicit neural representation, we propose Local Implicit Image Function (LIIF), which takes an image co- ordinate and the 2D deep features around the coordinate as inputs, predicts the RGB value at a given coordinate as an output. Since the coordinates are continuous, LIIF can be presented in arbitrary resolution. To generate the contin- uous representation for images, we train an encoder with LIIF representation via a self-supervised task with super- resolution. The learned continuous representation can be presented in arbitrary resolution even extrapolate to ×30 higher resolution, where the training tasks are not provided.</p>
+</blockquote>
+<h1 id="Implicit-Neural-Representation"><a href="#Implicit-Neural-Representation" class="headerlink" title="Implicit Neural Representation"></a>Implicit Neural Representation</h1><h2 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h2><p>来自论文SIREN。</p>
+<blockquote>
+<p>Implicit Neural Representations with Periodic Activation Functions<br><a target="_blank" rel="noopener" href="https://github.com/vsitzmann/siren">https://github.com/vsitzmann/siren</a><br><a target="_blank" rel="noopener" href="https://vsitzmann.github.io/siren/">https://vsitzmann.github.io/siren/</a></p>
+</blockquote>
+<p>作者本人对该方法的论文做了综述。</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/vsitzmann/awesome-implicit-representations">https://github.com/vsitzmann/awesome-implicit-representations</a></p>
+</blockquote>
+<p>比较著名的有NeRF等。</p>
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>以图像为例，其最常见的表示方式为二维空间上的离散像素点。</p>
+<p>但是，在真实世界中，我们观察到的世界可以认为是连续的，或者近似连续。于是，<strong>可以考虑使用一个连续函数来表示图像的真实状态（本篇的思路）</strong>。</p>
+<p>然而我们无从得知这个连续函数的准确形式，因此有人提出<strong>用神经网络来逼近这个连续函数</strong>，这种表示方法被称为“隐式神经表示“ （Implicit Neural Representation，INR）。</p>
+<p>对于图像，INR函数将二维坐标映射到rgb值。对于视频，INR函数将时刻t以及图像二维坐标xy映射到rgb值。对于一个三维形状，INR函数将三维坐标xyz映射到0或1，表示空间中的某一位置处于物体内部还是外部。当然还有其他形式，如NERF将xyz映射到rgb和sigma。<strong>总而言之，这个函数就是将坐标映射到目标值。一旦该函数确定，那么一个图像/视频/体素就确定了。</strong></p>
+<p><strong>INR是一个连续的函数，函数（网络）的复杂程度和信号的复杂程度成正比，但是和信号的分辨率无关。比如一个16<em>16的图像，和一个32</em>32的图像，如果内容一样，那么INR就会一样。</strong></p>
+<blockquote>
+<p>Implicit Neural Representation 隐式神经表示 - 知乎专栏<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/372338398">https://zhuanlan.zhihu.com/p/372338398</a></p>
+</blockquote>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="Local-Implicit-Image-Function"><a href="#Local-Implicit-Image-Function" class="headerlink" title="Local Implicit Image Function"></a>Local Implicit Image Function</h2><blockquote>
+<p>局部隐式图像函数</p>
+</blockquote>
+<p>在LIIF表示中，设每个连续图像<code>Ii</code>表示为2D特征映射<code>M(I) ∈ R_H×W×D</code>。解码函数<code>fθ</code>（以θ为参数）由所有图像共享，其形式如下：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/1.png" title="Optional title"></p>
+<p>其中，<code>z</code>是一个向量，<code>x</code>是连续图像域中的被查询的二维坐标，<code>s</code>是预测信号，即RGB值。</p>
+<p>假设<code>M</code>（latent codes，潜在代码）均匀分布在连续图像域（图2中的蓝色圆圈）的2D空间中，根据<code>f</code>，对任意位置<code>xq</code>，其重构的RGB值为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/2.png" title="Optional title"></p>
+<p>其中，<code>z*</code>为离<code>xq</code>最近（欧几里得距离）的特征向量（<code>M</code>中的一部分），<code>v*</code>为<code>z*</code>对应的坐标。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/3.png" title="Optional title"></p>
+<blockquote>
+<p><code>z*</code>表示特征向量，它可以看作代表了一整块的像素；<code>角标00、01、10、11</code>分别是指离<code>xq</code>最近的左上、右上、左下、右下四个<code>z*</code>。所有图像共享上述解码函数<code>fθ</code>。<br>以图2为例，<code>z*11</code>是距离<code>xq</code>最近的（欧氏距离）潜码（xq在z*11的块内），<code>v*</code>就是潜码<code>z*11</code>的二维坐标。</p>
+</blockquote>
+<h2 id="Feature-unfolding"><a href="#Feature-unfolding" class="headerlink" title="Feature unfolding"></a>Feature unfolding</h2><blockquote>
+<p>特征展开</p>
+</blockquote>
+<p>为了丰富潜码<code>M</code>，对<code>M</code>进行特征展开，称为得到<code>M^</code>：<code>M^</code>中的潜码是<code>M</code>中3×3个相邻潜码的<code>级联（Concat）</code>，形式为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/4.png" title="Optional title"></p>
+<p>其中，<code>级联</code>指的是一组向量的连接，<code>M</code>在其边界外用零向量填充。</p>
+<p>后面为了简洁，直接使用<code>M</code>表示这一步操作。</p>
+<h2 id="Local-ensemble"><a href="#Local-ensemble" class="headerlink" title="Local ensemble"></a>Local ensemble</h2><blockquote>
+<p>局部集合</p>
+</blockquote>
+<p><strong>式(2)是不连续预测</strong>：<code>xq</code>处的信号预测是通过查询最近的潜码<code>z*</code>来完成的，在<code>M</code>中，当<code>xq</code>在2D域中移动时，不同<code>z*</code>的边界是不连续的，会发生突变。<strong>这会导致坐标上无限接近的点，所选择的<code>z*</code>可能非常不同。</strong></p>
+<p>例如，<code>xq</code>穿过图2中的边界虚线（或者是极其接近边界位置），在这些坐标周围选择<code>z*</code>，两个无限接近坐标的信号将由不同的<code>z*</code>进行预测。只要学习到的函数<code>fθ</code>不是完美的，这些边界就会出现不连续的图案。</p>
+<p>为了解决这个问题，扩展式(2)为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/5.png" title="Optional title"></p>
+<p>其中，<code>St</code>是指<code>xq</code>与<code>z*u</code>所围成的矩形的面积，<code>S</code>为四块矩形面积之和。</p>
+<blockquote>
+<p>记u为t的对角特征，即t=0-&gt;u=1。</p>
+</blockquote>
+<blockquote>
+<p>这里采用面积之比作为权重，是为了维持在四个特征向量之间任何一点的总权重是相等的，如果采用距离之比则不能达到这一点。</p>
+</blockquote>
+<h2 id="Cell-decoding"><a href="#Cell-decoding" class="headerlink" title="Cell decoding"></a>Cell decoding</h2><blockquote>
+<p>单元解码</p>
+</blockquote>
+<p>根据上述步骤，则可以在任意分辨率下使用LIIF对图像进行表示。</p>
+<p>对于给定的分辨率，最直接的方式就是根据像素点中心坐标求得对应的RGB值。但这样的方式是独立于size的，也就是说像素点包围的位置中的其他信息都丢失了。</p>
+<p>为此，采用Cell decoding的策略，表示为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/6.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/7.png" title="Optional title"></p>
+<p>其中,<code>c=[ch，cw]</code>包含两个指定查询像素高度和宽度的值，<code>[x，c]</code>表示x和c的串联(concatenation)。</p>
+<p><code>fcell（z，[x，c]）</code>的含义可以解释为：如果用<code>形状c</code>渲染以坐标x为中心的像素，RGB值应该是什么。在给定分辨率下呈现连续表示时，拥有额外的输入c是有益的。</p>
+<blockquote>
+<p>逻辑上，当c -&gt; 0时，<code>f(z，x) = fcell(z，[x，c])</code>，即：连续图像可以被视为具有无限小像素的图像。</p>
+<blockquote>
+<p>The meaning of fcell(z, [x, c]) can be interpreted as: what the RGB value should be, if we ren- der a pixel centered at coordinate x with shape c. As we will show in the experiments, having an extra input c can be beneficial when presenting the continuous representation in a given resolution.</p>
+</blockquote>
+</blockquote>
+<h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/8.png" title="Optional title"></p>
+<p>对于给定的一张训练图片，以随机的scale下采样作为input。对应的ground-truth表示为<code>xhr</code>、<code>shr</code>，其中，<code>xhr</code>是中心坐标，<code>shr</code>是对应的RGB值。</p>
+<p><code>Eϕ</code>将input映射为二维特征图作为LIIF表示，使用<code>xhr</code>进行query，<code>fθ</code>会预测对应RGB值<code>Spred</code>，与<code>shr</code>计算loss。</p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="实验设置"><a href="#实验设置" class="headerlink" title="实验设置"></a>实验设置</h2><ul>
+<li><p><code>Eϕ</code>是EDSR或RDN去掉upsampler部分。</p>
+</li>
+<li><p>选用的loss是L1 loss。</p>
+</li>
+<li><p>训练：训练集：DIV2K，1000幅中的800幅；下采样：比例为×2、×3、×4的低分辨率对应图像，由Matlab中的imresize函数生成，默认设置为双三次插值；训练细节：初始学习率为1*1^-4的Adam优化器（每200个阶段衰减0.5倍）、训练时间为1000个epoch、bs=16、MetaSR的实验设置与LIIF相同，只是将LIIF表示替换为其元解码器。</p>
+</li>
+<li><p>测试：DIV2K、Set5、Set14、B100、Urban100。</p>
+</li>
+<li><p>平台：Pytorch。</p>
+</li>
+</ul>
+<h2 id="定量实验"><a href="#定量实验" class="headerlink" title="定量实验"></a>定量实验</h2><p>训练时在1倍到4倍之间均匀采样，在测试时对6倍到30倍都进行了验证。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/9.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/10.png" title="Optional title"></p>
+<blockquote>
+<p>由于针对如此大倍数的SR方法很少，这里实际上的SOTA就只有MetaSR。</p>
+</blockquote>
+<h2 id="定量实验-1"><a href="#定量实验-1" class="headerlink" title="定量实验"></a>定量实验</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LIIF/11.png" title="Optional title"></p>
+<h2 id="对比实验"><a href="#对比实验" class="headerlink" title="对比实验"></a>对比实验</h2><ul>
+<li><p>cell decoding似乎会影响out-of-distribution high resolution时的PSNR值。实验结果为：可以看到针对30倍的任务，cell-1/30明显好于其他设定。如果decoding cell大于实际的像素大小，这就类似于用一个比较大的平均核对图像进行处理。结论是，使用cell decoding有助于in-distribution scales，当scale过大时可能会影响PSNR但是仍然可以提升视觉质量。（图7）</p>
+</li>
+<li><p>实验在训练时使用固定的scale，虽然可以提升该scale的结果，但是对于其他scale效果不好。（表4）</p>
+</li>
+<li><p>针对size-varied ground-truth问题进行了实验。</p>
+</li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>文章：<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2012.09161.pdf">https://arxiv.org/pdf/2012.09161.pdf</a></p>
+<p>code/home：<a target="_blank" rel="noopener" href="https://yinboc.github.io/liif/">https://yinboc.github.io/liif/</a></p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>新的点的思路之一！就是用连续进行表示！如果真的出来的话还是非常nice的！</p>
+<hr>
+<blockquote>
+<p>截出来的图片糊的一，以后再也不在副屏上截图了，或者等有钱换个好一点的副屏……</p>
+</blockquote>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2021/06/21/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9AIGNN/" title="论文研读：IGNN"><span>NextPost ></span><br><span class="nextTitle">论文研读：IGNN</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Implicit-Neural-Representation"><span class="toc-number">2.</span> <span class="toc-text">Implicit Neural Representation</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A5%E6%BA%90"><span class="toc-number">2.1.</span> <span class="toc-text">来源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%87%8A"><span class="toc-number">2.2.</span> <span class="toc-text">解释</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Local-Implicit-Image-Function"><span class="toc-number">3.1.</span> <span class="toc-text">Local Implicit Image Function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Feature-unfolding"><span class="toc-number">3.2.</span> <span class="toc-text">Feature unfolding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Local-ensemble"><span class="toc-number">3.3.</span> <span class="toc-text">Local ensemble</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cell-decoding"><span class="toc-number">3.4.</span> <span class="toc-text">Cell decoding</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E6%B5%81%E7%A8%8B"><span class="toc-number">3.5.</span> <span class="toc-text">整体流程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">实验设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E9%87%8F%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.2.</span> <span class="toc-text">定量实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E9%87%8F%E5%AE%9E%E9%AA%8C-1"><span class="toc-number">4.3.</span> <span class="toc-text">定量实验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E6%AF%94%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.4.</span> <span class="toc-text">对比实验</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">6.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
