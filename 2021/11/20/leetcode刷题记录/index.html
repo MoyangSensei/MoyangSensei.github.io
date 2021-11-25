@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>leetcode刷题记录 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">leetcode刷题记录</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>11-20-2021 14:11:06</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="leetcode"> leetcode</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.4k</span> | Reading time: <span class="post-count">8</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<h1 id="统计"><a href="#统计" class="headerlink" title="统计"></a>统计</h1><ul>
+<li><p>hard：4、458</p>
+</li>
+<li><p>medium：2、6、11、56、148、189</p>
+</li>
+<li><p>easy：*1、7、9、20、26、27、66、70、88、283、*461、*2073</p>
+</li>
+<li><p>重难点：70、148</p>
+</li>
+</ul>
+<hr>
+<h1 id="11-Container-With-Most-Water-array"><a href="#11-Container-With-Most-Water-array" class="headerlink" title="11. Container With Most Water [array]"></a>11. Container With Most Water [array]</h1><p><img src="/images/leetcode/11.png" title="Optional title"></p>
+<p>直接两层循环会TLE，评论做法是<code>从头和尾开始相对着走</code>，实际上就是考虑了坐标轴长度，<code>保留最大的h</code>然后逐渐缩小坐标轴长度，时间O(1)。</p>
+<h1 id="26-Remove-Duplicates-from-Sorted-Array-array"><a href="#26-Remove-Duplicates-from-Sorted-Array-array" class="headerlink" title="26. Remove Duplicates from Sorted Array [array]"></a>26. Remove Duplicates from Sorted Array [array]</h1><p>给定按非降序排序的整数数组nums，请删除重复项，以便每个唯一元素只显示一次。元素的相对顺序应保持不变。</p>
+<p><img src="/images/leetcode/26.png" title="Optional title"></p>
+<p>这题返回值只有k，但检测结果还是操作num变成前k个不重复的值。</p>
+<p>时间O(1)，循环指针每次变动到新的不重复的值上，然后交换到当前k的位置，两件事情分开做就行。</p>
+<h1 id="66-Plus-One-array"><a href="#66-Plus-One-array" class="headerlink" title="66. Plus One [array]"></a>66. Plus One [array]</h1><p><img src="/images/leetcode/66.png" title="Optional title"></p>
+<p>设置一个进位flag。时间O(1)循环。</p>
+<p>注意最后一位如果进位的话，要在第一个位置多加一个1.</p>
+<h1 id="70-Climbing-Stairs-DP-array"><a href="#70-Climbing-Stairs-DP-array" class="headerlink" title="70. Climbing Stairs [DP/array]"></a>70. Climbing Stairs [DP/array]</h1><p><img src="/images/leetcode/70_1.png" title="Optional title"></p>
+<p>dp问题，本质上是fib，重点。</p>
+<p>最高赞解释：</p>
+<p><img src="/images/leetcode/70_2.png" title="Optional title"></p>
+<p><code>递归fib肯定会TLE</code>，两种做法，一种是设置n个空间，一种是就用两个空间做连续数组存放。</p>
+<p>这题也能看作是DFS，左子树是走一步，右子树是走两步，结果就是这棵树的子节点数量。</p>
+<h1 id="88-Merge-Sorted-Array-array"><a href="#88-Merge-Sorted-Array-array" class="headerlink" title="88. Merge Sorted Array [array]"></a>88. Merge Sorted Array [array]</h1><p>两个升序数组融合，要求在nums1上修改。</p>
+<p><img src="/images/leetcode/88_1.png" title="Optional title"></p>
+<p><img src="/images/leetcode/88_2.png" title="Optional title"></p>
+<p><img src="/images/leetcode/88_3.png" title="Optional title"></p>
+<p>这题有几个坑，首先如果用python的话，直接使用<code>nums1=</code>这种赋值方法，会<code>改变内存空间</code>，导致最后的结果系统不认；其次，需要考虑m和n是0的情况（图2），在考虑这个情况的时候同样要考虑前者。</p>
+<p>python可以有两个做法，偷懒就是用切片把两个list合起来，然后sort()（图1）；其次就是常规做法，在时间O(m+n)下，<code>倒着遍历两个list</code>，谁比较大就放到nums1的最后，收尾工作就是把最小的那些挨着放到nums1的最前面即可（图3）。</p>
+<p>这题逆大天，一定一定要注意python的赋值，这个以前从来没考虑过。</p>
+<h1 id="189-Rotate-Array-array"><a href="#189-Rotate-Array-array" class="headerlink" title="189. Rotate Array [array]"></a>189. Rotate Array [array]</h1><p>根据题意，就是将list中的后k个挪到前面来，就是尾出头进k次，每次一个人，之后的队列顺序。</p>
+<p><img src="/images/leetcode/189.png" title="Optional title"></p>
+<p>使用<code>切片</code>做即可。注意循环次数超过了队列长度，意味着要回归原位一次，那么<code>先用k对list长度取余数</code>即可。</p>
+<h1 id="283-Move-Zeroes-array"><a href="#283-Move-Zeroes-array" class="headerlink" title="283. Move Zeroes [array]"></a>283. Move Zeroes [array]</h1><p>将数组内的所有0挪到最后。</p>
+<p><img src="/images/leetcode/283.png" title="Optional title"></p>
+<p>从头开始遍历，设置一个flag=0，非0的就放到flag位置，flag++，也统计了非0的个数，最后把从第flag位置到最后设置成0即可，注意list长度是0或者list内没有要操作的数这两个问题。</p>
+<h1 id="27-Remove-Element-array"><a href="#27-Remove-Element-array" class="headerlink" title="27. Remove Element [array]"></a>27. Remove Element [array]</h1><p>将所有非val的数挪到list最前面，不论顺序，返回非val的个数。</p>
+<p><img src="/images/leetcode/27.png" title="Optional title"> </p>
+<p>与<code>283. Move Zeroes</code>同一个原理，就是把0换成是val然后做一个反向问题，代码都是一个逻辑，也是需要注意list长度是0或者list内没有要操作的数。</p>
+<p>细细看了下，与<code>26. Remove Duplicates from Sorted Array</code>应该也是同理，在26的<code>去重</code>中，无非就是把k=0，k=val换成了动态的k，就是当前的重复的那个值。当然，能这么想只存在于<code>26是有序</code>的，无序的话就不是这个道理了。</p>
+<h1 id="56-Merge-Intervals-array"><a href="#56-Merge-Intervals-array" class="headerlink" title="56. Merge Intervals [array]"></a>56. Merge Intervals [array]</h1><p>融合所给区间，区间相交取交集。</p>
+<p>自己想的方法：先求从第几个位置到第几个位置需要融合，然后融合了放进新的result，做得很复杂，要考虑开头结尾长度啥的，搞了半天还写的不对。</p>
+<p><img src="/images/leetcode/56_1.png" title="Optional title"> </p>
+<p>看评论区，实际上这题的思路非常简单，就是从头遍历，设置一个指针i，从0开始，看i和i+1，左区间是i[0]，右区间是max(i[1],i+1[1])。<code>如果有融合，那么指针不动，没有做融合操作，指针再向前走</code>。</p>
+<p><img src="/images/leetcode/56_2.png" title="Optional title"> </p>
+<h1 id="148-Sort-List-Sort-LinkList"><a href="#148-Sort-List-Sort-LinkList" class="headerlink" title="148. Sort List [Sort/LinkList]"></a>148. Sort List [Sort/LinkList]</h1><p>链表排序。</p>
+<p><img src="/images/leetcode/148_1.png" title="Optional title"> </p>
+<p><img src="/images/leetcode/148_2.png" title="Optional title"> </p>
+<p><img src="/images/leetcode/148_3.png" title="Optional title"> </p>
+<p>三种方法：</p>
+<p>第一种是只对每个node的value进行冒泡排序，不动next，这样做显然会TLE。</p>
+<p>第二种是偷鸡做法，就是把所有value取到一个list里，直接对list进行排序，这时的排序就是线性表的排序而不是链表的排序，最后把排好序的内容从链表头开始依次填进去，这样做面试估计不给过。</p>
+<p>第三种是正常做法，就是<code>归并排序</code>。</p>
+<p>对于链表而言最好的排序方法就是归并。要牢牢记住第三种方法的流程：<code>共三个函数</code>，<code>主函数</code>返回head的归并排序调用；<code>归并排序函数</code>就是将当前表头一分为二，并且递归的归并排左和右，最后返回的左右两部分的merge函数调用；<code>merge函数</code>就是设置一个新的暂时链表头和两个指针，把两个子链表，用操作指针从头遍历融合，返回的是暂时链表表头的指针next。</p>
+<p><strong>三种O(logn)的排序算法：快排、堆排序、归并排序。</strong></p>
+<h1 id="7-整数反转-array-num"><a href="#7-整数反转-array-num" class="headerlink" title="7. 整数反转 [array/num]"></a>7. 整数反转 [array/num]</h1><p>反转有符号整数，超过[−2<strong>31,  2</strong>31 − 1]就返回0。</p>
+<p><img src="/images/leetcode/7.png" title="Optional title"> </p>
+<p>常规方法设置一个n，每次对x取10的余数，再加上10倍的n（相当于前一位的进位）。</p>
+<p>使用python的切片可以反转str，将int保留符号，转成str，然后再添上符号。</p>
+<p>一定要注意反转后的数字有可能超过范围。</p>
+<h1 id="9-回文数-array"><a href="#9-回文数-array" class="headerlink" title="9. 回文数 [array]"></a>9. 回文数 [array]</h1><p>判断一个数从前向后读和从后向前读是不是一样的，是就称为回文数。</p>
+<p>常规思路就是和<code>7. 整数反转</code>，一样的操作，把这个整数反转然后看他们是否相等即可。偷鸡思路还是使用python切片反转str。</p>
+<p>注意，负数一定不会是回文数，因为多个符号。</p>
+<h1 id="2-两数相加-LinkList"><a href="#2-两数相加-LinkList" class="headerlink" title="2. 两数相加 [LinkList]"></a>2. 两数相加 [LinkList]</h1><p><img src="/images/leetcode/2_1.png" title="Optional title"> </p>
+<p><img src="/images/leetcode/2_2.png" title="Optional title"> </p>
+<p>按顺序加，主要就是保持一个进位flag，以及如果最后有进位，需要再新设一个node，值为1。</p>
+<h1 id="458-可怜的小猪-技巧题-num"><a href="#458-可怜的小猪-技巧题-num" class="headerlink" title="458. 可怜的小猪 [技巧题/num]"></a>458. 可怜的小猪 [技巧题/num]</h1><p><img src="/images/leetcode/458.png" title="Optional title"> </p>
+<p>比传统的那个用2进制做的题多了一个测试次数。使用测试次数可以扩展维度，即从<code>2进制（测试次数=1，2=1+1）变为测试次数+1进制</code>。</p>
+<p>可以以一个小时时长为例，每次15min，那么对于每个猪，就能测试4次。</p>
+<p>当只有猪1时，测试4次就意味着<code>猪1能断言一共5桶水的情况</code>：如果前4次没死，有毒的就是第5桶，如果前4次死了的话那就是死了那次的那一桶。</p>
+<p>两只猪的话，<code>把25个桶排列成5*5，猪1每次喝列5桶，猪2每次喝行5桶，交叉死的就是有毒的</code>；</p>
+<p>三只猪的话，<code>把125个桶排列成5*5*5</code>，猪1每次喝x面的25桶，猪2每次喝y面的25桶，猪3每次喝z面的25桶；</p>
+<p>四只猪的话，<code>排5组的5*5*5</code>，<code>猪1每次喝这5组的x面共5*25=125桶</code>，猪2、3同理，<code>猪4每次喝一组的5*5*5共125桶</code>；</p>
+<p>五只猪的话，<code>排列5*5=25组的5*5*5</code>，猪4每次喝一列的5<em>5</em>5，猪5每次喝1行的5<em>5</em>5…</p>
+<p>注意上述过程中的乘法，有助于理解，因为我们只有3维，猪喝水喝到4维之后就是3维又3维的叠加。</p>
+<h1 id="4-寻找两个正序数组的中位数-array-num-技巧题"><a href="#4-寻找两个正序数组的中位数-array-num-技巧题" class="headerlink" title="4. 寻找两个正序数组的中位数 [array/num/技巧题]"></a>4. 寻找两个正序数组的中位数 [array/num/技巧题]</h1><p><img src="/images/leetcode/4.png" title="Optional title"> </p>
+<p>把两个数组放到一个里面，然后返回中位数即可。放的时候都从头循环，谁小就放谁。其中一个放空之后，把另一个剩下的所有跟上前面，就能保证新的依旧是有序的。</p>
+<p><code>这题作为hard是因为要求的时间为O(log(m+n))</code>，这样的话就需要二分查找来解决，说实话给的解析确实没看懂。</p>
+<h1 id="6-Z字形变换-array-num-技巧题"><a href="#6-Z字形变换-array-num-技巧题" class="headerlink" title="6. Z字形变换 [array/num/技巧题]"></a>6. Z字形变换 [array/num/技巧题]</h1><p><img src="/images/leetcode/6.png" title="Optional title"> </p>
+<p>没啥好说的，几行就设置几个str，按顺序往里存，最后从上到下排成一行。也可以找规律，每一行都是从某一位开始，间隔多少个数取（这个数肯定是不一样的）。</p>
+<h1 id="20-有效的括号-技巧题"><a href="#20-有效的括号-技巧题" class="headerlink" title="20. 有效的括号 [技巧题]"></a>20. 有效的括号 [技巧题]</h1><p><img src="/images/leetcode/20.png" title="Optional title"> </p>
+<p>模拟<code>栈（先进先出）</code>的存储方式匹配括号序列。</p>
+<hr>
+<h1 id="代码技巧"><a href="#代码技巧" class="headerlink" title="代码技巧"></a>代码技巧</h1><blockquote>
+<p>基本都是python和cpp</p>
+</blockquote>
+<ul>
+<li>python可以函数里面写函数</li>
+<li>python中max和min能用，list的许多操作可用，主要是append</li>
+<li>cpp中vector常用的函数：size()，可按数组循环；insert(locat,num,value)指定位置插入指定个数的指定元素；</li>
+<li>python的list切片，记住[:a]和[a:]的区别；</li>
+<li>一些要求在原list上修改，不返回值的题，python操作数据赋值一定要用切片，不然会改变内存位置，导致过不去；</li>
+<li>【56】<code>python如果想写变循环上限的循环，一定不要用for，不管用</code>：就是说用i当循环变量写for，如果在for内部修改了这个i，对于循环来说i的值是没有变动的，这一点非常重要，和c语言的循环是不一样的，如果想写，可采用外设循环i，然后用while当循环，在while内部修改i的值，这样才行；</li>
+<li>python <code>str用切片反转：a -&gt; a[::-1]</code>（两个冒号）；</li>
+<li><code>负数取余数和正数不一样</code>；</li>
+<li>cpp链表，新设节点最好用<code>ListNode *temp = new ListNode(val,next)</code>，两个参数建议为-1和nullptr，用的时候<code>直接用 -&gt; 取元素</code>即可；</li>
+<li></li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2021/11/02/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ARealVSR/" title="论文研读：RealVSR"><span>NextPost ></span><br><span class="nextTitle">论文研读：RealVSR</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">统计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-Container-With-Most-Water-array"><span class="toc-number">2.</span> <span class="toc-text">11. Container With Most Water [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#26-Remove-Duplicates-from-Sorted-Array-array"><span class="toc-number">3.</span> <span class="toc-text">26. Remove Duplicates from Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#66-Plus-One-array"><span class="toc-number">4.</span> <span class="toc-text">66. Plus One [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#70-Climbing-Stairs-DP-array"><span class="toc-number">5.</span> <span class="toc-text">70. Climbing Stairs [DP&#x2F;array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#88-Merge-Sorted-Array-array"><span class="toc-number">6.</span> <span class="toc-text">88. Merge Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#189-Rotate-Array-array"><span class="toc-number">7.</span> <span class="toc-text">189. Rotate Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#283-Move-Zeroes-array"><span class="toc-number">8.</span> <span class="toc-text">283. Move Zeroes [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#27-Remove-Element-array"><span class="toc-number">9.</span> <span class="toc-text">27. Remove Element [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#56-Merge-Intervals-array"><span class="toc-number">10.</span> <span class="toc-text">56. Merge Intervals [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#148-Sort-List-Sort-LinkList"><span class="toc-number">11.</span> <span class="toc-text">148. Sort List [Sort&#x2F;LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E6%95%B4%E6%95%B0%E5%8F%8D%E8%BD%AC-array-num"><span class="toc-number">12.</span> <span class="toc-text">7. 整数反转 [array&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-%E5%9B%9E%E6%96%87%E6%95%B0-array"><span class="toc-number">13.</span> <span class="toc-text">9. 回文数 [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0-LinkList"><span class="toc-number">14.</span> <span class="toc-text">2. 两数相加 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#458-%E5%8F%AF%E6%80%9C%E7%9A%84%E5%B0%8F%E7%8C%AA-%E6%8A%80%E5%B7%A7%E9%A2%98-num"><span class="toc-number">15.</span> <span class="toc-text">458. 可怜的小猪 [技巧题&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">16.</span> <span class="toc-text">4. 寻找两个正序数组的中位数 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Z%E5%AD%97%E5%BD%A2%E5%8F%98%E6%8D%A2-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">17.</span> <span class="toc-text">6. Z字形变换 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">18.</span> <span class="toc-text">20. 有效的括号 [技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%8A%80%E5%B7%A7"><span class="toc-number">19.</span> <span class="toc-text">代码技巧</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

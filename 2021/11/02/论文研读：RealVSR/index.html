@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：RealVSR · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：RealVSR</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>11-02-2021 15:59:53</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">486</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>Real-world Video Super-resolution: A Benchmark Dataset and A Decomposition based Learning Scheme</p>
+</blockquote>
+<blockquote>
+<p>ICCV 2021</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>针对的问题是视频超分在<strong>下采样、退化</strong>时候产生的误差问题，认为使用简单的退化方法所得到的模型并不能很好的在实际应用中发挥作用。以及所使用的VSR数据集大多都是合成的（与SISR是一样的痛点）</p>
+<p>为了解决上述问题，本文首先使用iPhone 11 Pro Max的多摄像头系统捕获成对的LR-HR视频序列，构建了一个真实世界的视频超分辨率（RealVSR）数据集。</p>
+<p>接下来分析指出，由于LR-HR视频对由两个单独的摄像头捕获，因此它们之间不可避免地存在一定的错位和亮度/颜色差异。为了更稳健地训练VSR模型并从LR输入中恢复更多细节，将LR-HR视频转换为YCbCr空间，并将亮度通道分解为拉普拉斯金字塔，然后对不同的分量应用不同的损失函数。</p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><blockquote>
+<p>因为做的是比较有意义的新数据集，所以这部分有必要介绍一下。</p>
+</blockquote>
+<ul>
+<li><p>常用的VSR数据集：Vimeo-90k[31]、REDS[23]、一些私有数据集[25]。</p>
+</li>
+<li><p>真实世界的SISR数据集：[6][33][4][30]。</p>
+</li>
+<li><p>在这篇文章之前，没有公开的真实世界VSR数据集。</p>
+</li>
+</ul>
+<blockquote>
+<p>[31] Video enhancement with task-oriented flow<br>[23] Ntire 2019 challenge on video deblurring and super-resolution: Dataset and study<br>[25] Detail-revealing deep video super-resolution</p>
+</blockquote>
+<blockquote>
+<p>[6] Camera lens super-resolution<br>[33] Zoom to learn, learn to zoom<br>[4] Toward real-world single image super-resolution: A new benchmark and a new mode<br>[30] Component divide-and-conquer for real-world image super-resolution<br>上述文章中，33是之前读过的一篇；30是本文章的SISR的工作，ICCV 2019，后面可能会读。</p>
+</blockquote>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>文章：<a target="_blank" rel="noopener" href="https://www4.comp.polyu.edu.hk/~cslzhang/paper/ICCV21_RealVSR.pdf">https://www4.comp.polyu.edu.hk/~cslzhang/paper/ICCV21_RealVSR.pdf</a></p>
+</li>
+<li><p>code：<a target="_blank" rel="noopener" href="https://github.com/IanYeung/RealVSR">https://github.com/IanYeung/RealVSR</a>.</p>
+</li>
+</ul>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1></article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/11/20/leetcode%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" title="leetcode刷题记录"><span>< PreviousPost</span><br><span class="prevTitle">leetcode刷题记录</span></a><a class="nextSlogan" href="/2021/09/01/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ALIIF/" title="论文研读：LIIF"><span>NextPost ></span><br><span class="nextTitle">论文研读：LIIF</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">相关工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">3.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">4.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
