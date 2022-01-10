@@ -1,0 +1,180 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>SR Baseline Model code detail · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">SR Baseline Model code detail</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>12-22-2021 17:49:20</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">333</span> | Reading time: <span class="post-count">1</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><h1 id="数据集WSI"><a href="#数据集WSI" class="headerlink" title="数据集WSI"></a>数据集WSI</h1><table>
+<thead>
+<tr>
+<th>info</th>
+<th align="left">command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>home</td>
+<td align="left">/home/jfy/project/data/WSI</td>
+</tr>
+<tr>
+<td>10训2验2测_训</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_small_10_2_2/train</td>
+</tr>
+<tr>
+<td>10训2验2测_验</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_small_10_2_2/val</td>
+</tr>
+<tr>
+<td>10训2验2测_测</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_small_10_2_2/test</td>
+</tr>
+<tr>
+<td>1000训100验100测_训</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_medium_1000_100_100/train</td>
+</tr>
+<tr>
+<td>1000训100验100测_验</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_medium_1000_100_100/val</td>
+</tr>
+<tr>
+<td>1000训100验100测_测</td>
+<td align="left">/home/jfy/project/data/WSI/lv0_medium_1000_100_100/test</td>
+</tr>
+</tbody></table>
+<h1 id="SRCNN"><a href="#SRCNN" class="headerlink" title="SRCNN"></a>SRCNN</h1><p>code：<a target="_blank" rel="noopener" href="https://github.com/yjn870/SRCNN-pytorch">https://github.com/yjn870/SRCNN-pytorch</a></p>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th align="left">command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>home</td>
+<td align="left">/home/jfy/project/SRCNN-pytorch-master</td>
+</tr>
+<tr>
+<td>prepare</td>
+<td align="left">python prepare.py --images-dir <code>xxx</code> --output-path result/2x/lv0_0_9.h5 --patch-size 32 --stride 14 --scale 2</td>
+</tr>
+<tr>
+<td>train</td>
+<td align="left">python train.py --train-file result/2x/lv0_0_9.h5 --eval-file result/2x/lv0_11_12.h5 --outputs-dir result/2x/little --num-epochs 2 --batch-size 16 --seed 11</td>
+</tr>
+</tbody></table>
+<p><code>更改成个人数据集</code>：用prepare.py分别生成测试集和训练集的h5文件，train的时候输入两个h5文件即可。</p>
+<p>仅有PSNR指标，Y通道计算，utils.py中<code>def calc_psnr(img1, img2)</code>传的是tensor。</p>
+<p><code>添加SSIM指标：utils.py添加函数def calc_ssim(img1, img2)</code>，代码来自IGNN，需要将tensor先转成array。</p>
+<p><code>添加LPIPS指标：utils.py添加函数def calc_lpips(img1, img2)</code>，需要pip install lpips并在最上面import，调用需要统一将tensor转到device=cpu，并将Y通道重复三次。</p>
+<p>上两周跑起来没问题，这周开始报h5的错误了，暂且放下。</p>
+<h1 id="SRGAN"><a href="#SRGAN" class="headerlink" title="SRGAN"></a>SRGAN</h1><p>code：<a target="_blank" rel="noopener" href="https://github.com/leftthomas/SRGAN">https://github.com/leftthomas/SRGAN</a></p>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th align="left">command</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>home</td>
+<td align="left">/home/jfy/project/SRGAN-master</td>
+</tr>
+<tr>
+<td>train</td>
+<td align="left">python train.py –train_set_path ../data/WSI/lv0_medium_1000_100_100/train –val_set_path ../data/WSI/lv0_medium_1000_100_100/test –upscale_factor 2 –num_epochs 100 –train_bs 128</td>
+</tr>
+</tbody></table>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2022/01/07/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ALPIPS/" title="论文研读：LPIPS"><span>< PreviousPost</span><br><span class="prevTitle">论文研读：LPIPS</span></a><a class="nextSlogan" href="/2021/11/20/leetcode%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" title="leetcode刷题记录"><span>NextPost ></span><br><span class="nextTitle">leetcode刷题记录</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9B%86WSI"><span class="toc-number">1.</span> <span class="toc-text">数据集WSI</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SRCNN"><span class="toc-number">2.</span> <span class="toc-text">SRCNN</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SRGAN"><span class="toc-number">3.</span> <span class="toc-text">SRGAN</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

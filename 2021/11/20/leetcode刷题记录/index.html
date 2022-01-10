@@ -113,12 +113,74 @@
 </li>
 </ul>
 <hr>
+<h1 id="2-两数相加-LinkList"><a href="#2-两数相加-LinkList" class="headerlink" title="2. 两数相加 [LinkList]"></a>2. 两数相加 [LinkList]</h1><p><img src="/images/leetcode/2_1.png" title="Optional title"> </p>
+<p><img src="/images/leetcode/2_2.png" title="Optional title"> </p>
+<p>按顺序加，主要就是保持一个进位flag，以及如果最后有进位，需要再新设一个node，值为1。</p>
+<h1 id="3-无重复字符的最长子串-array"><a href="#3-无重复字符的最长子串-array" class="headerlink" title="3. 无重复字符的最长子串 [array]"></a>3. 无重复字符的最长子串 [array]</h1><p><img src="/images/leetcode/3.png" title="Optional title"></p>
+<p>设两个指针head和tail，分别从0和1开始，tail每次向下走一个，head走到在[head（包）,tail（不包）]区间内跟当前tail重复的位置，显然这个重复位置如果有的话那么就只有一个，如果无重复，那么head不动即可。每次tail走动一下后，将其区间长度的最大值保留即可。tail从头到尾走一遍就可以得到答案。</p>
+<p>题解有提示到查看是否重复和以用到一些容器，比如python中的set和cpp中的map。上面解法时间太慢也是因为判断是否重复我没有用这类容器，但实际上也省下了空间，时间换空间属于是。</p>
+<h1 id="4-寻找两个正序数组的中位数-array-num-技巧题"><a href="#4-寻找两个正序数组的中位数-array-num-技巧题" class="headerlink" title="4. 寻找两个正序数组的中位数 [array/num/技巧题]"></a>4. 寻找两个正序数组的中位数 [array/num/技巧题]</h1><p><img src="/images/leetcode/4.png" title="Optional title"> </p>
+<p>把两个数组放到一个里面，然后返回中位数即可。放的时候都从头循环，谁小就放谁。其中一个放空之后，把另一个剩下的所有跟上前面，就能保证新的依旧是有序的。</p>
+<p><code>这题作为hard是因为要求的时间为O(log(m+n))</code>，这样的话就需要二分查找来解决，说实话给的解析确实没看懂。</p>
+<h1 id="5-最长回文子串-array-DP-技巧题"><a href="#5-最长回文子串-array-DP-技巧题" class="headerlink" title="5. 最长回文子串 [array/DP/技巧题]"></a>5. 最长回文子串 [array/DP/技巧题]</h1><p><img src="/images/leetcode/5_1.png" title="Optional title"></p>
+<p>首先是好理解的方法，就是将这个<code>倒置串</code>，寻找本体和其倒置的 <code>最长公共</code> <code>回文</code> 子串。该做法的时间和空间都是0(n*n)。对于这两个操作分两部分走：</p>
+<ul>
+<li><p>最长公共子串就是设置一个len*len的数组arr，初始全部置0，从头循环，如果两个指针i、j指的字符相同，那么其状态就是他们的前面的最大子串长度+1，也就是arr[i][j]=arr[i-1][j-1]+1。这里需要注意的是当i和j是0的时候要单独判断。设置2个容器记录这个长度和末尾位置，每当当前的长度（arr[i][j]）大于记录的长度，那么就以当前的长度和i替换这两个记录容器。</p>
+</li>
+<li><p>在上述进行两个容器的记录之前需要判断这一段是否是回文串，具体做法有两种，一种就是把这一段整体取下来整体判断，另一种就是判断最末尾一位的下标。</p>
+</li>
+</ul>
+<p>在这里，对最长公共子串的求法是DP，而对这个题目本身有DP的做法，这两者的状态转移是完全不一样的，要区分好。</p>
+<p><img src="/images/leetcode/5_2.png" title="Optional title"></p>
+<p><img src="/images/leetcode/5_3.png" title="Optional title"></p>
+<p>其次，还是要了解本题的<code>扩展中心法</code>和<code>Manacher算法</code></p>
+<h1 id="6-Z字形变换-array-num-技巧题"><a href="#6-Z字形变换-array-num-技巧题" class="headerlink" title="6. Z字形变换 [array/num/技巧题]"></a>6. Z字形变换 [array/num/技巧题]</h1><p><img src="/images/leetcode/6.png" title="Optional title"> </p>
+<p>没啥好说的，几行就设置几个str，按顺序往里存，最后从上到下排成一行。也可以找规律，每一行都是从某一位开始，间隔多少个数取（这个数肯定是不一样的）。</p>
+<h1 id="7-整数反转-array-num"><a href="#7-整数反转-array-num" class="headerlink" title="7. 整数反转 [array/num]"></a>7. 整数反转 [array/num]</h1><p>反转有符号整数，超过[−2<strong>31,  2</strong>31 − 1]就返回0。</p>
+<p><img src="/images/leetcode/7.png" title="Optional title"> </p>
+<p>常规方法设置一个n，每次对x取10的余数，再加上10倍的n（相当于前一位的进位）。</p>
+<p>使用python的切片可以反转str，将int保留符号，转成str，然后再添上符号。</p>
+<p>一定要注意反转后的数字有可能超过范围。</p>
+<h1 id="9-回文数-array"><a href="#9-回文数-array" class="headerlink" title="9. 回文数 [array]"></a>9. 回文数 [array]</h1><p>判断一个数从前向后读和从后向前读是不是一样的，是就称为回文数。</p>
+<p>常规思路就是和<code>7. 整数反转</code>，一样的操作，把这个整数反转然后看他们是否相等即可。偷鸡思路还是使用python切片反转str。</p>
+<p>注意，负数一定不会是回文数，因为多个符号。</p>
 <h1 id="11-Container-With-Most-Water-array"><a href="#11-Container-With-Most-Water-array" class="headerlink" title="11. Container With Most Water [array]"></a>11. Container With Most Water [array]</h1><p><img src="/images/leetcode/11.png" title="Optional title"></p>
 <p>直接两层循环会TLE，评论做法是<code>从头和尾开始相对着走</code>，实际上就是考虑了坐标轴长度，<code>保留最大的h</code>然后逐渐缩小坐标轴长度，时间O(1)。</p>
+<h1 id="12-整数转罗马数字-num-技巧题"><a href="#12-整数转罗马数字-num-技巧题" class="headerlink" title="12. 整数转罗马数字 [num/技巧题]"></a>12. 整数转罗马数字 [num/技巧题]</h1><p><img src="/images/leetcode/12.png" title="Optional title"></p>
+<p>写好个位数，然后替换即可，替换规则都是相通的。</p>
+<p>题解里有提到用贪心，就是写好1000、<code>900</code>、500、<code>400</code>、100、…，以9和4的开头是需要用减法构造的，单独写出来，剩下的所有内容都可以用加法构造，所以就每次用num减去最大的，说是贪心，但这是贪心的意义么，后面写到这类题再说。</p>
+<h1 id="15-三数之和-num-技巧题"><a href="#15-三数之和-num-技巧题" class="headerlink" title="15. 三数之和 [num/技巧题]"></a>15. 三数之和 [num/技巧题]</h1><p><img src="/images/leetcode/15.png" title="Optional title"></p>
+<p>面试重点。</p>
+<p>首先，思路方面，<code>三重循环肯定是TLE</code>，那么就力争变成二重循环。最外面的一层循环肯定不能省略，那么就要对里面的两层动心思。做法就是先排序，然后对内层的[i+1,n]区间的循环，设置<code>双指针</code>，j从i+1向后走，k从n向前走。能这么的核心就是因为排过序，前后操作是对应的。判断的时候，如果是0，那么记录结果，如果不是，就看是比0大还是比0小，结果比0大证明后面加的两个数过大了，那么k就往小变；同理，结果小了证明所加的数不够大，那么j就往大变。</p>
+<p>其次，操作方面，比较重要的就是<code>去重</code>，对于ijk共同来说，就是要跳过相同的数，因为相同的数判断过会出现相同的结果，这里同时做到了去重和优化循环；对i来说，单独有一个优化，就是排了序之后，大于0的i，j和k都会大于，三个大于0的数相加必大于0。</p>
+<p>最后整体做下来，排序用的是O(logN)，循环遍历用的是<code>O(N*N)</code>。</p>
+<p>以及并不能为了去重而对nums上来就做去重，写题的时候就一直疑惑，写总结的时候突然发现确实不能这么写，不解释，懂得都懂。</p>
+<h1 id="17-电话号码的字母组合-DP"><a href="#17-电话号码的字母组合-DP" class="headerlink" title="17. 电话号码的字母组合 [DP]"></a>17. 电话号码的字母组合 [DP]</h1><p><img src="/images/leetcode/17.png" title="Optional title"></p>
+<p>并不算难，实际上是最简单的那种DP：<code>把之前的内容，每一个都重新加上新加的这个就行</code>。就是要记得对每个老内容，添加3或4个新内容之后，把老内容删了。</p>
+<p>上述写法模拟了一个队列的操作，每次都操作队头的那个就行，count则控制每新添加一个数之前一共有多少老内容。</p>
+<h1 id="20-有效的括号-技巧题"><a href="#20-有效的括号-技巧题" class="headerlink" title="20. 有效的括号 [技巧题]"></a>20. 有效的括号 [技巧题]</h1><p><img src="/images/leetcode/20.png" title="Optional title"> </p>
+<p>模拟<code>栈（先进先出）</code>的存储方式匹配括号序列。</p>
+<h1 id="21-合并两个有序链表-LinkList"><a href="#21-合并两个有序链表-LinkList" class="headerlink" title="21. 合并两个有序链表 [LinkList]"></a>21. 合并两个有序链表 [LinkList]</h1><p><img src="/images/leetcode/21.png" title="Optional title"> </p>
+<p>新设一个头和操作这个头的操作指针，两个链表从头遍历有两个操作指针，当前两个指针哪个指的值小，就把这个node接上，该node后面断掉，指针向前走一个。最后一定记得把两个表中剩下的部分接上。</p>
 <h1 id="26-Remove-Duplicates-from-Sorted-Array-array"><a href="#26-Remove-Duplicates-from-Sorted-Array-array" class="headerlink" title="26. Remove Duplicates from Sorted Array [array]"></a>26. Remove Duplicates from Sorted Array [array]</h1><p>给定按非降序排序的整数数组nums，请删除重复项，以便每个唯一元素只显示一次。元素的相对顺序应保持不变。</p>
 <p><img src="/images/leetcode/26.png" title="Optional title"></p>
 <p>这题返回值只有k，但检测结果还是操作num变成前k个不重复的值。</p>
+<h1 id="27-Remove-Element-array"><a href="#27-Remove-Element-array" class="headerlink" title="27. Remove Element [array]"></a>27. Remove Element [array]</h1><p>将所有非val的数挪到list最前面，不论顺序，返回非val的个数。</p>
+<p><img src="/images/leetcode/27.png" title="Optional title"> </p>
+<p>与<code>283. Move Zeroes</code>同一个原理，就是把0换成是val然后做一个反向问题，代码都是一个逻辑，也是需要注意list长度是0或者list内没有要操作的数。</p>
+<p>细细看了下，与<code>26. Remove Duplicates from Sorted Array</code>应该也是同理，在26的<code>去重</code>中，无非就是把k=0，k=val换成了动态的k，就是当前的重复的那个值。当然，能这么想只存在于<code>26是有序</code>的，无序的话就不是这个道理了。</p>
 <p>时间O(1)，循环指针每次变动到新的不重复的值上，然后交换到当前k的位置，两件事情分开做就行。</p>
+<h1 id="53-最大子数组和-num-DP"><a href="#53-最大子数组和-num-DP" class="headerlink" title="53. 最大子数组和 [num/DP]"></a>53. 最大子数组和 [num/DP]</h1><p>求在一个整数数组内，和最大的子序列的这个和。</p>
+<p><img src="/images/leetcode/53_1.png" title="Optional title"></p>
+<p>屏蔽掉的是暴力求解，肯定TLE（亏我还想了半天，用矩阵存储了一部分结果，把每个子列求和的N省略了，以为从O(N^3)变成O(N^2)，TLE之后再一寻思，nmd用切片和sum函数求和好像也是线性，人家本来就是O(N^2)，我优化了个寂寞，我是个逆天）。</p>
+<p>上面代码确实没体现出DP，好像就是用了常规的规律，但确实是DP的思想。</p>
+<p><img src="/images/leetcode/53_2.png" title="Optional title"></p>
+<p>以及，这题是easy就多少有点说不过去了。</p>
+<h1 id="56-Merge-Intervals-array"><a href="#56-Merge-Intervals-array" class="headerlink" title="56. Merge Intervals [array]"></a>56. Merge Intervals [array]</h1><p>融合所给区间，区间相交取交集。</p>
+<p>自己想的方法：先求从第几个位置到第几个位置需要融合，然后融合了放进新的result，做得很复杂，要考虑开头结尾长度啥的，搞了半天还写的不对。</p>
+<p><img src="/images/leetcode/56_1.png" title="Optional title"> </p>
+<p>看评论区，实际上这题的思路非常简单，就是从头遍历，设置一个指针i，从0开始，看i和i+1，左区间是i[0]，右区间是max(i[1],i+1[1])。<code>如果有融合，那么指针不动，没有做融合操作，指针再向前走</code>。</p>
+<p><img src="/images/leetcode/56_2.png" title="Optional title"> </p>
 <h1 id="66-Plus-One-array"><a href="#66-Plus-One-array" class="headerlink" title="66. Plus One [array]"></a>66. Plus One [array]</h1><p><img src="/images/leetcode/66.png" title="Optional title"></p>
 <p>设置一个进位flag。时间O(1)循环。</p>
 <p>注意最后一位如果进位的话，要在第一个位置多加一个1.</p>
@@ -135,21 +197,10 @@
 <p>这题有几个坑，首先如果用python的话，直接使用<code>nums1=</code>这种赋值方法，会<code>改变内存空间</code>，导致最后的结果系统不认；其次，需要考虑m和n是0的情况（图2），在考虑这个情况的时候同样要考虑前者。</p>
 <p>python可以有两个做法，偷懒就是用切片把两个list合起来，然后sort()（图1）；其次就是常规做法，在时间O(m+n)下，<code>倒着遍历两个list</code>，谁比较大就放到nums1的最后，收尾工作就是把最小的那些挨着放到nums1的最前面即可（图3）。</p>
 <p>这题逆大天，一定一定要注意python的赋值，这个以前从来没考虑过。</p>
-<h1 id="189-Rotate-Array-array"><a href="#189-Rotate-Array-array" class="headerlink" title="189. Rotate Array [array]"></a>189. Rotate Array [array]</h1><p>根据题意，就是将list中的后k个挪到前面来，就是尾出头进k次，每次一个人，之后的队列顺序。</p>
-<p><img src="/images/leetcode/189.png" title="Optional title"></p>
-<p>使用<code>切片</code>做即可。注意循环次数超过了队列长度，意味着要回归原位一次，那么<code>先用k对list长度取余数</code>即可。</p>
-<h1 id="283-Move-Zeroes-array"><a href="#283-Move-Zeroes-array" class="headerlink" title="283. Move Zeroes [array]"></a>283. Move Zeroes [array]</h1><p>将数组内的所有0挪到最后。</p>
-<p><img src="/images/leetcode/283.png" title="Optional title"></p>
-<p>从头开始遍历，设置一个flag=0，非0的就放到flag位置，flag++，也统计了非0的个数，最后把从第flag位置到最后设置成0即可，注意list长度是0或者list内没有要操作的数这两个问题。</p>
-<h1 id="27-Remove-Element-array"><a href="#27-Remove-Element-array" class="headerlink" title="27. Remove Element [array]"></a>27. Remove Element [array]</h1><p>将所有非val的数挪到list最前面，不论顺序，返回非val的个数。</p>
-<p><img src="/images/leetcode/27.png" title="Optional title"> </p>
-<p>与<code>283. Move Zeroes</code>同一个原理，就是把0换成是val然后做一个反向问题，代码都是一个逻辑，也是需要注意list长度是0或者list内没有要操作的数。</p>
-<p>细细看了下，与<code>26. Remove Duplicates from Sorted Array</code>应该也是同理，在26的<code>去重</code>中，无非就是把k=0，k=val换成了动态的k，就是当前的重复的那个值。当然，能这么想只存在于<code>26是有序</code>的，无序的话就不是这个道理了。</p>
-<h1 id="56-Merge-Intervals-array"><a href="#56-Merge-Intervals-array" class="headerlink" title="56. Merge Intervals [array]"></a>56. Merge Intervals [array]</h1><p>融合所给区间，区间相交取交集。</p>
-<p>自己想的方法：先求从第几个位置到第几个位置需要融合，然后融合了放进新的result，做得很复杂，要考虑开头结尾长度啥的，搞了半天还写的不对。</p>
-<p><img src="/images/leetcode/56_1.png" title="Optional title"> </p>
-<p>看评论区，实际上这题的思路非常简单，就是从头遍历，设置一个指针i，从0开始，看i和i+1，左区间是i[0]，右区间是max(i[1],i+1[1])。<code>如果有融合，那么指针不动，没有做融合操作，指针再向前走</code>。</p>
-<p><img src="/images/leetcode/56_2.png" title="Optional title"> </p>
+<h1 id="141-环形链表-LinkList"><a href="#141-环形链表-LinkList" class="headerlink" title="141. 环形链表 [LinkList]"></a>141. 环形链表 [LinkList]</h1><p>检查是不是环形链表。</p>
+<p><img src="/images/leetcode/141.png" title="Optional title"></p>
+<p>必须要遵从链表思想的话是做法是<code>快慢指针</code>：两个指针，一个每次前进1步，一个每次前进2步，如果有环的话它们必定相遇。此时内存用的是O(1)。</p>
+<p>常规做法就是每过一个内存地址，就存储，如果得到一个重复的，证明有环，指针遇到末尾了证明无环。此时用的内存是O(N)。检查重复自然需要用到一些数据结构比如hash和set等，实际上还是第一个方法简单。</p>
 <h1 id="148-Sort-List-Sort-LinkList"><a href="#148-Sort-List-Sort-LinkList" class="headerlink" title="148. Sort List [Sort/LinkList]"></a>148. Sort List [Sort/LinkList]</h1><p>链表排序。</p>
 <p><img src="/images/leetcode/148_1.png" title="Optional title"> </p>
 <p><img src="/images/leetcode/148_2.png" title="Optional title"> </p>
@@ -160,17 +211,22 @@
 <p>第三种是正常做法，就是<code>归并排序</code>。</p>
 <p>对于链表而言最好的排序方法就是归并。要牢牢记住第三种方法的流程：<code>共三个函数</code>，<code>主函数</code>返回head的归并排序调用；<code>归并排序函数</code>就是将当前表头一分为二，并且递归的归并排左和右，最后返回的左右两部分的merge函数调用；<code>merge函数</code>就是设置一个新的暂时链表头和两个指针，把两个子链表，用操作指针从头遍历融合，返回的是暂时链表表头的指针next。</p>
 <p><strong>三种O(logn)的排序算法：快排、堆排序、归并排序。</strong></p>
-<h1 id="7-整数反转-array-num"><a href="#7-整数反转-array-num" class="headerlink" title="7. 整数反转 [array/num]"></a>7. 整数反转 [array/num]</h1><p>反转有符号整数，超过[−2<strong>31,  2</strong>31 − 1]就返回0。</p>
-<p><img src="/images/leetcode/7.png" title="Optional title"> </p>
-<p>常规方法设置一个n，每次对x取10的余数，再加上10倍的n（相当于前一位的进位）。</p>
-<p>使用python的切片可以反转str，将int保留符号，转成str，然后再添上符号。</p>
-<p>一定要注意反转后的数字有可能超过范围。</p>
-<h1 id="9-回文数-array"><a href="#9-回文数-array" class="headerlink" title="9. 回文数 [array]"></a>9. 回文数 [array]</h1><p>判断一个数从前向后读和从后向前读是不是一样的，是就称为回文数。</p>
-<p>常规思路就是和<code>7. 整数反转</code>，一样的操作，把这个整数反转然后看他们是否相等即可。偷鸡思路还是使用python切片反转str。</p>
-<p>注意，负数一定不会是回文数，因为多个符号。</p>
-<h1 id="2-两数相加-LinkList"><a href="#2-两数相加-LinkList" class="headerlink" title="2. 两数相加 [LinkList]"></a>2. 两数相加 [LinkList]</h1><p><img src="/images/leetcode/2_1.png" title="Optional title"> </p>
-<p><img src="/images/leetcode/2_2.png" title="Optional title"> </p>
-<p>按顺序加，主要就是保持一个进位flag，以及如果最后有进位，需要再新设一个node，值为1。</p>
+<h1 id="165-比较版本号"><a href="#165-比较版本号" class="headerlink" title="165. 比较版本号"></a>165. 比较版本号</h1><p>题目比较拗口，但是不难，中等就这？</p>
+<p><img src="/images/leetcode/165.png" title="Optional title"></p>
+<p>主要用到python的<code>split</code>和<code>int强制类型转换时会忽略前导0</code>。</p>
+<h1 id="189-Rotate-Array-array"><a href="#189-Rotate-Array-array" class="headerlink" title="189. Rotate Array [array]"></a>189. Rotate Array [array]</h1><p>根据题意，就是将list中的后k个挪到前面来，就是尾出头进k次，每次一个人，之后的队列顺序。</p>
+<p><img src="/images/leetcode/189.png" title="Optional title"></p>
+<p>使用<code>切片</code>做即可。注意循环次数超过了队列长度，意味着要回归原位一次，那么<code>先用k对list长度取余数</code>即可。</p>
+<h1 id="206-反转链表-LinkList"><a href="#206-反转链表-LinkList" class="headerlink" title="206. 反转链表 [LinkList]"></a>206. 反转链表 [LinkList]</h1><p><img src="/images/leetcode/206.png" title="Optional title"></p>
+<p>在我看来还是递归比较舒服一点：从头开始循环，两个指针分别是头p和头的下一个p_next，如果p_next的下一个，也就是p_next-&gt;next不为空，就递归传入p_next和p_next-&gt;next，p_next-&gt;next为空就证明循环到了最后俩，此时p_next-&gt;next指向p，也就是反转操作，p的下一个也就是p-&gt;next指空，也就是改递归边界。</p>
+<p>不递归纯循环的话就从头设立两个指针p和p_next，初始化为head和head-&gt;next，然后翻转，反转之后根据p_next的定位，挪p，然后p_next向下指。</p>
+<p>两种方法从<code>操作顺序</code>上来说，<code>递归是从尾部开始反转，迭代就是从头部开始循环</code>。</p>
+<p>非常规方法就是设其他空间去记录一部分信息，比如将值信息按顺序取下来，反着再装到这个表里；再或者用栈记录从头到尾的位置信息，然后每次反转栈头的两个。</p>
+<h1 id="215-数组中的第K个最大元素-quick-sort"><a href="#215-数组中的第K个最大元素-quick-sort" class="headerlink" title="215. 数组中的第K个最大元素 [quick sort]"></a>215. 数组中的第K个最大元素 [quick sort]</h1><p><img src="/images/leetcode/215.png" title="Optional title"></p>
+<p>主要是<code>快排</code>的代码，背下来。</p>
+<h1 id="283-Move-Zeroes-array"><a href="#283-Move-Zeroes-array" class="headerlink" title="283. Move Zeroes [array]"></a>283. Move Zeroes [array]</h1><p>将数组内的所有0挪到最后。</p>
+<p><img src="/images/leetcode/283.png" title="Optional title"></p>
+<p>从头开始遍历，设置一个flag=0，非0的就放到flag位置，flag++，也统计了非0的个数，最后把从第flag位置到最后设置成0即可，注意list长度是0或者list内没有要操作的数这两个问题。</p>
 <h1 id="458-可怜的小猪-技巧题-num"><a href="#458-可怜的小猪-技巧题-num" class="headerlink" title="458. 可怜的小猪 [技巧题/num]"></a>458. 可怜的小猪 [技巧题/num]</h1><p><img src="/images/leetcode/458.png" title="Optional title"> </p>
 <p>比传统的那个用2进制做的题多了一个测试次数。使用测试次数可以扩展维度，即从<code>2进制（测试次数=1，2=1+1）变为测试次数+1进制</code>。</p>
 <p>可以以一个小时时长为例，每次15min，那么对于每个猪，就能测试4次。</p>
@@ -180,62 +236,6 @@
 <p>四只猪的话，<code>排5组的5*5*5</code>，<code>猪1每次喝这5组的x面共5*25=125桶</code>，猪2、3同理，<code>猪4每次喝一组的5*5*5共125桶</code>；</p>
 <p>五只猪的话，<code>排列5*5=25组的5*5*5</code>，猪4每次喝一列的5<em>5</em>5，猪5每次喝1行的5<em>5</em>5…</p>
 <p>注意上述过程中的乘法，有助于理解，因为我们只有3维，猪喝水喝到4维之后就是3维又3维的叠加。</p>
-<h1 id="4-寻找两个正序数组的中位数-array-num-技巧题"><a href="#4-寻找两个正序数组的中位数-array-num-技巧题" class="headerlink" title="4. 寻找两个正序数组的中位数 [array/num/技巧题]"></a>4. 寻找两个正序数组的中位数 [array/num/技巧题]</h1><p><img src="/images/leetcode/4.png" title="Optional title"> </p>
-<p>把两个数组放到一个里面，然后返回中位数即可。放的时候都从头循环，谁小就放谁。其中一个放空之后，把另一个剩下的所有跟上前面，就能保证新的依旧是有序的。</p>
-<p><code>这题作为hard是因为要求的时间为O(log(m+n))</code>，这样的话就需要二分查找来解决，说实话给的解析确实没看懂。</p>
-<h1 id="6-Z字形变换-array-num-技巧题"><a href="#6-Z字形变换-array-num-技巧题" class="headerlink" title="6. Z字形变换 [array/num/技巧题]"></a>6. Z字形变换 [array/num/技巧题]</h1><p><img src="/images/leetcode/6.png" title="Optional title"> </p>
-<p>没啥好说的，几行就设置几个str，按顺序往里存，最后从上到下排成一行。也可以找规律，每一行都是从某一位开始，间隔多少个数取（这个数肯定是不一样的）。</p>
-<h1 id="20-有效的括号-技巧题"><a href="#20-有效的括号-技巧题" class="headerlink" title="20. 有效的括号 [技巧题]"></a>20. 有效的括号 [技巧题]</h1><p><img src="/images/leetcode/20.png" title="Optional title"> </p>
-<p>模拟<code>栈（先进先出）</code>的存储方式匹配括号序列。</p>
-<h1 id="21-合并两个有序链表-LinkList"><a href="#21-合并两个有序链表-LinkList" class="headerlink" title="21. 合并两个有序链表 [LinkList]"></a>21. 合并两个有序链表 [LinkList]</h1><p><img src="/images/leetcode/21.png" title="Optional title"> </p>
-<p>新设一个头和操作这个头的操作指针，两个链表从头遍历有两个操作指针，当前两个指针哪个指的值小，就把这个node接上，该node后面断掉，指针向前走一个。最后一定记得把两个表中剩下的部分接上。</p>
-<h1 id="12-整数转罗马数字-num-技巧题"><a href="#12-整数转罗马数字-num-技巧题" class="headerlink" title="12. 整数转罗马数字 [num/技巧题]"></a>12. 整数转罗马数字 [num/技巧题]</h1><p><img src="/images/leetcode/12.png" title="Optional title"></p>
-<p>写好个位数，然后替换即可，替换规则都是相通的。</p>
-<p>题解里有提到用贪心，就是写好1000、<code>900</code>、500、<code>400</code>、100、…，以9和4的开头是需要用减法构造的，单独写出来，剩下的所有内容都可以用加法构造，所以就每次用num减去最大的，说是贪心，但这是贪心的意义么，后面写到这类题再说。</p>
-<h1 id="3-无重复字符的最长子串-array"><a href="#3-无重复字符的最长子串-array" class="headerlink" title="3. 无重复字符的最长子串 [array]"></a>3. 无重复字符的最长子串 [array]</h1><p><img src="/images/leetcode/3.png" title="Optional title"></p>
-<p>设两个指针head和tail，分别从0和1开始，tail每次向下走一个，head走到在[head（包）,tail（不包）]区间内跟当前tail重复的位置，显然这个重复位置如果有的话那么就只有一个，如果无重复，那么head不动即可。每次tail走动一下后，将其区间长度的最大值保留即可。tail从头到尾走一遍就可以得到答案。</p>
-<p>题解有提示到查看是否重复和以用到一些容器，比如python中的set和cpp中的map。上面解法时间太慢也是因为判断是否重复我没有用这类容器，但实际上也省下了空间，时间换空间属于是。</p>
-<h1 id="5-最长回文子串-array-DP-技巧题"><a href="#5-最长回文子串-array-DP-技巧题" class="headerlink" title="5. 最长回文子串 [array/DP/技巧题]"></a>5. 最长回文子串 [array/DP/技巧题]</h1><p><img src="/images/leetcode/5_1.png" title="Optional title"></p>
-<p>首先是好理解的方法，就是将这个<code>倒置串</code>，寻找本体和其倒置的 <code>最长公共</code> <code>回文</code> 子串。该做法的时间和空间都是0(n*n)。对于这两个操作分两部分走：</p>
-<ul>
-<li><p>最长公共子串就是设置一个len*len的数组arr，初始全部置0，从头循环，如果两个指针i、j指的字符相同，那么其状态就是他们的前面的最大子串长度+1，也就是arr[i][j]=arr[i-1][j-1]+1。这里需要注意的是当i和j是0的时候要单独判断。设置2个容器记录这个长度和末尾位置，每当当前的长度（arr[i][j]）大于记录的长度，那么就以当前的长度和i替换这两个记录容器。</p>
-</li>
-<li><p>在上述进行两个容器的记录之前需要判断这一段是否是回文串，具体做法有两种，一种就是把这一段整体取下来整体判断，另一种就是判断最末尾一位的下标。</p>
-</li>
-</ul>
-<p>在这里，对最长公共子串的求法是DP，而对这个题目本身有DP的做法，这两者的状态转移是完全不一样的，要区分好。</p>
-<p><img src="/images/leetcode/5_2.png" title="Optional title"></p>
-<p><img src="/images/leetcode/5_3.png" title="Optional title"></p>
-<p>其次，还是要了解本题的<code>扩展中心法</code>和<code>Manacher算法</code></p>
-<h1 id="15-三数之和-num-技巧题"><a href="#15-三数之和-num-技巧题" class="headerlink" title="15. 三数之和 [num/技巧题]"></a>15. 三数之和 [num/技巧题]</h1><p><img src="/images/leetcode/15.png" title="Optional title"></p>
-<p>面试重点。</p>
-<p>首先，思路方面，<code>三重循环肯定是TLE</code>，那么就力争变成二重循环。最外面的一层循环肯定不能省略，那么就要对里面的两层动心思。做法就是先排序，然后对内层的[i+1,n]区间的循环，设置<code>双指针</code>，j从i+1向后走，k从n向前走。能这么的核心就是因为排过序，前后操作是对应的。判断的时候，如果是0，那么记录结果，如果不是，就看是比0大还是比0小，结果比0大证明后面加的两个数过大了，那么k就往小变；同理，结果小了证明所加的数不够大，那么j就往大变。</p>
-<p>其次，操作方面，比较重要的就是<code>去重</code>，对于ijk共同来说，就是要跳过相同的数，因为相同的数判断过会出现相同的结果，这里同时做到了去重和优化循环；对i来说，单独有一个优化，就是排了序之后，大于0的i，j和k都会大于，三个大于0的数相加必大于0。</p>
-<p>最后整体做下来，排序用的是O(logN)，循环遍历用的是<code>O(N*N)</code>。</p>
-<p>以及并不能为了去重而对nums上来就做去重，写题的时候就一直疑惑，写总结的时候突然发现确实不能这么写，不解释，懂得都懂。</p>
-<h1 id="53-最大子数组和-num-DP"><a href="#53-最大子数组和-num-DP" class="headerlink" title="53. 最大子数组和 [num/DP]"></a>53. 最大子数组和 [num/DP]</h1><p>求在一个整数数组内，和最大的子序列的这个和。</p>
-<p><img src="/images/leetcode/53_1.png" title="Optional title"></p>
-<p>屏蔽掉的是暴力求解，肯定TLE（亏我还想了半天，用矩阵存储了一部分结果，把每个子列求和的N省略了，以为从O(N^3)变成O(N^2)，TLE之后再一寻思，nmd用切片和sum函数求和好像也是线性，人家本来就是O(N^2)，我优化了个寂寞，我是个逆天）。</p>
-<p>上面代码确实没体现出DP，好像就是用了常规的规律，但确实是DP的思想。</p>
-<p><img src="/images/leetcode/53_2.png" title="Optional title"></p>
-<p>以及，这题是easy就多少有点说不过去了。</p>
-<h1 id="141-环形链表-LinkList"><a href="#141-环形链表-LinkList" class="headerlink" title="141. 环形链表 [LinkList]"></a>141. 环形链表 [LinkList]</h1><p>检查是不是环形链表。</p>
-<p><img src="/images/leetcode/141.png" title="Optional title"></p>
-<p>必须要遵从链表思想的话是做法是<code>快慢指针</code>：两个指针，一个每次前进1步，一个每次前进2步，如果有环的话它们必定相遇。此时内存用的是O(1)。</p>
-<p>常规做法就是每过一个内存地址，就存储，如果得到一个重复的，证明有环，指针遇到末尾了证明无环。此时用的内存是O(N)。检查重复自然需要用到一些数据结构比如hash和set等，实际上还是第一个方法简单。</p>
-<h1 id="206-反转链表-LinkList"><a href="#206-反转链表-LinkList" class="headerlink" title="206. 反转链表 [LinkList]"></a>206. 反转链表 [LinkList]</h1><p><img src="/images/leetcode/206.png" title="Optional title"></p>
-<p>在我看来还是递归比较舒服一点：从头开始循环，两个指针分别是头p和头的下一个p_next，如果p_next的下一个，也就是p_next-&gt;next不为空，就递归传入p_next和p_next-&gt;next，p_next-&gt;next为空就证明循环到了最后俩，此时p_next-&gt;next指向p，也就是反转操作，p的下一个也就是p-&gt;next指空，也就是改递归边界。</p>
-<p>不递归纯循环的话就从头设立两个指针p和p_next，初始化为head和head-&gt;next，然后翻转，反转之后根据p_next的定位，挪p，然后p_next向下指。</p>
-<p>两种方法从<code>操作顺序</code>上来说，<code>递归是从尾部开始反转，迭代就是从头部开始循环</code>。</p>
-<p>非常规方法就是设其他空间去记录一部分信息，比如将值信息按顺序取下来，反着再装到这个表里；再或者用栈记录从头到尾的位置信息，然后每次反转栈头的两个。</p>
-<h1 id="17-电话号码的字母组合-DP"><a href="#17-电话号码的字母组合-DP" class="headerlink" title="17. 电话号码的字母组合 [DP]"></a>17. 电话号码的字母组合 [DP]</h1><p><img src="/images/leetcode/17.png" title="Optional title"></p>
-<p>并不算难，实际上是最简单的那种DP：<code>把之前的内容，每一个都重新加上新加的这个就行</code>。就是要记得对每个老内容，添加3或4个新内容之后，把老内容删了。</p>
-<p>上述写法模拟了一个队列的操作，每次都操作队头的那个就行，count则控制每新添加一个数之前一共有多少老内容。</p>
-<h1 id="165-比较版本号"><a href="#165-比较版本号" class="headerlink" title="165. 比较版本号"></a>165. 比较版本号</h1><p>题目比较拗口，但是不难，中等就这？</p>
-<p><img src="/images/leetcode/165.png" title="Optional title"></p>
-<p>主要用到python的<code>split</code>和<code>int强制类型转换时会忽略前导0</code>。</p>
-<h1 id="215-数组中的第K个最大元素-quick-sort"><a href="#215-数组中的第K个最大元素-quick-sort" class="headerlink" title="215. 数组中的第K个最大元素 [quick sort]"></a>215. 数组中的第K个最大元素 [quick sort]</h1><p><img src="/images/leetcode/215.png" title="Optional title"></p>
-<p>主要是<code>快排</code>的代码，背下来。</p>
 <hr>
 <h1 id="代码技巧"><a href="#代码技巧" class="headerlink" title="代码技巧"></a>代码技巧</h1><blockquote>
 <p>都是python和cpp</p>
@@ -253,4 +253,4 @@
 <li><code>python str replace</code>的话，一定记得<code>用变量去接一下结果</code>，直接调用不接的话，原本的str是不会变的，会导致误判，觉得replace没生效或者写错了啥的；</li>
 <li>python 用0初始化m<em>n二维数组：<code>arr=[[0]*m for _ in range(n)]</code>；不能用arr=[[0]\</em>m]*n，这样做修改某一行的某个位置会导致所有行的该位置做同样修改，意思就是把第一行的内存存了n遍；</li>
 </ul>
-</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2021/11/02/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ARealVSR/" title="论文研读：RealVSR"><span>NextPost ></span><br><span class="nextTitle">论文研读：RealVSR</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">统计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-Container-With-Most-Water-array"><span class="toc-number">2.</span> <span class="toc-text">11. Container With Most Water [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#26-Remove-Duplicates-from-Sorted-Array-array"><span class="toc-number">3.</span> <span class="toc-text">26. Remove Duplicates from Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#66-Plus-One-array"><span class="toc-number">4.</span> <span class="toc-text">66. Plus One [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#70-Climbing-Stairs-DP-array"><span class="toc-number">5.</span> <span class="toc-text">70. Climbing Stairs [DP&#x2F;array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#88-Merge-Sorted-Array-array"><span class="toc-number">6.</span> <span class="toc-text">88. Merge Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#189-Rotate-Array-array"><span class="toc-number">7.</span> <span class="toc-text">189. Rotate Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#283-Move-Zeroes-array"><span class="toc-number">8.</span> <span class="toc-text">283. Move Zeroes [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#27-Remove-Element-array"><span class="toc-number">9.</span> <span class="toc-text">27. Remove Element [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#56-Merge-Intervals-array"><span class="toc-number">10.</span> <span class="toc-text">56. Merge Intervals [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#148-Sort-List-Sort-LinkList"><span class="toc-number">11.</span> <span class="toc-text">148. Sort List [Sort&#x2F;LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E6%95%B4%E6%95%B0%E5%8F%8D%E8%BD%AC-array-num"><span class="toc-number">12.</span> <span class="toc-text">7. 整数反转 [array&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-%E5%9B%9E%E6%96%87%E6%95%B0-array"><span class="toc-number">13.</span> <span class="toc-text">9. 回文数 [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0-LinkList"><span class="toc-number">14.</span> <span class="toc-text">2. 两数相加 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#458-%E5%8F%AF%E6%80%9C%E7%9A%84%E5%B0%8F%E7%8C%AA-%E6%8A%80%E5%B7%A7%E9%A2%98-num"><span class="toc-number">15.</span> <span class="toc-text">458. 可怜的小猪 [技巧题&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">16.</span> <span class="toc-text">4. 寻找两个正序数组的中位数 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Z%E5%AD%97%E5%BD%A2%E5%8F%98%E6%8D%A2-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">17.</span> <span class="toc-text">6. Z字形变换 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">18.</span> <span class="toc-text">20. 有效的括号 [技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">19.</span> <span class="toc-text">21. 合并两个有序链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12-%E6%95%B4%E6%95%B0%E8%BD%AC%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">20.</span> <span class="toc-text">12. 整数转罗马数字 [num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2-array"><span class="toc-number">21.</span> <span class="toc-text">3. 无重复字符的最长子串 [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2-array-DP-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">22.</span> <span class="toc-text">5. 最长回文子串 [array&#x2F;DP&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">23.</span> <span class="toc-text">15. 三数之和 [num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#53-%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C-num-DP"><span class="toc-number">24.</span> <span class="toc-text">53. 最大子数组和 [num&#x2F;DP]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">25.</span> <span class="toc-text">141. 环形链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">26.</span> <span class="toc-text">206. 反转链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17-%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88-DP"><span class="toc-number">27.</span> <span class="toc-text">17. 电话号码的字母组合 [DP]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#165-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="toc-number">28.</span> <span class="toc-text">165. 比较版本号</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACK%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0-quick-sort"><span class="toc-number">29.</span> <span class="toc-text">215. 数组中的第K个最大元素 [quick sort]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%8A%80%E5%B7%A7"><span class="toc-number">30.</span> <span class="toc-text">代码技巧</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2021/12/22/SR-Baseline-Model-code-detail/" title="SR Baseline Model code detail"><span>< PreviousPost</span><br><span class="prevTitle">SR Baseline Model code detail</span></a><a class="nextSlogan" href="/2021/11/02/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ARealVSR/" title="论文研读：RealVSR"><span>NextPost ></span><br><span class="nextTitle">论文研读：RealVSR</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">统计</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E4%B8%A4%E6%95%B0%E7%9B%B8%E5%8A%A0-LinkList"><span class="toc-number">2.</span> <span class="toc-text">2. 两数相加 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2-array"><span class="toc-number">3.</span> <span class="toc-text">3. 无重复字符的最长子串 [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">4. 寻找两个正序数组的中位数 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2-array-DP-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">5. 最长回文子串 [array&#x2F;DP&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-Z%E5%AD%97%E5%BD%A2%E5%8F%98%E6%8D%A2-array-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">6. Z字形变换 [array&#x2F;num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-%E6%95%B4%E6%95%B0%E5%8F%8D%E8%BD%AC-array-num"><span class="toc-number">7.</span> <span class="toc-text">7. 整数反转 [array&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9-%E5%9B%9E%E6%96%87%E6%95%B0-array"><span class="toc-number">8.</span> <span class="toc-text">9. 回文数 [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11-Container-With-Most-Water-array"><span class="toc-number">9.</span> <span class="toc-text">11. Container With Most Water [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12-%E6%95%B4%E6%95%B0%E8%BD%AC%E7%BD%97%E9%A9%AC%E6%95%B0%E5%AD%97-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">10.</span> <span class="toc-text">12. 整数转罗马数字 [num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#15-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C-num-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">11.</span> <span class="toc-text">15. 三数之和 [num&#x2F;技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#17-%E7%94%B5%E8%AF%9D%E5%8F%B7%E7%A0%81%E7%9A%84%E5%AD%97%E6%AF%8D%E7%BB%84%E5%90%88-DP"><span class="toc-number">12.</span> <span class="toc-text">17. 电话号码的字母组合 [DP]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#20-%E6%9C%89%E6%95%88%E7%9A%84%E6%8B%AC%E5%8F%B7-%E6%8A%80%E5%B7%A7%E9%A2%98"><span class="toc-number">13.</span> <span class="toc-text">20. 有效的括号 [技巧题]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#21-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">14.</span> <span class="toc-text">21. 合并两个有序链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#26-Remove-Duplicates-from-Sorted-Array-array"><span class="toc-number">15.</span> <span class="toc-text">26. Remove Duplicates from Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#27-Remove-Element-array"><span class="toc-number">16.</span> <span class="toc-text">27. Remove Element [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#53-%E6%9C%80%E5%A4%A7%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C-num-DP"><span class="toc-number">17.</span> <span class="toc-text">53. 最大子数组和 [num&#x2F;DP]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#56-Merge-Intervals-array"><span class="toc-number">18.</span> <span class="toc-text">56. Merge Intervals [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#66-Plus-One-array"><span class="toc-number">19.</span> <span class="toc-text">66. Plus One [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#70-Climbing-Stairs-DP-array"><span class="toc-number">20.</span> <span class="toc-text">70. Climbing Stairs [DP&#x2F;array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#88-Merge-Sorted-Array-array"><span class="toc-number">21.</span> <span class="toc-text">88. Merge Sorted Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#141-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">22.</span> <span class="toc-text">141. 环形链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#148-Sort-List-Sort-LinkList"><span class="toc-number">23.</span> <span class="toc-text">148. Sort List [Sort&#x2F;LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#165-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7"><span class="toc-number">24.</span> <span class="toc-text">165. 比较版本号</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#189-Rotate-Array-array"><span class="toc-number">25.</span> <span class="toc-text">189. Rotate Array [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#206-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8-LinkList"><span class="toc-number">26.</span> <span class="toc-text">206. 反转链表 [LinkList]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#215-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACK%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0-quick-sort"><span class="toc-number">27.</span> <span class="toc-text">215. 数组中的第K个最大元素 [quick sort]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#283-Move-Zeroes-array"><span class="toc-number">28.</span> <span class="toc-text">283. Move Zeroes [array]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#458-%E5%8F%AF%E6%80%9C%E7%9A%84%E5%B0%8F%E7%8C%AA-%E6%8A%80%E5%B7%A7%E9%A2%98-num"><span class="toc-number">29.</span> <span class="toc-text">458. 可怜的小猪 [技巧题&#x2F;num]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%8A%80%E5%B7%A7"><span class="toc-number">30.</span> <span class="toc-text">代码技巧</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>

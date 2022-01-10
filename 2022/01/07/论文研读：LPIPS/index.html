@@ -1,0 +1,208 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>论文研读：LPIPS · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">论文研读：LPIPS</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>01-07-2022 20:51:01</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="论文研读"> 论文研读</a><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="图像超分辨率"> 图像超分辨率</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">2.5k</span> | Reading time: <span class="post-count">9</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，转载、引用请注明出处！</p>
+</blockquote>
+<hr>
+<blockquote>
+<p>The Unreasonable Effectiveness of Deep Features as a Perceptual Metric</p>
+</blockquote>
+<blockquote>
+<p>CVPR 2018</p>
+</blockquote>
+<h1 id="立意"><a href="#立意" class="headerlink" title="立意"></a>立意</h1><p>在计算机科学的许多领域中，比较数据都不会构成太大的困难：比如汉明距离、欧几里得距离等，但是视觉相似性（visual similarity）的概念往往是很主观的，旨在模仿人类的视觉感知。</p>
+<p><strong>期望得到一个真正的“感知距离”（也就是能明确证明这个感知指标是接近人的主观视觉感知的）</strong>，已有一些依据感知的距离度量，比如SSIM[58]、MSSIM[60]、FSIM[62]和HDR-VDP[34]。</p>
+<blockquote>
+<p>[58] Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli. Image quality assessment: from error visibility to structural similarity. TIP, 2004. 1, 2, 8, 12, 14<br>[60] Z. Wang, E. P. Simoncelli, and A. C. Bovik. Multiscale struc- tural similarity for image quality assessment. In Signals, Sys- tems and Computers. IEEE, 2004. 1<br>[62] L. Zhang, L. Zhang, X. Mou, and D. Zhang. Fsim: A feature similarity index for image quality assessment. TIP, 2011. 1, 2, 12, 14<br>[34] R.Mantiuk,K.J.Kim,A.G.Rempel,andW.Heidrich.Hdr-<br>vdp-2: A calibrated visual metric for visibility and quality predictions in all luminance conditions. In ACM Transac- tions on Graphics (TOG), 2011. 1, 12</p>
+</blockquote>
+<p>根据以上背景，文章提出问题：</p>
+<ul>
+<li><p>如何得到一个”感知距离(Perceptual Distance)“，以符合人类判断的方式衡量两个图像的相似程度？</p>
+</li>
+<li><p>这些”感知损失“与人类的视觉到底有多对应？</p>
+</li>
+<li><p>它们与网络架构是否有关？</p>
+</li>
+</ul>
+<blockquote>
+<p>怎样以“感知”的形式衡量图像的相似程度？怎么证明或者评估这种衡量指标的性能？这种衡量指标可否在不同网络架构下通用？</p>
+</blockquote>
+<h1 id="Berkeley-Adobe-Perceptual-Patch-Similarity-BAPPS-Dataset"><a href="#Berkeley-Adobe-Perceptual-Patch-Similarity-BAPPS-Dataset" class="headerlink" title="Berkeley-Adobe Perceptual Patch Similarity (BAPPS) Dataset"></a>Berkeley-Adobe Perceptual Patch Similarity (BAPPS) Dataset</h1><p>为了评估不同感知方法的性能，首先对已有方法造成的图像扭曲进行分类和收集，然后使用两种方法收集了一个大规模的高度不同的认知判断数据集，称为BAPPS。</p>
+<h2 id="Distortions"><a href="#Distortions" class="headerlink" title="Distortions"></a>Distortions</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/1.png" title="Optional title"></p>
+<h3 id="Traditional-distortions"><a href="#Traditional-distortions" class="headerlink" title="Traditional distortions"></a>Traditional distortions</h3><p>使用了亮度失真(photometric distortions)，随机噪声(random noise)，模糊(blurring)，空间移位(spatial shifts)，损坏(corruptions)，压缩伪影(compression artifacts)等20种传统方法进行顺序组合成308种顺序的失真。</p>
+<p><strong>这里的“扭曲”，指的是人为添加的失真</strong>，也就是直接用图像处理算法对每张图像进行处理。可以看作是数据增广的概念和操作。</p>
+<blockquote>
+<p>Our traditional distortions (left) are performed by basic low-level image editing operations.</p>
+</blockquote>
+<h3 id="CNN-based-distortions"><a href="#CNN-based-distortions" class="headerlink" title="CNN-based distortions"></a>CNN-based distortions</h3><p><strong>通过探索各种图像任务、网络结构和损失函数来模拟可能的算法输出</strong>，比如编码(autoencoding)、去噪(Denoising)、着色(Colorization)、超分(Super Resolution)、去模糊(Video Deblurring)、帧插值(Frame Interpolation)等。总成生成了96个去噪自编码器(denoising autoencoders)，每个网络的目标不是本身解决任务，而是探索困扰基于深度学习方法输出的常见工件。</p>
+<blockquote>
+<p>Our CNN-based distortions (right) are formed by randomly varying parameters such as task, network architecture, and learning parameters. The goal of the distortions is to mimic plausible distortions seen in real algorithm outputs.</p>
+</blockquote>
+<h3 id="超分部分的工作内容"><a href="#超分部分的工作内容" class="headerlink" title="超分部分的工作内容"></a>超分部分的工作内容</h3><p>传统扭曲方法：评估了NTIRE 2017 workshop的结果，使用×2、×3、×4上采样率，使用“未知”下采样创建输入图像，每个上采样倍数都有大约20个算法提交。</p>
+<p>基于CNN的扭曲方法：包括双三次上采样和四种性能最好的深度超分辨率方法[24、59、31、48]。结果比较：从Div2K数据集中随机位置的图像中随机抽取64×64 patch进行比较。</p>
+<blockquote>
+<p>原文中没做划分，但应该就是按照之前的两个区分标准进行的扭曲方法。给的四个“效果最好”的模型只看过SRGAN，其他三个都见过。<br>[24] J.Kim,J.KwonLee,andK.MuLee.Accurateimagesuper- resolution using very deep convolutional networks. In CVPR,<br>pages 1646–1654, 2016. 4<br>[59] Z. Wang, D. Liu, J. Yang, W. Han, and T. Huang. Deep networks for image super-resolution with sparse prior. In ICCV, 2015. 4<br>[31] SRGAN<br>[48] M. S. Sajjadi, B. Scho ̈lkopf, and M. Hirsch. Enhancenet: Single image super-resolution through automated texture synthesis. ICCV, 2017. 4</p>
+</blockquote>
+<h2 id="Psychophysical-Similarity-Measurements"><a href="#Psychophysical-Similarity-Measurements" class="headerlink" title="Psychophysical Similarity Measurements"></a>Psychophysical Similarity Measurements</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/2.png" title="Optional title"></p>
+<h3 id="2AFC-similarity-judgments"><a href="#2AFC-similarity-judgments" class="headerlink" title="2AFC similarity judgments"></a>2AFC similarity judgments</h3><p>随机选取一个图片x，使用两种失真（变换）方法生成两张图片x0和x1，让人来判断哪一个更接近原图，记录结果h，最终这一组实验数据表示为<code>T(x,x0,x1,h)</code>。</p>
+<p>把每一个测试样本称为一个双向强迫选择（2AFC），人平均每次判断花费3秒钟。收集了训练样本151.4K个。</p>
+<h3 id="Just-noticeable-differences-JND"><a href="#Just-noticeable-differences-JND" class="headerlink" title="Just noticeable differences (JND)"></a>Just noticeable differences (JND)</h3><p><strong>2AFC的一个缺点是它是”cognitively penetrable(可认知渗透的)“，参与者可以有意识地选择他们在完成任务时选择关注的相似性方面，这就向判断中引入了主观性。</strong></p>
+<p>为了反应客观、有意义的内容，还需要收集JND的判断：只给出两张图像，先给出一个参考图像(reference image，2AFC中的x0)，然后再给出一张随机失真的图像，询问人图像是相同的还是不同的。</p>
+<p>两张图像分别显示1s，间隔为250ms。收集了9.6K个样本。</p>
+<h1 id="Deep-Feature-Spaces"><a href="#Deep-Feature-Spaces" class="headerlink" title="Deep Feature Spaces"></a>Deep Feature Spaces</h1><p>在不同网络的深度特征空间中评估特征的距离。</p>
+<h2 id="Network-architectures"><a href="#Network-architectures" class="headerlink" title="Network architectures"></a>Network architectures</h2><ul>
+<li><p>评估了Squeezenet、AlexNet、VGG网络。使用了VGG网络的5个conv层，还使用了更接近人类视觉皮层结构的较浅的AlexNet以及具有与AlexNet相似性能的轻量SqueezeNet架构。</p>
+</li>
+<li><p>评估了自监督的方法，包括解谜(puzzle-solving)、跨通道预测(cross-channel prediction)、视频学习(learning from video)和生成建模(generative modeling)。</p>
+</li>
+</ul>
+<h2 id="Network-activations-to-distance"><a href="#Network-activations-to-distance" class="headerlink" title="Network activations to distance"></a>Network activations to distance</h2><p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/3.png" title="Optional title"></p>
+<p>上图左半部分说明了如何用网络计算<code>原图x</code>和<code>失真图像x0</code>之间的距离：<strong>从L层中提取特征堆栈，并在通道维度中进行单元归一化(unit-normalize in the channel dimension)。</strong></p>
+<p>对于<code>l层</code>，将得到的结果记为<code>y^l,y^l0(Hl*wl*cl)</code>。利用向量<code>wl</code>缩放激活通道并计算<code>l2距离</code>，最后在空间上求平均值，在信道上求和。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/4.png" title="Optional title"></p>
+<blockquote>
+<p>Note that using <code>wl = 1∀l</code> is equivalent to computing <code>cosine distance</code>.</p>
+</blockquote>
+<p>上图的右半部分用于映射<code>得分h</code>的小网络G使用了 2个32通道的FC-ReLU层、单通道FC层和sigmoid层。</p>
+<p>相似性度量的损失函数为：</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/5.png" title="Optional title"> </p>
+<blockquote>
+<p>来自Appendix部分的B. Model Training Details，正文中没有提到。</p>
+</blockquote>
+<h2 id="Training-on-our-data"><a href="#Training-on-our-data" class="headerlink" title="Training on our data"></a>Training on our data</h2><p><strong>考虑一些不同的训练方式来进行感知判断：lin，tune，scratch。</strong>三个变种统称为Learned Perceptual Image Patch Similarity (LPIPS) metric。</p>
+<ul>
+<li><p>lin：保持预训练网络权重不变，在顶部学习线性权重w，这构成了已有特征空间中一些参数的”感知校准(perceptual calibration)；</p>
+</li>
+<li><p>tune：从预先训练的分类模型初始化，并允许对网络的所有权重进行微调；</p>
+</li>
+<li><p>scratch：从随机高斯分布进行权重初始化，并完全根据前文判断对其进行训练。</p>
+</li>
+</ul>
+<blockquote>
+<p>这里的训练策略，lin没有查到；tune相关的词是fine-tune；scratch是有的，但具体所指意义不明。对于这三个训练策略，原文中也没有引用什么论文加以说明。</p>
+</blockquote>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>部分实验结果：图4、5、6（11）；表5。</p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/6.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/7.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/8.png" title="Optional title"></p>
+<p><img src="/images/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/SISR-LPIPS/9.png" title="Optional title"></p>
+<p>以问答形式解释了实验结果，部分重点如下：</p>
+<ol>
+<li><p>low-level metrics和Classification networks的性能如何？<br>答：<code>图4a，红色同黑色的比较和其他颜色同黑色的比较；表5（Appendix中A. Quantitative Results）</code>。Classification networks的表现要明显优于low-level metrics。</p>
+</li>
+<li><p>网络是否必须是Classification的任务？<br>答：<code>图4a，绿色右1、2和蓝色左1</code>。网络不一定要在Classification任务上训练。BiGAN，Puzzle，Splitbrain等无监督和自监督模型特征和监督模型差距不大。</p>
+</li>
+<li><p>不同的感知任务之间是否存在相关性？<br>答：<code>图5</code>。没有说明相关的程度，只给了结果。</p>
+</li>
+<li><p>我们可以针对传统的和基于CNN的失真训练一个指标吗？（这个问题的问法和回答有点对不上，因该是问题叙述没叙述清楚，应该是<code>是否可以用第二部分收集到的数据训练出一个可以用来评估的感知指标，该指标的效果如何？</code>）<br>答：<code>图4a，右1-9，紫、粉、棕黄色</code>。通过实验证实了更高容量的网络VGG比低容量的SqueezeNet和AlexNet架构表现更好，也就证实了网络确实可以从感知判断中学习。</p>
+</li>
+<li><p>关于传统和基于CNN的扭曲的训练是否转移到了real-world场景中？（<code>迁移到真实算法中是否能提高性能？</code>）<br>答：<code>图4b，右1-9，紫、粉、棕黄色</code>。学习线性分类器（紫）可以提高所有网络的性能。从零开始训练一个网络（粉），AlexNet的性能略低，而VGG的性能略高于线性校准。<strong>总结：使用数据“校准”预先存在的表征的激活是实现性能小幅提升的安全方法（分别为1.1%、0.3%和1.5%）。</strong></p>
+</li>
+<li><p>deep metrics和low-level metrics在哪里不一致?（<code>扭曲的定性比较？</code>）<br>答：<code>图6；图11（Appendix中B. Model Training Details，图6的拓展，和图6性质一样）</code>。使用BiGAN进行对比实验，认为相关噪声模式比SSIM失真更小。</p>
+</li>
+</ol>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><p>文章：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1801.03924">https://arxiv.org/abs/1801.03924</a></p>
+<p>code：<a target="_blank" rel="noopener" href="https://www.github.com/richzhang/PerceptualSimilarity">https://www.github.com/richzhang/PerceptualSimilarity</a></p>
+<p>如何使用：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Magic_o/article/details/106770317">https://blog.csdn.net/Magic_o/article/details/106770317</a></p>
+<h1 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h1><p>LPIPS这个方法本身，从数据收集到网络训练，难度并不高，但非常流畅。对实验结果做了很详细的解释，这一点是非常好的，因为如果只是将提高的性能作为结果摆上去，说服力也就那样，但针对不同位置进行的解释，就给了这个方法极大的可用性和拓展性。</p>
+<p>估计是受限于篇幅，并没有对每个算法之间的指标进行逻辑上的比较，算是这篇文章没有完成的内容，可以作为自己写论文过程中指标对比的一个论点去写。</p>
+<p>使用过程中发现LPIPS计算图像距离，速度并不是特别快，想要将这个当作新的SR指标，还是需要考虑时间成本的。</p>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2021/12/22/SR-Baseline-Model-code-detail/" title="SR Baseline Model code detail"><span>NextPost ></span><br><span class="nextTitle">SR Baseline Model code detail</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AB%8B%E6%84%8F"><span class="toc-number">1.</span> <span class="toc-text">立意</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Berkeley-Adobe-Perceptual-Patch-Similarity-BAPPS-Dataset"><span class="toc-number">2.</span> <span class="toc-text">Berkeley-Adobe Perceptual Patch Similarity (BAPPS) Dataset</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Distortions"><span class="toc-number">2.1.</span> <span class="toc-text">Distortions</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Traditional-distortions"><span class="toc-number">2.1.1.</span> <span class="toc-text">Traditional distortions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CNN-based-distortions"><span class="toc-number">2.1.2.</span> <span class="toc-text">CNN-based distortions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E5%88%86%E9%83%A8%E5%88%86%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AE%B9"><span class="toc-number">2.1.3.</span> <span class="toc-text">超分部分的工作内容</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Psychophysical-Similarity-Measurements"><span class="toc-number">2.2.</span> <span class="toc-text">Psychophysical Similarity Measurements</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2AFC-similarity-judgments"><span class="toc-number">2.2.1.</span> <span class="toc-text">2AFC similarity judgments</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Just-noticeable-differences-JND"><span class="toc-number">2.2.2.</span> <span class="toc-text">Just noticeable differences (JND)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Deep-Feature-Spaces"><span class="toc-number">3.</span> <span class="toc-text">Deep Feature Spaces</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Network-architectures"><span class="toc-number">3.1.</span> <span class="toc-text">Network architectures</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Network-activations-to-distance"><span class="toc-number">3.2.</span> <span class="toc-text">Network activations to distance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Training-on-our-data"><span class="toc-number">3.3.</span> <span class="toc-text">Training on our data</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C"><span class="toc-number">4.</span> <span class="toc-text">实验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">5.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">6.</span> <span class="toc-text">感想</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
