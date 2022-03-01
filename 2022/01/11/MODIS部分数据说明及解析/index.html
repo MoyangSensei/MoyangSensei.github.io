@@ -1,0 +1,278 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>MODIS部分数据说明及解析 · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">MODIS部分数据说明及解析</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>01-11-2022 15:33:38</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="MODIS"> MODIS</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">1.8k</span> | Reading time: <span class="post-count">7</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>项目需要。记录资料。</p>
+</blockquote>
+<h1 id="官网"><a href="#官网" class="headerlink" title="官网"></a>官网</h1><p>官网：<code>https://modis.gsfc.nasa.gov/</code>。</p>
+<p>Google搜关键词MODIS，第一个就是。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>About和Data页面的一些简介：</p>
+<p><img src="/images/MODIS/1.png" title="Optional title"></p>
+<p><img src="/images/MODIS/2.png" title="Optional title"></p>
+<h1 id="数据下载"><a href="#数据下载" class="headerlink" title="数据下载"></a>数据下载</h1><p>数据下载和官方产品都在Data介绍页给的第一个域名：<code>http://ladsweb.nascom.nasa.gov/</code>。</p>
+<p>里面有一个做的很详细的文件系统，可以查、下数据（主要是用最前面那个编码查）和已有产品所使用到的数据。比如MYD03/2013/001的267条数据：<code>https://ladsweb.modaps.eosdis.nasa.gov/archive/allData/61/MYD03/2013/001/</code>：</p>
+<p><img src="/images/MODIS/3.png" title="Optional title"></p>
+<p>下载要求注册用户和登陆。</p>
+<h1 id="文件命名规则"><a href="#文件命名规则" class="headerlink" title="文件命名规则"></a>文件命名规则</h1><p>来自<code>https://lpdaac.usgs.gov/data/get-started-data/collection-overview/missions/modis-overview/#modis-naming-conventions</code>，内有MODIS文件命名规则（3类）、产品长名称命名规则、时空分辨率、平铺系统（Tiling Systems）、数据处理、光谱带（1-36）、元数据（Metadata）等信息。</p>
+<p>取<code>MODIS/MYD03/2013/001/MYD03.A2013001.0000.061.2018043200701.hdf</code>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">命名字段</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">MYD03</td>
+<td align="center">产品短名，<code>MOD</code>是Terra星（上午星）数据，<code>MYD</code>是Aqua星（下午星）数据</td>
+</tr>
+<tr>
+<td align="center">A2013001</td>
+<td align="center">数据采样时间，<code>A-YYYYDDD</code>，DDD表示YYYY这一年中的第几天，与上一级文件夹命名对应，意义：该数据2013年的第一天被传感器所采集</td>
+</tr>
+<tr>
+<td align="center">0000</td>
+<td align="center">数据采样时间，<code>HHMM</code>，HH取值为[00,23]，MM取值为[00,59]，意义：该数据与00时00分（晚12时整）采集</td>
+</tr>
+<tr>
+<td align="center">061</td>
+<td align="center">数据采集版本号</td>
+</tr>
+<tr>
+<td align="center">2018043200701</td>
+<td align="center">数据生产时间，<code>YYYYDDDHHMMSS</code>，Y、D、H、M同上，SS为秒，意义：2018年第43天的20时07分01秒生产了该数据</td>
+</tr>
+<tr>
+<td align="center">.hdf</td>
+<td align="center">数据格式<code>HDF-EOS</code></td>
+</tr>
+</tbody></table>
+<h1 id="tool"><a href="#tool" class="headerlink" title="tool"></a>tool</h1><h2 id="HDFView"><a href="#HDFView" class="headerlink" title="HDFView"></a>HDFView</h2><p>最新的是3.1.3版本：<code>https://portal.hdfgroup.org/display/support/HDFView+3.1.3</code>，多系统支持，mac系统的是110M，不翻墙下的很慢。</p>
+<h2 id="HDF-Explore"><a href="#HDF-Explore" class="headerlink" title="HDF Explore"></a>HDF Explore</h2><p>1.4版本：<code>https://www.space-research.org/hdf_explorer/explorer_download.htm</code>，只支持windows，有可视化功能，比上一个好用点，需要在网页上填写一些信息才能下载，下载还需要购买使用许可，直接从百度上找破解版。</p>
+<h1 id="数据说明"><a href="#数据说明" class="headerlink" title="数据说明"></a>数据说明</h1><h2 id="官网数据介绍"><a href="#官网数据介绍" class="headerlink" title="官网数据介绍"></a>官网数据介绍</h2><p>MYD0211KM（Level 1B Calibrated Radiances）：<code>https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MYD021KM</code></p>
+<p>MYD03：（Geolocation）<code>https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/products/MYD03</code></p>
+<p>MYD35（Cloud Mask）：<code>https://ladsweb.modaps.eosdis.nasa.gov/missions-and-measurements/science-domain/cloud-mask/</code> </p>
+<table>
+<thead>
+<tr>
+<th align="center">数据产品名称</th>
+<th align="center">解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">MYD021KM</td>
+<td align="center">MODIS <code>1B</code></td>
+</tr>
+<tr>
+<td align="center">MYD03</td>
+<td align="center">MODIS数据<code>地理定位</code>文件</td>
+</tr>
+<tr>
+<td align="center">MYD35</td>
+<td align="center">大气2,3级，<code>云掩膜</code>，250m/1㎞</td>
+</tr>
+</tbody></table>
+<h2 id="文件目录"><a href="#文件目录" class="headerlink" title="文件目录"></a>文件目录</h2><p>前三级目录：</p>
+<p><img src="/images/MODIS/4.png" title="Optional title"></p>
+<p>第四级目录，取<code>MODIS/MYD03/2013/001</code>：</p>
+<p><img src="/images/MODIS/5.png" title="Optional title"></p>
+<p><img src="/images/MODIS/6.png" title="Optional title"></p>
+<p>数量：MYD03和MYD021KM都选的是2013年的相同天数，除了两个001内是267个文件，剩下的每个文件夹内都是288（60/5=12，24*12=288）个文件。</p>
+<p>这里给的35是21年的02和03都是13年的，对不上。</p>
+<h2 id="重点字段信息"><a href="#重点字段信息" class="headerlink" title="重点字段信息"></a>重点字段信息</h2><p>三部分产品需要联合起来用的。</p>
+<h3 id="MYD35"><a href="#MYD35" class="headerlink" title="MYD35"></a>MYD35</h3><ul>
+<li>Cloud_Mask：作为GT，为<code>6*2030*1354</code>矩阵。</li>
+</ul>
+<p><img src="/images/MODIS/7.png" title="Optional title"></p>
+<h3 id="MYD02"><a href="#MYD02" class="headerlink" title="MYD02"></a>MYD02</h3><p>对地观测数据文件包括250米、500米和1000米分辨率的定标后的资料。</p>
+<p>给定波段的一组探测器在沿轨道方向对齐在四个焦平面上。图象中的一条扫描线是扫描带中一个探测器的扫描观测资料。<code>1km波段包含10个探测器</code>，500m波段包含20个探测器，250m波段包含40个探测器。探测器之间的扫描间距大致分别为1km、500m和250m，在扫描方向，<code>每帧（frame）大致为1km大小</code>，MODIS仪器<code>在1km波段每帧的取样率为1</code>，500m波段为2，250m波段为4。</p>
+<ul>
+<li><p>EV_1KM_Emissive：热辐射波段，用来计算亮温。</p>
+</li>
+<li><p>EV_1KM_RefSB：太阳光反射波段，计算反射率。</p>
+</li>
+</ul>
+<p><img src="/images/MODIS/8.png" title="Optional title"></p>
+<p><img src="/images/MODIS/9.png" title="Optional title"></p>
+<h3 id="MYD03"><a href="#MYD03" class="headerlink" title="MYD03"></a>MYD03</h3><p>暂且不用，因为不考虑特定区域划分的话，使用02和35的文件名即可对准数据。</p>
+<h1 id="云检测实验"><a href="#云检测实验" class="headerlink" title="云检测实验"></a>云检测实验</h1><h2 id="实验细节"><a href="#实验细节" class="headerlink" title="实验细节"></a>实验细节</h2><ul>
+<li><p>数据：使用2013年001天的0000、0005和0010进行实验，只取用02和35产品，不使用03产品；3个hdf文件中共有3<em>2030</em>1354=<code>8245860</code>个点</p>
+</li>
+<li><p>真值：使用35产品中，0通道数值的第1、2比特位</p>
+</li>
+<li><p>input：使用02产品中，<code>EV_1KM_Emissive的4个通道</code>和<code>EV_1KM_RefSB的4个通道</code></p>
+</li>
+<li><p>数据预处理：对于真值，取第一通道数据，取00状态作为有云，其他三个状态统一处理为无云，不考虑背景的冰雪、耀斑等；对于input数据，对于不同通道的处理为<code>(data+offset)*scale</code></p>
+</li>
+<li><p>数据划分：训练:测试=8:2，划分后的数据量为<code>6596688:1649172</code></p>
+</li>
+<li><p>评估指标：同真值计算<code>ACC</code></p>
+</li>
+</ul>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">参数设置</th>
+<th align="center">结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">PCA+逻辑回归</td>
+<td align="center">lr的max_iter=3000，PCA缩小围度范围为8-2</td>
+<td align="center">0.941/0.761/0.794/0.788/0.832/0.854/0.864</td>
+</tr>
+<tr>
+<td align="center">SVM</td>
+<td align="center">sklearn默认</td>
+<td align="center">0.955（100w）</td>
+</tr>
+<tr>
+<td align="center">GDBT</td>
+<td align="center">sklearn默认</td>
+<td align="center">0.958</td>
+</tr>
+<tr>
+<td align="center">GaussianNB</td>
+<td align="center">sklearn默认</td>
+<td align="center">0.867</td>
+</tr>
+<tr>
+<td align="center">BP神经网络</td>
+<td align="center">三个隐藏层(50,15,5)，solver=’adam’，max_iter=1000</td>
+<td align="center">0.969</td>
+</tr>
+<tr>
+<td align="center">LSTM</td>
+<td align="center">LSTM(100)+LSTM(50)+Dense(1)，epochs=100，batch_size=128</td>
+<td align="center">0.919</td>
+</tr>
+<tr>
+<td align="center">随机森林</td>
+<td align="center">n_estimators=1000</td>
+<td align="center">0.948</td>
+</tr>
+<tr>
+<td align="center">RS-Net(U-Net)</td>
+<td align="center"><a target="_blank" rel="noopener" href="https://github.com/JacobJeppesen/RS-Net">https://github.com/JacobJeppesen/RS-Net</a></td>
+<td align="center">0.935</td>
+</tr>
+</tbody></table>
+<h2 id="问题总结"><a href="#问题总结" class="headerlink" title="问题总结"></a>问题总结</h2><ul>
+<li><p>方法流程：有两种：一是直接将HDF文件看做图像，数据处理也当作图像那样整体处理，一般是转存为TIF或者是HDF5，用图像的方法进行云检测，是部分深度学习方法的思路；另一种是把这些离散数据取出，将多通道的数据所对应的检测结果当成一个个像素点，用分类的方法进行拟合，偏向于传统机器学习的思路。<code>不知道到底哪种思路适合这个工程</code>。现状：两种方法都有应用；写论文的话，业内人士会尽量避免深度学习的方法，因为卫星数据的物理因素比较多的情况下进行数据处理会引入很大的误差；模型速度上深度方法更适合大量数据，看做图像的话要使用较多的显卡。</p>
+</li>
+<li><p>训练数据不同种类下垫面划分：做了的话肯定有助于提高性能，属于是标数据的一部分。但对于国产数据来说，没有固定的标准，需要制定划分标准（这里可以使用Modis的），试验前做划分，且如果做了划分，就肯定要训练多个模型。</p>
+</li>
+<li><p>算法性能评估指标：简单的使用了ACC，是否可信未知。</p>
+</li>
+<li><p>算法性能比较：推荐的是<code>随机森林</code>、<code>朴素贝叶斯</code>和<code>U-Net</code>。实际进行下来，决策树类算法、BP的性能是第一档；U-Net性能稍差一点但是也能看，估计是因为数据量的原因，上面的数据量对于其他算法来说够了，但是对于U-Net来说肯定是少；基于高斯分布的朴素贝叶斯网络性能就一般；<code>LSTM</code>的性能也算做中档，但实际上LSTM并不适合这个场景，因为数据并没有呈现序列性；SVM就不考虑了，数据量一大的话，效率太低。</p>
+</li>
+<li><p>国产数据与MODIS数据的对齐问题：raw data经纬度对不齐。</p>
+</li>
+<li><p>国产数据的评估问题：真值、指标。</p>
+</li>
+</ul>
+<h2 id="接下来需要做的"><a href="#接下来需要做的" class="headerlink" title="接下来需要做的"></a>接下来需要做的</h2><ul>
+<li><p>可以补一下Deep CNN系的方法，简单粗暴，上面说的两种思路都可以做，但主要的可能还是数值拟合。</p>
+</li>
+<li><p>使用MODIS的数训练FY4的，主要需要解决数据对齐、数据选择（主要是通道选择，推荐通道还需要再缩小一下提高性能）、评估，尽量上深度方法。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="prevSlogan" href="/2022/02/25/leetcode%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95%EF%BC%882%EF%BC%89/" title="leetcode刷题记录（2）"><span>< PreviousPost</span><br><span class="prevTitle">leetcode刷题记录（2）</span></a><a class="nextSlogan" href="/2022/01/07/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ALPIPS/" title="论文研读：LPIPS"><span>NextPost ></span><br><span class="nextTitle">论文研读：LPIPS</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%98%E7%BD%91"><span class="toc-number">1.</span> <span class="toc-text">官网</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BD%BD"><span class="toc-number">3.</span> <span class="toc-text">数据下载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99"><span class="toc-number">4.</span> <span class="toc-text">文件命名规则</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#tool"><span class="toc-number">5.</span> <span class="toc-text">tool</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HDFView"><span class="toc-number">5.1.</span> <span class="toc-text">HDFView</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HDF-Explore"><span class="toc-number">5.2.</span> <span class="toc-text">HDF Explore</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">6.</span> <span class="toc-text">数据说明</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E7%BD%91%E6%95%B0%E6%8D%AE%E4%BB%8B%E7%BB%8D"><span class="toc-number">6.1.</span> <span class="toc-text">官网数据介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95"><span class="toc-number">6.2.</span> <span class="toc-text">文件目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E7%82%B9%E5%AD%97%E6%AE%B5%E4%BF%A1%E6%81%AF"><span class="toc-number">6.3.</span> <span class="toc-text">重点字段信息</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MYD35"><span class="toc-number">6.3.1.</span> <span class="toc-text">MYD35</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MYD02"><span class="toc-number">6.3.2.</span> <span class="toc-text">MYD02</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MYD03"><span class="toc-number">6.3.3.</span> <span class="toc-text">MYD03</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%91%E6%A3%80%E6%B5%8B%E5%AE%9E%E9%AA%8C"><span class="toc-number">7.</span> <span class="toc-text">云检测实验</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%86%E8%8A%82"><span class="toc-number">7.1.</span> <span class="toc-text">实验细节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C"><span class="toc-number">7.2.</span> <span class="toc-text">结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93"><span class="toc-number">7.3.</span> <span class="toc-text">问题总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E9%9C%80%E8%A6%81%E5%81%9A%E7%9A%84"><span class="toc-number">7.4.</span> <span class="toc-text">接下来需要做的</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
