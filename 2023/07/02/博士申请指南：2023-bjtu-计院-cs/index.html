@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>博士申请指南：2023+bjtu+计院+cs · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">博士申请指南：2023+bjtu+计院+cs</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>07-02-2023 14:40:18</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="闲谈"> 闲谈</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">4.5k</span> | Reading time: <span class="post-count">15</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>原创文章，个人经历，我认为这篇也没啥价值值得转载，看看就得了。</p>
+</blockquote>
+<hr>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这一篇博客离上一篇有接近8个月了，这期间忙活的都是硕士毕业和博士申请的事情。自2020年研究生入学的时候，就有考虑读博，这个考虑基于三年疫情导致的工作难找，也基于个人的特殊情况。</p>
+<p>时至今日，这件事情也算是圆满完成。在这期间有很多人为我提供了帮助，以及自身的努力加上相当不错的运气，才能有这样的结果。此时坐在新工位上，我想把这段经历做下分享，在记录生活的同时也为后来人指引一下方向，能积一份德就积一份德。</p>
+<h1 id="关于本博客中内容的重要说明"><a href="#关于本博客中内容的重要说明" class="headerlink" title="关于本博客中内容的重要说明"></a>关于本博客中内容的重要说明</h1><blockquote>
+<p>用来免责的，毕竟我在网络上分享这些，我等于也在网上透明了，怕出事。</p>
+</blockquote>
+<ul>
+<li><p>本博客的目的是本博客中的所有内容均为个人经历，不可复制，仅供参考；</p>
+</li>
+<li><p>本博客中包含大量互联网内容，均为相关单位在互联网中公开发表的内容，使用相关单位之外的ip也可访问到这些内容；</p>
+</li>
+<li><p>本博客中包含涉及他人隐私的内容，包括聊天记录截图、邮件等，已将所有个人信息做屏蔽处理，仅提供与博士申请相关的内容；</p>
+</li>
+<li><p>如果本博客中的内容有任何侵权或者其他违法行为，敬请邮件告知，本人将立即删除。</p>
+</li>
+</ul>
+<h1 id="个人情况"><a href="#个人情况" class="headerlink" title="个人情况"></a>个人情况</h1><p>为什么申请bjtu呢？因为实际上我本科就是bjtu计算机与信息技术学院2016级的一个小透明，专业同样是cs，2016-2020呆了4年。2020年初赶上疫情，也没回校参加毕业典礼和收拾行李，黯然离场了属于是。19年大三，绩点稍微差些，保研没报上，记得当时保到3.6几的绩点，我加上保研加分也就只有3.58。然后考研惨遭滑铁卢，就考了294，数一58差点没过国家线。我数学实在是烂，虽然没挂过科，但几大门数学课的绩点拖了很多后腿。2020年bjtu的专硕线在前后一年内都是最低的，只有315，复试几乎没压力，导师也找好了，可以说是进面就随便上。但就这都没考上，真的属于是好牌打得稀烂。然后调剂呗，当时考研还没卷到所有学校所有位置考爆满的地步，因此通过导师的人脉和神通，调剂到了btbu计院的学硕。但由于考的实在是有点烂，没调剂到cs，专业成了轻工技术与工程。这专业是btbu的优势学科与计算机交叉的结果，就跟bjtu的铁信一个性质。当时还有一条路就是bjtu再参加非全的面试，这俩一权衡，那还是选择全日制得了。期间种种的心酸和不甘在此不表，反正这就算是有学上了。</p>
+<p>btbu在读期间，上的课搞的内容都是计算机相关的，唯独专业歪了。因此22年秋招到23年春招，找工作真的就突出一个难字。简历关都过不了几个，能有机会面了几个大厂也是因为第一学历对口和熟人内推，但也没啥用，都挂了。最后一合计：申请博士！于是在这条路上猛冲，毕竟实在是没路子了，总不能回家躺着啃老。接下来就有了以下的经历。</p>
+<h1 id="2022申请考核博士的重要通知时间线"><a href="#2022申请考核博士的重要通知时间线" class="headerlink" title="2022申请考核博士的重要通知时间线"></a>2022申请考核博士的重要通知时间线</h1><ul>
+<li><p>211025：<code>计算机与信息技术学院2022年学术型博士研究生申请考核制招生实施办法</code>、。就是招博士的总章，主要是申请条件（外国语水平）和申请流程（提交材料列表），内容在近几年应该不会有太大变化，以当年为准。</p>
+</li>
+<li><p>211025：<code>计算机与信息技术学院2022年工程博士研究生申请考核制招生实施办法</code>。同上。</p>
+</li>
+</ul>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/1.png" title="招生办法"></p>
+<ul>
+<li>211230：<code>北京交通大学计算机与信息技术学院2022年申请考核博士考生复试安排</code>。邮件确认复试和参加综合素质测评（主要就是一些心理测试，正常选就行），然后面试是远程，需要测试面试环境。</li>
+</ul>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/2.png" title="复试安排1"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/3.png" title="复试安排2"></p>
+<ul>
+<li><p>211230：<code>计算机与信息技术学院2022年申请考核博士复试考核流程说明</code>。主要说双机位的事情，最需要注意的两点：不可以使用任何类型耳机、不要迟到。</p>
+</li>
+<li><p>211230：<code>计算机与信息技术学院2022年申请考核博士研究生报考材料审核通过名单</code>。公布所有通过材料审核进入面试的人，部分人因为外国语水平不达标提示“须参加1月19日上午英语水平考核”。</p>
+</li>
+<li><p>220420：<code>北京交通大学计算机与信息技术学院2022年博士招生考核成绩</code>。这里仅仅只是考核成绩，不是拟录取名单，但在这之前通过导师的消息渠道基本上就知道自己能否被录取。给了附件，看就完事了。</p>
+</li>
+<li><p>220424：<code>北京交通大学计算机与信息技术学院2022年博士研究生招生录取工作办法</code>。与之前公布的招生实施办法的内容有部分耦合，最重要的是公布了招生计划、成绩怎么算。</p>
+</li>
+</ul>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/4.png" title="招生计划"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/5.png" title="成绩算法"></p>
+<ul>
+<li><p>220428：<code>北京交通大学计算机与信息技术学院2022年博士研究生招生拟录取名单</code>。给了附件，看就完事了。</p>
+</li>
+<li><p>220506：<code>北京交通大学计算机与信息技术学院2022年博士招生拟录取信息变动公示</code>。有1个cs的人放弃，往上替补了1个人。</p>
+</li>
+<li><p>220520：<code>北京交通大学计算机与信息技术学院2022年博士招生拟录取信息变动公示</code>。补录了1个cs的 科研博士专项。</p>
+</li>
+<li><p>220612：<code>2022级博士同学建钉钉群通知</code>。全日制的同学使用手机号加钉钉。</p>
+</li>
+<li><p>220628：<code>关于2022年拟录取博士研究生调档函及定向培养告知书开通下载的通知</code>。调档，这个通知是研究生院对所有学院统一发的。</p>
+</li>
+</ul>
+<h1 id="前期准备：2022-9-2022-10"><a href="#前期准备：2022-9-2022-10" class="headerlink" title="前期准备：2022.9-2022.10"></a>前期准备：2022.9-2022.10</h1><p>前期准备工作最主要的就是收集前一年的博士申请考核信息，并且找个有经验的人带一带。</p>
+<ul>
+<li>220909：经导师推送加了22级申请考核进来的师兄的微信，拿到了他所有的资料，包括提交系统的材料和面试时的ppt。</li>
+</ul>
+<h1 id="材料提交：2022-11-2022-12"><a href="#材料提交：2022-11-2022-12" class="headerlink" title="材料提交：2022.11-2022.12"></a>材料提交：2022.11-2022.12</h1><p>根据下面两个通知，博士招生系统材料的上传时间和纸质材料的邮寄时间为<code>221112-221216</code>。</p>
+<ul>
+<li><p>221112：<code>北京交通大学计算机与信息技术学院2023年学术型博士研究生申请考核制招生实施办法</code>。</p>
+</li>
+<li><p>221112：<code>北京交通大学计算机与信息技术学院2023年工程博士研究生申请考核制招生实施办法</code>。</p>
+</li>
+</ul>
+<h2 id="博士招生系统注册"><a href="#博士招生系统注册" class="headerlink" title="博士招生系统注册"></a>博士招生系统注册</h2><p>需要先在博士招生系统注册账号，需要一个<code>常用邮箱</code>作为登陆号。注册成功后会给一个<code>报考号</code>，这是报考期间的唯一身份ID，比如我的就是2023000xxxx，xxxx就是你在系统上注册的序号，我是第1000多位在系统上注册的。</p>
+<p>然后需要在系统上填一系列的材料，我记忆中首先是选择导师和方向，然后填自己的教育信息，反正乱七八糟一堆，不确定的内容具体询问导师或者自己师兄。填完之后确认所有自己填的信息，点完确定之后就不能改了，只能看信息确认页面，如下：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/10.png" title="信息确认页面1"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/11.png" title="信息确认页面2"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/12.png" title="信息确认页面3"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/13.png" title="信息确认页面4"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/14.png" title="信息确认页面5"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/15.png" title="信息确认页面6"></p>
+<p>最上面的4个按钮下载生成的文件，都是pdf格式。其中<code>政审表</code>和<code>诚信承诺书</code>是需要打印签字并邮寄的，其他两个到目前为止也没啥地方用得到。</p>
+<p>最下面的8个按钮可以下载在系统中上传的8项内容。</p>
+<h2 id="博士招生系统上传材料"><a href="#博士招生系统上传材料" class="headerlink" title="博士招生系统上传材料"></a>博士招生系统上传材料</h2><p>这里一共8项内容，第1项是证件照，这个是录取以后学生卡上的照片，需要近期蓝底照片，大家可以去精修证件照然后上传。</p>
+<p>接下来7项在系统里称为“其他文件”，并且在系统的对应页面上会提供详细的<code>其他文件上传要求</code>，今年的上传要求原文为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1、“有效居民身份证”上传要求格式为PDF文件，正反面均需在文件中。</span><br><span class="line">2、“最后学历、学位证书及其认证报告”上传要求格式为PDF文件；直博生不用上传，硕博连读生和应届硕士毕业生上传本科学历、学位证书及其对应的认证报告；其他考生应上传本人的最后学历、学位证书及其对应认证报告；学历认证报考获取网址为中国高等教育学生信息网（https:&#x2F;&#x2F;www.chsi.com.cn&#x2F;xlcx&#x2F;），学位认证报告获取网址为学位网（https:&#x2F;&#x2F;www.chinadegrees.cn&#x2F;cqva&#x2F;gateway.html）。</span><br><span class="line">3、“课程成绩单”上传格式为PDF文件，直博生上传本科阶段的成绩单，硕博连读生、应届硕士毕业生和已获得硕士学位人员上传硕士课程成绩单，同等学力人员上传进修相同或相近专业的硕士研究生课程成绩单。</span><br><span class="line">4、“学生证及其认证报告”上传格式为PDF文件，直博生、硕博连读生及应届硕士毕业生需要上传学生信息页及学籍认证报告，其他考生不需要上传。学籍认证报告获取网址中国高等教育学生信息网（https:&#x2F;&#x2F;www.chsi.com.cn&#x2F;xlcx&#x2F;）。</span><br><span class="line">5、“英语水平材料”上传格式为PDF文件，符合学校及学院规定的英语水平证明材料。</span><br><span class="line">6、“基础水平材料”上传将以下（1）—（8）要求的材料按照顺序扫描、编辑、汇总为一个带有目录的PDF文件。</span><br><span class="line">（1）有效居民身份证，将正反面均放置。</span><br><span class="line">（2）至少两名所报考学科专业领域内的教授（或相当专业技术职称的专家）专家的推荐信（由专家填写，如果打印，专家须在每一页纸上签字）。</span><br><span class="line">（3）往届生提供硕士学位、学历证书，应届硕士毕业生及同等学力考生提供本科学历、学位证书。</span><br><span class="line">（4）应届硕士毕业生提供硕士研究生学生证或学校研究生管理部门开具的在校证明。</span><br><span class="line">（5）硕士课程学习成绩单（或硕士成绩单复印件加盖档案部门公章），同等学力考生提供进修相同或相近专业的硕士研究生课程成绩单原件（加盖研究生培养部门的公章）。</span><br><span class="line">（6）往届生提供硕士学位论文，应届硕士毕业生提供论文目录、详细摘要和主要成果。</span><br><span class="line">（7）获奖证书、公开发表的学术论文、所获专利及其他原创性研究成果的证明材料。</span><br><span class="line">（8）外国语水平材料。</span><br><span class="line">（9）报考学院要求的其他材料。</span><br><span class="line">7、“学科综述与研究设想” 上传格式为PDF文件，按照报考学院的要求撰写完成后，提供一份攻读博士学位期间的学科综述与研究设想</span><br></pre></td></tr></table></figure>
+
+<p>对于上述7项内容的建议：</p>
+<ul>
+<li><p>第1项直接拿身份证去正反面<code>扫描</code>，因为要用很多次，别搞手机拍照最好。</p>
+</li>
+<li><p>第2项按照他给的网址下载就行，实际上就是学信网，但这里要注意需要<code>手动调整有效期</code>，默认的有效期是1个月，调整到最长，否则学校的人验证的时候扫的那个二维码会失效。pdf的安排顺序可以为：毕业证、学位证、学历备案、学位在线验证。搞的时候我还没拿到硕士毕业，因此放的是本科的双证。学历备案、学位验证要和双证的阶段对应。</p>
+</li>
+<li><p>第3项直接问学校要，一定记得是带<code>公章</code>的那种，搞那种自己弄的成绩表格要去学校加公章然后扫描。</p>
+</li>
+<li><p>第4项学生证从头到尾<code>扫描</code>，学籍在线验证一般是硕士阶段的，同样记得<code>手动调整有效期</code>。 </p>
+</li>
+<li><p>第5项上<code>CET官网</code>查自己能用的6级成绩然后<code>下载电子版</code>，这里需要注意的就是<code>考试成绩时效</code>的问题，你要是特别特别早就考过了6级，比如大二就过了，等你研三申请这个博士，按照时间规定这个成绩是不能用的。学校那边对于这种情况是如何看待和处理我不清楚。</p>
+</li>
+<li><p>第6项中的（2），自己拟完之后去找大佬们签字，注意推荐信模板的<code>封面虽然没有提供签名的地方，但也需要签名</code>。推荐信的内容可以打印，但是<code>必须手写签名</code>。搞完之后扫描完整内容，后面要多次用。</p>
+</li>
+<li><p>第6项中的（4），在校证明可以自己拟好之后找学院盖章，自己学校有模板的直接按照按照模板搞。他这里两项材料写的是“或”，因为学生证前面就用过一次，能全部提供最好全部提供。</p>
+</li>
+<li><p>第6项中的（7），所有能证明自己水平的东西都往上弄，各类证书能扫描最好扫描，能用电子版最好用电子版，所有内容按照重要程度排排序（中了的论文往最前面放），这里的排版能够彰显自己的态度和水平，老师们肯定会比较看重这里。</p>
+</li>
+<li><p>第6项中的（9）实际上指的就是第7项，<code>这里不需要</code>。材料从（1）写到（8）即可。</p>
+</li>
+<li><p>第6项所有内容在整体组织的时候最好正式一些，使用封面+目录，并为所有内容起好题目，材料内容这么多，没点条理的话这绝对会成为材料审核中的减分项。我自己的搞了30页，目录如下。</p>
+</li>
+</ul>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/6.png" title="基础水平材料-目录页"></p>
+<ul>
+<li>第7项是非常重要的材料，体现自己的各类水平，按照模板填，注意排版。最后会给一个<code>二维码</code>，记得自己扫了然后填编号，并加上自己的<code>电子签</code>。我自己的搞了22页。</li>
+</ul>
+<h2 id="纸质材料邮寄"><a href="#纸质材料邮寄" class="headerlink" title="纸质材料邮寄"></a>纸质材料邮寄</h2><p>招生实施办法里面会提供<code>计算机与信息技术学院申请考核博士报考材料整理目录</code>，按照目录整理，并且<code>按时</code>邮寄即可。</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/7.png" title="23报考材料整理目录1"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/8.png" title="23报考材料整理目录2"></p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/9.png" title="23报考材料整理目录3"></p>
+<p>对于上述14项内容的建议（不是在职博士不用管第15项）：</p>
+<ul>
+<li><p>纸质材料内容与系统上传的内容基本耦合，看清楚整理目录的要求，<code>基本上所有盖章的、签名的都需要提交原件</code>。</p>
+</li>
+<li><p>第3项，<code>政审表的模板是pdf格式</code>，不方便编辑。并且<code>政审表模板在系统提交完所有材料并确认提交之后才能下载</code>。建议自己拟好政审内容找笔迹不同的人手写填入，签名自己签，然后去盖章。当然了有学校的专门负责人直接帮你搞定政审的所有内容更好。</p>
+</li>
+<li><p>第10项，英语水平材料同样注意<code>有效期</code>问题。</p>
+</li>
+<li><p>第11项，<code>诚信承诺书同样是在系统提交完所有材料并确认提交之后才能下载</code>。</p>
+</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>至此，面试前的准备工作就做完了。接下里（二）内会涉及面试及等待成绩的事情。</p>
+<h1 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h1><p>在申博之路上为我提供了直接或间接帮助的人，他们的名字缩写。</p>
+<p>致谢统一写在这里，后面两篇就不写了。</p>
+<p>排名无先后，所有人我都是真心实意的感谢：</p>
+<ul>
+<li><p>znc：读研时我导介绍来带我的导师。2016年就带我做比赛了，是我进行硕士课题中的最强依靠，能够在极限时间内拿下论文，全靠c老师和我导。</p>
+</li>
+<li><p>gw：读研时同门。他曾经也想读博，报考了bjtu软件学院23年的博士申请考核。他与我共享了他几乎所有的报考材料。</p>
+</li>
+<li><p>zys：现组内师兄。22级申请考核进来的博，为我提供大量技术支持、情报支持和心理支持。</p>
+</li>
+<li><p>hsl：读研时学院大领导。为我提供专家推荐信，且很认真的帮我改了信内容。</p>
+</li>
+<li><p>cyj：我导。本科时就带我搞各种比赛和科研，博士期间是我导。<strong>在此强推我导，学术素养高，对待学生耐心，愿意为学生解决各种困难，脾气好。</strong></p>
+</li>
+<li><p>lt：读研时我导。为我提供专家推荐信及大量信息。</p>
+</li>
+<li><p>xkh：读研时同门。多次帮我解决材料问题。</p>
+</li>
+<li><p>jl：读研时同门。加上hxk，我们三个人同为宿舍好兄弟，这俩时常安慰我，请我吃个火锅啥的。</p>
+</li>
+<li><p>cxw：读研时同门。研一下晋升为女朋友（目前仍是），在我文章翻译、投稿工作中提供有力帮助。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2022/10/25/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB%EF%BC%9ADDPM-SR3/" title="论文研读：DDPM+SR3"><span>NextPost ></span><br><span class="nextTitle">论文研读：DDPM+SR3</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E6%9C%AC%E5%8D%9A%E5%AE%A2%E4%B8%AD%E5%86%85%E5%AE%B9%E7%9A%84%E9%87%8D%E8%A6%81%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">关于本博客中内容的重要说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%83%85%E5%86%B5"><span class="toc-number">3.</span> <span class="toc-text">个人情况</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2022%E7%94%B3%E8%AF%B7%E8%80%83%E6%A0%B8%E5%8D%9A%E5%A3%AB%E7%9A%84%E9%87%8D%E8%A6%81%E9%80%9A%E7%9F%A5%E6%97%B6%E9%97%B4%E7%BA%BF"><span class="toc-number">4.</span> <span class="toc-text">2022申请考核博士的重要通知时间线</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87%EF%BC%9A2022-9-2022-10"><span class="toc-number">5.</span> <span class="toc-text">前期准备：2022.9-2022.10</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%90%E6%96%99%E6%8F%90%E4%BA%A4%EF%BC%9A2022-11-2022-12"><span class="toc-number">6.</span> <span class="toc-text">材料提交：2022.11-2022.12</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%A3%AB%E6%8B%9B%E7%94%9F%E7%B3%BB%E7%BB%9F%E6%B3%A8%E5%86%8C"><span class="toc-number">6.1.</span> <span class="toc-text">博士招生系统注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%A3%AB%E6%8B%9B%E7%94%9F%E7%B3%BB%E7%BB%9F%E4%B8%8A%E4%BC%A0%E6%9D%90%E6%96%99"><span class="toc-number">6.2.</span> <span class="toc-text">博士招生系统上传材料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BA%B8%E8%B4%A8%E6%9D%90%E6%96%99%E9%82%AE%E5%AF%84"><span class="toc-number">6.3.</span> <span class="toc-text">纸质材料邮寄</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%B4%E8%B0%A2"><span class="toc-number">8.</span> <span class="toc-text">致谢</span></a></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
