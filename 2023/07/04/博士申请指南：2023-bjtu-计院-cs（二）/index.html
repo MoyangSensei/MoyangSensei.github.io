@@ -1,0 +1,201 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><meta name="author" content="Fy J"><meta name="renderer" content="webkit"><meta name="copyright" content="Fy J"><meta name="keywords" content="MoyangSensei"><meta name="description" content="null"><meta name="Cache-Control" content="no-cache"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>博士申请指南：2023+bjtu+计院+cs（二） · MoYang</title><link rel="stylesheet" href="/css/style.css?v=2018.7.9"><link rel="stylesheet" href="/css/animation.css?v=2018.7.9"><link rel="icon" href="/img/assets/Moyangico.ico"><link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css?version=1.5.6"><!-- scripts--><script>(function( w ){
+  "use strict";
+  // rel=preload support test
+  if( !w.loadCSS ){
+    w.loadCSS = function(){};
+  }
+  // define on the loadCSS obj
+  var rp = loadCSS.relpreload = {};
+  // rel=preload feature support test
+  // runs once and returns a function for compat purposes
+  rp.support = (function(){
+    var ret;
+    try {
+      ret = w.document.createElement( "link" ).relList.supports( "preload" );
+    } catch (e) {
+      ret = false;
+    }
+    return function(){
+      return ret;
+    };
+  })();
+
+  // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+  // then change that media back to its intended value on load
+  rp.bindMediaToggle = function( link ){
+    // remember existing media attr for ultimate state, or default to 'all'
+    var finalMedia = link.media || "all";
+
+    function enableStylesheet(){
+      link.media = finalMedia;
+    }
+
+    // bind load handlers to enable media
+    if( link.addEventListener ){
+      link.addEventListener( "load", enableStylesheet );
+    } else if( link.attachEvent ){
+      link.attachEvent( "onload", enableStylesheet );
+    }
+
+    // Set rel and non-applicable media type to start an async request
+    // note: timeout allows this to happen async to let rendering continue in IE
+    setTimeout(function(){
+      link.rel = "stylesheet";
+      link.media = "only x";
+    });
+    // also enable media after 3 seconds,
+    // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+    setTimeout( enableStylesheet, 3000 );
+  };
+
+  // loop through link elements in DOM
+  rp.poly = function(){
+    // double check this to prevent external calls from running
+    if( rp.support() ){
+      return;
+    }
+    var links = w.document.getElementsByTagName( "link" );
+    for( var i = 0; i < links.length; i++ ){
+      var link = links[ i ];
+      // qualify links to those with rel=preload and as=style attrs
+      if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+        // prevent rerunning on link
+        link.setAttribute( "data-loadcss", true );
+        // bind listeners to toggle media back
+        rp.bindMediaToggle( link );
+      }
+    }
+  };
+
+  // if unsupported, run the polyfill
+  if( !rp.support() ){
+    // run once at least
+    rp.poly();
+
+    // rerun poly on an interval until onload
+    var run = w.setInterval( rp.poly, 500 );
+    if( w.addEventListener ){
+      w.addEventListener( "load", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    } else if( w.attachEvent ){
+      w.attachEvent( "onload", function(){
+        rp.poly();
+        w.clearInterval( run );
+      } );
+    }
+  }
+
+
+  // commonjs
+  if( typeof exports !== "undefined" ){
+    exports.loadCSS = loadCSS;
+  }
+  else {
+    w.loadCSS = loadCSS;
+  }
+}( typeof global !== "undefined" ? global : this ) );</script><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" defer></script><script src="/js/main.js?v=2018.7.9" defer></script><!-- fancybox--><link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script><!-- busuanzi--><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><meta name="generator" content="Hexo 5.1.1"><link rel="alternate" href="/atom.xml" title="MoyangSensei" type="application/atom+xml">
+</head><body><section class="profile-close" id="cxo-profile"><div class="profile-avatar"><i class="fa fa-caret-left"></i><img src="/img/assets/cat.png"></div><!--.profile-saying
+  i.fa.fa-comment
+  .saying--><div class="cxo-profile-inner"><div class="profile-name">Fy J</div><div class="profile-signature">CS专业扫雷学深造学者互联网冲浪一级选手</div><div class="friends"><div>FRIENDS</div><span><a href="//hnjia00.github.io" target="_black">jhn</a></span></div><div class="read-progress"></div></div></section><header id="cxo-intro" style="height: 70vh;background-image: url(/img/intro/index-bg.png);"><nav id="cxo-intro-nav"><section><div class="intro-nav-title"><a href="/">MoYang's Blog</a></div><div class="intro-nav-label-box"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div><i class="fa fa-bars intro-nav-menu"><div class="intro-nav-drop"><a href="/">Home</a><a href="/about/">About</a><a href="/archives/">Archives</a><a href="/tags/">Tags</a></div></i><div class="clear"></div></section></nav><h1 class="post-title">博士申请指南：2023+bjtu+计院+cs（二）</h1><div class="post-intros"><div class="post-intro-meta"><span class="post-intro-time"><i class="post-intro-calendar fa fa-calendar"></i><span>07-04-2023 16:40:58</span></span><span class="post-intro-tags"><a class="intro-tag fa fa-tag" href="javascript:void(0)" date-tags="闲谈"> 闲谈</a></span></div><div class="post-intro-read"><span> Word count: <span class="post-count">3.4k</span> | Reading time: <span class="post-count">11</span>min</span></div></div></header><article class="cxo-up" id="cxo-content-outer"><section id="cxo-content-inner"><article class="article-entry" id="post"><blockquote>
+<p>个人经历，转载也没啥意义，看看就得了。</p>
+</blockquote>
+<blockquote>
+<p>“关于本博客中内容的重要说明”请看（一）。</p>
+</blockquote>
+<hr>
+<h1 id="复试：2022-12-2023-01"><a href="#复试：2022-12-2023-01" class="headerlink" title="复试：2022.12-2023.01"></a>复试：2022.12-2023.01</h1><h2 id="复试安排"><a href="#复试安排" class="headerlink" title="复试安排"></a>复试安排</h2><p>相关通知：</p>
+<ul>
+<li><p>221226：<code>2023年申请考核博士考生复试安排</code>。面试时间230105，从发通知到面试中间也就10天时间。</p>
+</li>
+<li><p>221226：<code>2023年申请考核博士复试流程说明</code>。安排双机位，跟22年的通知几乎一样。</p>
+</li>
+<li><p>221226：<code>2023年申请考核博士研究生报考材料审核通过名单（非定向就业）</code>。公布了<code>69个进面</code>的人。</p>
+</li>
+<li><p>221228：<code>申请考核复试秘书老师微信查询方式已在我校博士招生系统信息动态栏中发布，请同学们及时添加</code>。内容如题。</p>
+</li>
+</ul>
+<p>首先根据复试安排，回复邮件确认参加面试：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/16.png" title="23复试确认邮件"></p>
+<p>综合素质在线测评从邮件里参加：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/17.png" title="23综合素质在线测评邮件"></p>
+<p><code>复试序号</code>、加<code>面试秘书老师微信</code>的通知是在博士招生系统上给的，加上微信了之后听指挥走流程就行。</p>
+<p>首先是面试测试：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/18.png" title="面试测试与秘书聊天记录"></p>
+<p>检查面试环境是在<code>腾讯会议</code>，举着手机给老师看看你那个面试的独立房间，个人感觉比研究生复试的时候检查的松很多，只要保证你摆机器的桌面上干净就行，屋子内杂七杂八的东西基本不会要求清理。甚至我桌子上摆了一个台式机，机箱在下，显示屏跟我的笔记本都放在桌子上一前一后，我特意问了需不需要把台式机挪到屋子外，毕竟也是电子产品，得到的回答是不用，面试的时候别开台式机就行。双机位一般都是用手机放在座位侧后方，左右都行，需要提前买一个手机支架，可伸缩的三角架加上上面有一个可以夹手机的头。</p>
+<h2 id="复试当天的准备工作"><a href="#复试当天的准备工作" class="headerlink" title="复试当天的准备工作"></a>复试当天的准备工作</h2><p>我当天的面试顺序应该是倒数第二个，所以从下午1点钟开始等待，一直等到晚上8点半左右才轮到我，非常的煎熬。</p>
+<p>面试当天上午：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/19.png" title="面试当天与秘书聊天记录1"></p>
+<p>然后就一直干等，期间秘书老师还大致跟我讲了时间，我也能根据自己的序号判断出来自己应该很靠后：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/20.png" title="面试当天与秘书聊天记录2"></p>
+<p>得到了会议号之后，双机位都进入这个会议等待。最开始会议里只有3个账号，是秘书和我的两个号。在里面等了大概10来分钟之后，突然进来了一个账号，一个男老师的声音直接跟我说考生可以开始了，我问了一句“老师，我的声音和屏幕共享正常吗”，得到答复后我就开始念叨我的ppt了。据我导消息，面试是老师们在线下的一个教室里一起听的，因此只有一个账号进了会议。问我的那个男老师应该是主持人，后续问了我几个问题也是这个老师进行询问的。</p>
+<h2 id="面试现场"><a href="#面试现场" class="headerlink" title="面试现场"></a>面试现场</h2><p>面试有两个主要内容，一个是ppt和个人讲解，另一个是问答环节。</p>
+<p>ppt的结构和内容主要还是多找导师把关，导师们在这方面比较懂，他们知道老师们爱听什么不爱听什么。ppt的结构是尤其重要的，每个人仅有<code>8分钟</code>时间讲ppt，科研内容中非常细节的啰里八嗦的东西是没时间说的。这里给出我ppt的目录页和我个人讲解内容的提炼：</p>
+<p><img src="/images/%E9%97%B2%E8%B0%88/bjtu%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97/21.png" title="面试ppt目录页"></p>
+<p>个人讲解没什么好说的，我的做法是：在ppt的内容固定了之后，就定好自己要讲什么，每一页的哪一个部分要固定的说哪写话（话本身不用固定，话传达的内容固定），每天对着ppt掐时间练，基本上<code>练到7分半</code>就是最完美的状态。我练到最后固定在7分20秒-7分23秒之间。千万别超时，这种场合被打断了那可是相当搞心态的。</p>
+<p>我讲完之后被询问到：</p>
+<p><strong><em>Q1：（英语问答）你为什么选择重新回到bjtu？</em></strong><br>A1：我在三年前的研究生考试中失败了，从那以后我就very very的想回来，我想在这里继续学习。</p>
+<p><strong><em>Q2：你博士为什么选择做你说的这个方向？</em></strong><br>A2：是导师的强势方向，实验室有积累，且跟我之前做的CV方向相关。</p>
+<p><strong><em>Q3：GAN为什么是无监督的？（被叫停后）你的毕业设计不是用了GAN吗，你解释一下？</em></strong><br>A3：解释了一通GAN的运行原理。（被叫停后）我还没有做，只是设想。</p>
+<blockquote>
+<p>这里尴尬的一，虽然我知道GAN从头到尾的运作原理，但是我被问懵了。我甚至提到了初始的数据是random的，训练数据是无标签的，当场脑子短路也没解释清楚为啥是无监督网络……</p>
+</blockquote>
+<p><strong><em>Q4：你博士研究设想中为什么对“小目标目标检测”提了这些问题？</em></strong><br>A4：从持续学习和灾难性遗忘方面进行了解释。</p>
+<p>我已经忘记现场是问了我4个问题还是5个问题，但大体就是上面那些。实际上问出这上面这些问题来是完全出乎我的意料了。<strong>首先英文问答，2022年是没有英语问答的，我是在等待面试的过程中被我导告知今年有英文问答。然后我问我导“英文问题问的是专业相关问题还是像研究生复试那样天南海北的问”，我导回“专业相关的问题问得多”。</strong>其次，也许是我论文做的太差，我想着怎么着也得针对我已经做出来的工作挑挑刺吧，结果也是一个都不问。所以我猜测老师们更喜欢对未来的规划，对于过去的事情老师们基本是看不上眼的。尤其是Q2和Q4，在ppt讲解中第三部分都是略过的，前后加起来1分钟都不到，问题提出部分我都是直接照着ppt念的，结果人家老师抓住这里问。得亏我导在面试前给我补了课，行业内的大方向大问题相关概念等的关键词都给我讲了，不然这俩问题我都得烂掉。回答的时候我导给我讲到的我几乎都用过到了，并且我还多提了几次“我导该方向做的强”之类的话。<strong>这里实际上凸出了自己对所选择导师的情况确实是有所了解的，博士研究设想也不是画饼，虽然大家都知道这是画饼，进来之后做什么要看情况变化和导师安排。</strong>面下来总共用时15分钟左右。</p>
+<h1 id="等待成绩：2023-1-2023-5"><a href="#等待成绩：2023-1-2023-5" class="headerlink" title="等待成绩：2023.1-2023.5"></a>等待成绩：2023.1-2023.5</h1><p>成绩出来之前的这段日子中没有任何事情，也没有任何通知。这段日子长到让人怀疑人生（反正我深刻怀疑了我的人生），因为这中间考研成绩出来了，要搞硕士研究生复试。等硕士的事情都搞的差不多了，学院才会想起这一帮博士，近两年都是如此。可以根据硕士研究生的通知来大致判断出成绩的日子，基本就是五一前后。23年公布成绩算是相当晚的了，比22年晚了20多天。</p>
+<p>左等右等等不到，导师也天天在学校询问消息。终于5月16号发了第一波拟录取名单：</p>
+<ul>
+<li>230516：<code>2023年博士研究生招生拟录取名单公示</code>。如题。</li>
+</ul>
+<p>然后听我导说有申请考核放弃拟录取的，随后出了补录：</p>
+<ul>
+<li>230612：<code>2023年拟录取博士研究生名单(补报名批次)</code>。补录了2个申请考核和3个硕博连读。</li>
+</ul>
+<p>公示是研究生院官网为全体拟录取博士统一发的：</p>
+<ul>
+<li>230612：<code>北京交通大学2023年博士研究生拟录取名单公示</code>。公示日期为10个工作日，2023年6月12日-2023年6月26日。</li>
+</ul>
+<blockquote>
+<p>公示中的说明：<br>根据教育部、北京市相关文件要求，经各学院研究生招生工作小组审核，校研究生招生工作领导小组审批，在各招生学院公布拟录取考生名单和成绩的基础上，现将我校2023年博士研究生拟录取名单进行统一公示，公示期10个工作日（2023年6月12日-2023年6月26日）。公示期间，对拟录取名单有异议者，请通过电子邮件向我办实名咨询和反映。……<br>特别说明：此名单为拟录取名单，需要上报教育部审核通过后才能成为正式录取名单。未通过审核、未按时送交所需材料、弄虚作假一经查实的考生，将取消其录取资格。</p>
+</blockquote>
+<p>随后又出了一次补录：</p>
+<ul>
+<li>230621：<code>2023年拟录取博士研究生名单(补报名批次)</code>。补录了2个硕博连读。</li>
+</ul>
+<p>补录名单的两个人单另发了一个公示：</p>
+<ul>
+<li>230621：<code>北京交通大学2023年博士研究生补录名单公示</code>。也是10个工作日。</li>
+</ul>
+<p>到这里复试过程算完整结束了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>面试这种事情真的是千变万化，每一年的情况都会有变化。这些变化看着简单，可一旦影响到了自己，那就跟一座山压在头上了一样。上述经历在24年说不定会直接过时，因为这是疫情时代中我个人的沉浮。因此再次强调，个人经历仅供参考。能帮助到各位读者自然是好，没帮到的话就看看图一乐。有价值的信息我会随时更新进来。本来想接着写关于拟录取之后调档、转关系、工位、宿舍、录取通知书的事情，但转念一想，只要能录取，这些琐碎事情都无大所谓（事情太细碎了，主要还是懒得写）。</p>
+<p>有道是<strong>莫愁前路无知己，天下谁人不识君</strong>，我祝各位同好早日达成心中心愿。录取之后记得来我工位找我打牌喝茶。</p>
+<hr>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="对于“官网公告”的说明"><a href="#对于“官网公告”的说明" class="headerlink" title="对于“官网公告”的说明"></a>对于“官网公告”的说明</h2><p>申博过程中大部分信息都是来自学院官网、研究生院、博士招生系统的公告。本博客不放重要官网公告链接、名单附件的理由是：</p>
+<p>（1）出于隐私考虑。学院官网、研究生网的内容虽然都是全网公开的，但是我认为我个人也只能对这些内容进行简单描述。我也不是不能全搬过来，只是我确实怕搞出一些不必要的事情来。具体的内容各位想看想查，还是亲力亲为吧。</p>
+<p>（2）我按时间序列记录的官网公告，它们其中的一些内容是会在事后被删除的，包括但不限于名单公示、博士招生系统的内容等。至于什么时候删除，也是未知的，就像学院官网现在还挂着22年的拟录取名单等公告，但是再往前几年的内容全删了。研究生院把22年的公示公告都删了，以前的那就更没有了，不过其他有关博士招生的基本都保留了。博士招生系统的公告都是些琐碎的小事情，比如交材料、改信息等，也会随时删除。</p>
+<h2 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h2><p>记录在申博之路上为我提供了直接或间接帮助的人，排名无先后。</p>
+<p>致谢统一写在这里，后面两篇就不写了。</p>
+<ul>
+<li><p>znc：读研时我导介绍来带我的导师。2016年就带我做比赛了，是我进行硕士课题中的最强依靠，能够在极限时间内拿下论文，全靠该老师和我导。</p>
+</li>
+<li><p>gw：读研时同门。他曾经也想读博，报考了bjtu软件学院23年的博士申请考核。他与我共享了他几乎所有的报考材料。</p>
+</li>
+<li><p>不知名的复试秘书老师：秘书老师很负责，面试时能及时的告知我等待时常，缓解了我当天的焦虑。</p>
+</li>
+<li><p>zys：现组内师兄。22级申请考核进来的博，为我提供大量技术支持、情报支持和心理支持。</p>
+</li>
+<li><p>hsl：读研时学院大领导。为我提供专家推荐信，且很认真的帮我改了信内容。</p>
+</li>
+<li><p>cyj：我导。本科时就带我搞各种比赛和科研，博士期间是我导。<strong>在此强推我导，学术素养高，对待学生耐心，愿意为学生解决各种困难，脾气好。</strong></p>
+</li>
+<li><p>lt：读研时我导。为我提供专家推荐信及大量信息。</p>
+</li>
+<li><p>xkh：读研时同门。多次帮我解决材料问题。</p>
+</li>
+<li><p>jl：读研时同门。加上hxk，我们三个人同为宿舍好兄弟，这俩时常安慰我，请我吃个火锅啥的。</p>
+</li>
+<li><p>cxw：读研时同门。研一下晋升为女朋友（目前仍是），在我文章翻译、投稿工作中提供有力帮助。</p>
+</li>
+</ul>
+</article><!-- lincense--><div class="post-paginator"><a class="nextSlogan" href="/2023/07/02/%E5%8D%9A%E5%A3%AB%E7%94%B3%E8%AF%B7%E6%8C%87%E5%8D%97%EF%BC%9A2023-bjtu-%E8%AE%A1%E9%99%A2-cs%EF%BC%88%E4%B8%80%EF%BC%89/" title="博士申请指南：2023+bjtu+计院+cs（一）"><span>NextPost ></span><br><span class="nextTitle">博士申请指南：2023+bjtu+计院+cs（一）</span></a><div class="clear"></div></div><div id="comment"></div></section></article><footer id="cxo-footer-outer"><div id="cxo-footer-inner"><p class="footer-container"><span>Site by </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span> | theme </span><a target="_blank" rel="noopener" href="https://github.com/Longlongyu/hexo-theme-Cxo"><span>Cxo</span></a></p><i class="fa fa-user"> </i><span id="busuanzi_value_site_uv"></span><span> | </span><i class="fa fa-eye"> </i><span id="busuanzi_value_site_pv"></span></div></footer><!-- catelog--><div class="toc-wrapper" style="top: 70vh;"><div class="toc-catalog"><i class="fa fa-list"> </i><span>CATALOG</span></div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%8D%E8%AF%95%EF%BC%9A2022-12-2023-01"><span class="toc-number">1.</span> <span class="toc-text">复试：2022.12-2023.01</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E8%AF%95%E5%AE%89%E6%8E%92"><span class="toc-number">1.1.</span> <span class="toc-text">复试安排</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E8%AF%95%E5%BD%93%E5%A4%A9%E7%9A%84%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.2.</span> <span class="toc-text">复试当天的准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E7%8E%B0%E5%9C%BA"><span class="toc-number">1.3.</span> <span class="toc-text">面试现场</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AD%89%E5%BE%85%E6%88%90%E7%BB%A9%EF%BC%9A2023-1-2023-5"><span class="toc-number">2.</span> <span class="toc-text">等待成绩：2023.1-2023.5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">4.</span> <span class="toc-text">其他</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E2%80%9C%E5%AE%98%E7%BD%91%E5%85%AC%E5%91%8A%E2%80%9D%E7%9A%84%E8%AF%B4%E6%98%8E"><span class="toc-number">4.1.</span> <span class="toc-text">对于“官网公告”的说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%B4%E8%B0%A2"><span class="toc-number">4.2.</span> <span class="toc-text">致谢</span></a></li></ol></li></ol></div><!-- top--><i class="fa fa-arrow-up close" id="go-up" aria-hidden="true"></i></body></html>
